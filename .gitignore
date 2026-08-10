@@ -1,0 +1,17 @@
+.venv/
+data/
+research/audit/
+PROJECT_STATE.md
+比赛/
+artifacts/
+__pycache__/
+*.pyc
+*.log
+.env
+.env.*
+!.env.example
+
+# Installed third-party skills stay local; publish only the project-owned workflow.
+.agents/skills/*
+!.agents/skills/futu-options-agent/
+!.agents/skills/futu-options-agent/**

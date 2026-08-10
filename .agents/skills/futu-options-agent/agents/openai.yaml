@@ -1,0 +1,4 @@
+interface:
+  display_name: "期权智能终端 Agent"
+  short_description: "港美股期权决策支持工作流：链数据、Greeks、策略、账户约束与审计"
+  default_prompt: "Use $futu-options-agent 为腾讯 0700.HK 业绩前构建 10 万港币账户的跨式期权方案并输出审计留痕。"
