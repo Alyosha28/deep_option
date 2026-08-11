@@ -167,6 +167,24 @@ class LiveNormalizationTests(unittest.TestCase):
         calls = [name for name, _ in quote.calls if name == "get_market_snapshot"]
         self.assertEqual(len(calls), 1)
 
+    def test_default_account_rate_limit_matches_futu_refresh_limit(self):
+        account = FakeAccountContext()
+        binding = AccountBinding("demo", 123456, trd_env="SIMULATE")
+        gateway = FutuLiveGateway(
+            quote_context_factory=lambda: FakeQuoteContext(),
+            account_context_factory=lambda _binding: account,
+            account_bindings={"demo": binding},
+            opend_probe=lambda *_args: True,
+            clock=lambda: FIXED_NOW,
+            monotonic=lambda: 100.0,
+        )
+
+        results = [gateway.get_account_risk_summary("demo") for _ in range(11)]
+
+        self.assertTrue(all(result.status is EnvelopeStatus.OK for result in results[:10]))
+        self.assertEqual(results[10].typed_error.code, GatewayErrorCode.RATE_LIMITED)
+        self.assertEqual(len(account.calls), 20)
+
     def test_recording_failure_is_visible(self):
         class BrokenRecorder:
             def record(self, *_args, **_kwargs):
