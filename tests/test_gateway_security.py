@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
+from pathlib import Path
 
 from src.decision_inputs import DecisionInputService
 from src.futu_adapter import FutuLiveGateway
@@ -16,6 +18,7 @@ from src.gateway import (
     OptionLeg,
 )
 from src.replay_adapter import ReplayGateway
+from src.snapshot_recorder import SnapshotRecorder
 from tests.fakes import FakeAccountContext, FakeFrame, FakeQuoteContext
 
 
@@ -312,6 +315,114 @@ class ReplayInputTests(unittest.TestCase):
 
         self.assertEqual(state.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
         self.assertEqual(resolution.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
+
+    def test_legacy_fixtures_require_explicit_migration_mode(self):
+        payload = {
+            "code": "HK.00700",
+            "data": [
+                {
+                    "code": "HK.PUT",
+                    "option_type": "PUT",
+                    "strike_time": "2026-08-28",
+                    "strike_price": 500.0,
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            Path(temp_dir, "legacy.json").write_text(json.dumps(payload), encoding="utf-8")
+
+            normal = ReplayGateway(temp_dir).health()
+            migration = ReplayGateway(temp_dir, allow_legacy=True).health()
+
+        self.assertEqual(normal.typed_error.code, GatewayErrorCode.REPLAY_FIXTURE_MISSING)
+        self.assertEqual(migration.status, EnvelopeStatus.PARTIAL)
+        self.assertFalse(migration.data["ready"])
+
+    def test_legacy_duplicate_keys_and_empty_filters_fail_closed(self):
+        duplicate = (
+            '{"code":"HK.00700","code":"HK.09988",'
+            '"data":[{"code":"HK.PUT","option_type":"PUT",'
+            '"strike_time":"2026-08-28","strike_price":500.0}]}'
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir, "2026-08-12_legacy.json")
+            path.write_text(duplicate, encoding="utf-8")
+            corrupt = ReplayGateway(temp_dir, allow_legacy=True).health()
+
+            path.write_text(
+                json.dumps(
+                    {
+                        "code": "HK.00700",
+                        "data": [
+                            {
+                                "code": "HK.PUT",
+                                "option_type": "PUT",
+                                "strike_time": "2026-08-28",
+                                "strike_price": 500.0,
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            missing = ReplayGateway(temp_dir, allow_legacy=True).get_option_chain(
+                OptionChainRequest(
+                    "HK.00700", "2026-08-28", "2026-08-28", option_type="CALL"
+                )
+            )
+
+        self.assertEqual(corrupt.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+        self.assertEqual(missing.typed_error.code, GatewayErrorCode.NOT_FOUND)
+
+    def test_capabilities_are_derived_from_validated_operation_inventory(self):
+        recorded = DataEnvelope(
+            mode=DataMode.REPLAY,
+            origin_source="FUTU",
+            captured_at_utc="2026-08-12T02:00:01+00:00",
+            source_time_utc="2026-08-12T02:00:00+00:00",
+            freshness_status=FreshnessStatus.FROZEN,
+            request={"operation": "get_market_snapshot", "codes": ["HK.00700"]},
+            status=EnvelopeStatus.OK,
+            data=[{"code": "HK.00700", "last_price": 500.0}],
+            entitlements={"recorded": True},
+            warnings=[],
+            typed_error=None,
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            SnapshotRecorder(temp_dir).record(recorded, "market")
+
+            capabilities = ReplayGateway(temp_dir).capabilities()
+
+        self.assertFalse(capabilities.data["account_read"])
+        self.assertFalse(capabilities.data["execution"])
+
+    def test_replay_and_recorder_enforce_bounded_files_and_records(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            recorder = SnapshotRecorder(temp_dir)
+            oversized = DataEnvelope(
+                mode=DataMode.REPLAY,
+                origin_source="TEST",
+                captured_at_utc="2026-08-12T02:00:01+00:00",
+                source_time_utc=None,
+                freshness_status=FreshnessStatus.FROZEN,
+                request={"operation": "oversized"},
+                status=EnvelopeStatus.OK,
+                data={"payload": "x" * (5 * 1024 * 1024)},
+                entitlements={},
+                warnings=[],
+                typed_error=None,
+            )
+
+            with self.assertRaises(ValueError):
+                recorder.record(oversized, "large")
+            with self.assertRaises(ValueError):
+                recorder.record(oversized, "x" * 65)
+
+            for index in range(101):
+                Path(temp_dir, f"fixture_{index:03d}.jsonl").write_text("", encoding="utf-8")
+            health = ReplayGateway(temp_dir).health()
+
+        self.assertEqual(health.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
 
 
 if __name__ == "__main__":
