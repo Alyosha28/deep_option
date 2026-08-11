@@ -374,6 +374,65 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
 
 
 class OrchestrationIsolationTests(unittest.TestCase):
+    def test_live_account_scenario_stops_when_trade_session_is_logged_out(self):
+        class LoggedOut:
+            mode = DataMode.LIVE
+
+            def __init__(self):
+                self.calls = []
+
+            def health(self):
+                self.calls.append("health")
+                return envelope(
+                    DataMode.LIVE,
+                    "health",
+                    {"ready": True, "account_logged_in": 0},
+                )
+
+            def capabilities(self):
+                self.calls.append("capabilities")
+                return envelope(DataMode.LIVE, "capabilities", {})
+
+        logged_out = LoggedOut()
+        result = DecisionInputService(logged_out).refresh_decision_inputs(
+            {"underlying": "HK.00700", "expiry": "2026-08-28", "account_ref": "demo"}
+        )
+
+        self.assertEqual(logged_out.calls, ["health"])
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.ACCOUNT_UNAVAILABLE)
+
+    def test_refresh_rate_limit_fails_before_calling_gateway(self):
+        class Ledger:
+            mode = DataMode.REPLAY
+
+            def __init__(self):
+                self.calls = 0
+
+            def health(self):
+                self.calls += 1
+                return envelope(DataMode.REPLAY, "health", {"ready": False})
+
+        ledger = Ledger()
+        service = DecisionInputService(
+            ledger,
+            refresh_limit=(2, 30.0),
+            monotonic=lambda: 100.0,
+        )
+        scenario = {"underlying": "HK.00700", "expiry": "2026-08-28"}
+
+        results = [service.refresh_decision_inputs(scenario) for _ in range(3)]
+
+        self.assertEqual(ledger.calls, 2)
+        self.assertEqual(results[-1].typed_error.code, GatewayErrorCode.RATE_LIMITED)
+
+    def test_invalid_live_scenario_keeps_live_mode(self):
+        class Live:
+            mode = DataMode.LIVE
+
+        result = DecisionInputService(Live()).refresh_decision_inputs({})
+
+        self.assertEqual(result.mode, DataMode.LIVE)
+
     def test_wrong_operation_or_parameters_are_rejected_before_later_calls(self):
         class WrongResponse:
             mode = DataMode.REPLAY

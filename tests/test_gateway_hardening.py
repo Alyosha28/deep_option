@@ -72,7 +72,7 @@ class LiveNormalizationTests(unittest.TestCase):
         self.assertEqual(result.data[0]["exercise_type"], "AMERICAN")
         self.assertNotIn("delta", result.data[0])
 
-    def test_naive_vendor_timestamp_is_partial_not_a_provider_error(self):
+    def test_naive_vendor_timestamp_uses_market_timezone(self):
         quote = FakeQuoteContext(
             snapshot_data=FakeFrame(
                 [{"code": "HK.00700", "update_time": "2026-08-12 10:00:00", "last_price": 500.0}]
@@ -82,10 +82,26 @@ class LiveNormalizationTests(unittest.TestCase):
 
         result = gateway.get_market_snapshot(["HK.00700"])
 
-        self.assertEqual(result.status, EnvelopeStatus.PARTIAL)
-        self.assertEqual(result.freshness_status, FreshnessStatus.UNKNOWN)
-        self.assertIsNone(result.source_time_utc)
-        self.assertTrue(any("timezone" in warning.lower() for warning in result.warnings))
+        self.assertEqual(result.status, EnvelopeStatus.OK)
+        self.assertEqual(result.freshness_status, FreshnessStatus.FRESH)
+        self.assertEqual(result.source_time_utc, "2026-08-12T02:00:00+00:00")
+
+    def test_us_naive_vendor_timestamp_observes_dst(self):
+        quote = FakeQuoteContext(
+            snapshot_data=FakeFrame(
+                [{"code": "US.AAPL", "update_time": "2026-08-12 16:00:00", "last_price": 220.0}]
+            )
+        )
+        gateway = FutuLiveGateway(
+            quote_context_factory=lambda: quote,
+            opend_probe=lambda *_args: True,
+            clock=lambda: "2026-08-12T20:00:01+00:00",
+        )
+
+        result = gateway.get_market_snapshot(["US.AAPL"])
+
+        self.assertEqual(result.status, EnvelopeStatus.OK)
+        self.assertEqual(result.source_time_utc, "2026-08-12T20:00:00+00:00")
 
     def test_option_quotes_are_plural_and_attach_leg_codes(self):
         class QuoteContext(FakeQuoteContext):
