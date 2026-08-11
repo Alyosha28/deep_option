@@ -7,7 +7,14 @@ import unittest
 from pathlib import Path
 
 from src.decision_inputs import DecisionInputService
-from src.gateway import DataEnvelope, DataMode, EnvelopeStatus, FreshnessStatus
+from src.gateway import (
+    DataEnvelope,
+    DataMode,
+    EnvelopeStatus,
+    FreshnessStatus,
+    GatewayError,
+    GatewayErrorCode,
+)
 from src.snapshot_recorder import SnapshotRecorder, iter_envelopes
 
 
@@ -69,6 +76,60 @@ class DecisionInputServiceTests(unittest.TestCase):
         self.assertEqual(result.mode, DataMode.REPLAY)
         self.assertIn("option_chain", result.data)
         self.assertEqual(result.data["underlying_quote"][0]["last_price"], 500.0)
+
+    def test_unhealthy_gateway_fails_fast_without_more_live_calls(self):
+        class UnhealthyGateway(StubGateway):
+            def __init__(self):
+                self.calls = []
+
+            def health(self):
+                self.calls.append("health")
+                return DataEnvelope(
+                    mode=DataMode.LIVE,
+                    origin_source="FUTU",
+                    captured_at_utc="2026-08-12T02:00:00+00:00",
+                    source_time_utc=None,
+                    freshness_status=FreshnessStatus.UNKNOWN,
+                    request={"operation": "health"},
+                    status=EnvelopeStatus.ERROR,
+                    data=None,
+                    entitlements={},
+                    warnings=[],
+                    typed_error=GatewayError(
+                        code=GatewayErrorCode.OPEND_UNAVAILABLE,
+                        message="OpenD is unavailable",
+                        retryable=True,
+                    ),
+                )
+
+            def capabilities(self):
+                self.calls.append("capabilities")
+                return super().capabilities()
+
+            def get_market_state(self, codes):
+                self.calls.append("get_market_state")
+                return super().get_market_state(codes)
+
+            def get_market_snapshot(self, codes):
+                self.calls.append("get_market_snapshot")
+                return super().get_market_snapshot(codes)
+
+            def get_expiration_dates(self, underlying):
+                self.calls.append("get_expiration_dates")
+                return super().get_expiration_dates(underlying)
+
+            def get_option_chain(self, request):
+                self.calls.append("get_option_chain")
+                return super().get_option_chain(request)
+
+        gateway = UnhealthyGateway()
+        result = DecisionInputService(gateway).refresh_decision_inputs(
+            {"underlying": "HK.00700", "expiry": "2026-08-28"}
+        )
+
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.OPEND_UNAVAILABLE)
+        self.assertEqual(gateway.calls, ["health"])
 
 
 class SnapshotRecorderTests(unittest.TestCase):
