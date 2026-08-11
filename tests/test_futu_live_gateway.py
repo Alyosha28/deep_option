@@ -12,7 +12,7 @@ from src.gateway import (
     OptionLeg,
 )
 
-from tests.fakes import FakeAccountContext, FakeFrame, FakeQuoteContext, RecordingSink
+from tests.fakes import FakeAccountContext, FakeQuoteContext, RecordingSink
 
 
 class FutuLiveGatewayTests(unittest.TestCase):
@@ -123,4 +123,3 @@ class FutuLiveGatewayTests(unittest.TestCase):
         forbidden = ("place", "modify", "cancel", "unlock", "submit", "invoke")
         public_names = [name.lower() for name in dir(gateway) if not name.startswith("_")]
         self.assertFalse(any(word in name for name in public_names for word in forbidden))
-
