@@ -128,16 +128,15 @@ class ReplayGatewayTests(unittest.TestCase):
             + "\n2026-08-08 11:54:36,100 | INFO | disconnected\n"
         )
         (self.snapshot_dir / "2026-08-08_hero_chain.json").write_text(legacy, encoding="utf-8")
-        gateway = ReplayGateway(self.snapshot_dir)
+        gateway = ReplayGateway(self.snapshot_dir, allow_legacy=True)
 
         result = gateway.get_option_chain(
             OptionChainRequest("HK.00700", "2026-08-28", "2026-08-28", option_type="CALL")
         )
 
-        self.assertEqual(result.status, EnvelopeStatus.OK)
+        self.assertEqual(result.status, EnvelopeStatus.PARTIAL)
         self.assertEqual(result.mode, DataMode.REPLAY)
         self.assertEqual(result.origin_source, "FUTU")
         self.assertEqual(result.freshness_status, FreshnessStatus.FROZEN)
         self.assertEqual([row["code"] for row in result.data], ["HK.CALL"])
         self.assertEqual(result.captured_at_utc, "2026-08-08T03:54:35.202000+00:00")
-

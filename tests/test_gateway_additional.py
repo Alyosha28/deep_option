@@ -319,7 +319,7 @@ class ReplayGatewayAdditionalTests(unittest.TestCase):
     def test_malformed_legacy_fixture_fails_health_and_capabilities(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             Path(temp_dir, "bad.json").write_text("not JSON", encoding="utf-8")
-            gateway = ReplayGateway(temp_dir)
+            gateway = ReplayGateway(temp_dir, allow_legacy=True)
 
             health = gateway.health()
             capabilities = gateway.capabilities()
@@ -401,12 +401,11 @@ class ReplayGatewayAdditionalTests(unittest.TestCase):
                 "2026-08-28",
                 "2026-08-28",
                 option_type="CALL",
-                option_cond_type="STANDARD",
             )
 
-            result = ReplayGateway(temp_dir).get_option_chain(request)
+            result = ReplayGateway(temp_dir, allow_legacy=True).get_option_chain(request)
 
-        self.assertEqual(result.status, EnvelopeStatus.OK)
+        self.assertEqual(result.status, EnvelopeStatus.PARTIAL)
         self.assertEqual(result.captured_at_utc, "2026-08-11T16:00:00+00:00")
         self.assertEqual(result.data[0]["standard_type"], "STANDARD")
 

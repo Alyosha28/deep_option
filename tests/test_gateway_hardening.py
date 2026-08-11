@@ -194,7 +194,9 @@ class LiveNormalizationTests(unittest.TestCase):
 
         result = gateway.get_market_snapshot(["HK.00700"])
 
-        self.assertEqual(result.status, EnvelopeStatus.PARTIAL)
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.INTERNAL_ERROR)
+        self.assertIsNone(result.data)
         self.assertTrue(any("record" in warning.lower() for warning in result.warnings))
 
 
@@ -255,14 +257,14 @@ class ReplayHardeningTests(unittest.TestCase):
                 "2026-08-08 11:54:35,202 | connected\n" + json.dumps(payload),
                 encoding="utf-8",
             )
-            gateway = ReplayGateway(temp_dir)
+            gateway = ReplayGateway(temp_dir, allow_legacy=True)
 
             health = gateway.health()
             capabilities = gateway.capabilities()
 
-            self.assertEqual(health.status, EnvelopeStatus.OK)
-            self.assertTrue(health.data["ready"])
-            self.assertEqual(capabilities.status, EnvelopeStatus.OK)
+            self.assertEqual(health.status, EnvelopeStatus.PARTIAL)
+            self.assertFalse(health.data["ready"])
+            self.assertEqual(capabilities.status, EnvelopeStatus.PARTIAL)
             self.assertFalse(capabilities.data["execution"])
 
     def test_corrupt_fixture_returns_schema_error_instead_of_raising(self):

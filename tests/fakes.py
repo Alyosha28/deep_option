@@ -50,7 +50,12 @@ class FakeQuoteContext:
 
     def get_global_state(self):
         self.calls.append(("get_global_state", None))
-        return 0, {"server_ver": "10.9.6918", "timestamp": "2026-08-12T02:00:00+00:00"}
+        return 0, {
+            "server_ver": "10.9.6918",
+            "timestamp": "2026-08-12T02:00:00+00:00",
+            "qot_logined": 1,
+            "trd_logined": 1,
+        }
 
     def get_market_state(self, codes):
         self.calls.append(("get_market_state", list(codes)))
