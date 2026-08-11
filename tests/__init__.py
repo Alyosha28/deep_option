@@ -1,0 +1,1 @@
+"""GOAI gateway contract tests."""
