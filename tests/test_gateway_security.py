@@ -20,7 +20,7 @@ from src.gateway import (
     OptionLeg,
 )
 from src.replay_adapter import ReplayGateway
-from src.snapshot_recorder import SnapshotRecorder
+from src.snapshot_recorder import SnapshotRecorder, iter_envelopes
 from tests.fakes import FakeAccountContext, FakeFrame, FakeQuoteContext
 
 
@@ -56,6 +56,22 @@ def envelope(mode, operation, data, *, status=EnvelopeStatus.OK):
 
 
 class LiveSchemaAndLimitTests(unittest.TestCase):
+    def test_sdk_import_error_is_constant_and_redacted(self):
+        def missing_sdk():
+            raise ImportError("/home/alice/private/sdk.py bearer top-secret")
+
+        live = FutuLiveGateway(
+            quote_context_factory=missing_sdk,
+            opend_probe=lambda *_args: True,
+            clock=lambda: NOW,
+        )
+
+        result = live.health()
+
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.SDK_UNAVAILABLE)
+        self.assertNotIn("/home", result.typed_error.message)
+        self.assertNotIn("top-secret", result.typed_error.message)
+
     def test_health_requires_login_field_and_parses_unix_timestamp(self):
         source_time = datetime(2026, 8, 12, 2, 0, tzinfo=timezone.utc)
 
@@ -171,6 +187,72 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
         self.assertEqual(result.source_time_utc, "2026-08-12T01:00:00+00:00")
         self.assertEqual(result.freshness_status, FreshnessStatus.STALE)
 
+    def test_snapshot_requires_exact_code_and_timestamp_coverage(self):
+        missing_code = FakeQuoteContext(
+            snapshot_data=FakeFrame(
+                [
+                    {
+                        "code": "HK.00700",
+                        "update_time": "2026-08-12T02:00:00+00:00",
+                        "last_price": 500.0,
+                    }
+                ]
+            )
+        )
+        missing_time = FakeQuoteContext(
+            snapshot_data=FakeFrame(
+                [
+                    {"code": "HK.00700", "last_price": 500.0},
+                    {
+                        "code": "HK.09988",
+                        "update_time": "2026-08-12T02:00:00+00:00",
+                        "last_price": 100.0,
+                    },
+                ]
+            )
+        )
+
+        incomplete = gateway(missing_code).get_market_snapshot(["HK.00700", "HK.09988"])
+        unknown_time = gateway(missing_time).get_market_snapshot(["HK.00700", "HK.09988"])
+
+        self.assertEqual(incomplete.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+        self.assertEqual(unknown_time.status, EnvelopeStatus.PARTIAL)
+        self.assertEqual(unknown_time.freshness_status, FreshnessStatus.UNKNOWN)
+
+    def test_live_payloads_reject_wrong_financial_types_and_contract_identity(self):
+        class BadPayload(FakeQuoteContext):
+            def get_option_chain(self, _code, **_kwargs):
+                return 0, FakeFrame(
+                    [
+                        {
+                            "code": "HK.BAD",
+                            "stock_owner": "HK.09988",
+                            "strike_time": "2026-09-30",
+                            "option_type": "CALL",
+                            "strike_price": "NaN",
+                        }
+                    ]
+                )
+
+        bad_snapshot = FakeQuoteContext(
+            snapshot_data=FakeFrame(
+                [
+                    {
+                        "code": "HK.00700",
+                        "update_time": "2026-08-12T02:00:00+00:00",
+                        "last_price": "not-a-price",
+                    }
+                ]
+            )
+        )
+        request = OptionChainRequest("HK.00700", "2026-08-28", "2026-08-28", "CALL")
+
+        snapshot = gateway(bad_snapshot).get_market_snapshot(["HK.00700"])
+        chain = gateway(BadPayload()).get_option_chain(request)
+
+        self.assertEqual(snapshot.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+        self.assertEqual(chain.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+
     def test_future_source_timestamp_is_not_marked_fresh(self):
         quote = FakeQuoteContext(
             snapshot_data=FakeFrame(
@@ -206,6 +288,54 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
         result = live.get_account_risk_summary("demo")
 
         self.assertEqual(result.typed_error.code, GatewayErrorCode.NOT_FOUND)
+
+    def test_account_risk_requires_one_complete_finite_summary(self):
+        cases = (
+            [{"total_assets": "unknown", "available_funds": 10.0}],
+            [{"total_assets": 100.0}],
+            [
+                {"total_assets": 100.0, "available_funds": 90.0},
+                {"total_assets": 200.0, "available_funds": 180.0},
+            ],
+        )
+        for records in cases:
+            with self.subTest(records=records):
+                class AccountWithRecords(FakeAccountContext):
+                    def accinfo_query(self, **kwargs):
+                        self.calls.append(("accinfo_query", dict(kwargs)))
+                        return 0, FakeFrame(records)
+
+                account = AccountWithRecords()
+                live = gateway(
+                    FakeQuoteContext(),
+                    account_context_factory=lambda _binding, account=account: account,
+                    account_bindings={"demo": AccountBinding("demo", 123456)},
+                )
+
+                result = live.get_account_risk_summary("demo")
+
+                self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+
+    def test_close_is_terminal_and_does_not_reconnect(self):
+        contexts = []
+
+        def factory():
+            context = FakeQuoteContext()
+            contexts.append(context)
+            return context
+
+        live = FutuLiveGateway(
+            quote_context_factory=factory,
+            opend_probe=lambda *_args: True,
+            clock=lambda: NOW,
+        )
+        self.assertEqual(live.health().status, EnvelopeStatus.OK)
+        live.close()
+
+        after_close = live.health()
+
+        self.assertEqual(len(contexts), 1)
+        self.assertEqual(after_close.typed_error.code, GatewayErrorCode.OPEND_UNAVAILABLE)
 
     def test_account_entitlement_is_labeled_as_account_read(self):
         class Denied(FakeAccountContext):
@@ -244,6 +374,32 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
 
 
 class OrchestrationIsolationTests(unittest.TestCase):
+    def test_wrong_operation_or_parameters_are_rejected_before_later_calls(self):
+        class WrongResponse:
+            mode = DataMode.REPLAY
+
+            def __init__(self):
+                self.calls = []
+
+            def health(self):
+                self.calls.append("health")
+                return envelope(DataMode.REPLAY, "health", {"ready": True})
+
+            def capabilities(self):
+                self.calls.append("capabilities")
+                return envelope(DataMode.REPLAY, "get_market_state", {})
+
+            def get_market_state(self, _codes):
+                self.calls.append("market_state")
+                return envelope(DataMode.REPLAY, "get_market_state", [])
+
+        wrong = WrongResponse()
+        result = DecisionInputService(wrong).refresh_decision_inputs(
+            {"underlying": "HK.00700", "expiry": "2026-08-28"}
+        )
+
+        self.assertEqual(wrong.calls, ["health", "capabilities"])
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
     def test_component_error_or_bad_integrity_stops_later_calls(self):
         class Broken:
             mode = DataMode.REPLAY
@@ -416,6 +572,17 @@ class OrchestrationIsolationTests(unittest.TestCase):
 
 
 class ReplayInputTests(unittest.TestCase):
+    def test_deeply_nested_snapshot_is_reported_as_schema_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "nested.jsonl"
+            path.write_text(
+                '{"data":' + "[" * 2000 + "0" + "]" * 2000 + "}",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "Invalid DataEnvelope"):
+                next(iter_envelopes(path))
+
     def test_wrong_shaped_replay_inputs_are_typed(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             replay = ReplayGateway(temp_dir)
