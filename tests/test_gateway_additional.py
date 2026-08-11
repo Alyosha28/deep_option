@@ -206,7 +206,19 @@ class LiveGatewayAdditionalTests(unittest.TestCase):
         self.assertEqual(result.data["currency"], "USD")
 
     def test_snapshot_batches_and_context_close_are_deterministic(self):
-        quote = FakeQuoteContext()
+        class BatchQuote(FakeQuoteContext):
+            def get_market_snapshot(self, codes):
+                self.calls.append(("get_market_snapshot", list(codes)))
+                return 0, [
+                    {
+                        "code": code,
+                        "update_time": "2026-08-12T02:00:00+00:00",
+                        "last_price": 500.0,
+                    }
+                    for code in codes
+                ]
+
+        quote = BatchQuote()
         gateway = live_gateway(quote)
         codes = [f"HK.{index:05d}" for index in range(401)]
 
@@ -238,7 +250,10 @@ class LiveGatewayAdditionalTests(unittest.TestCase):
 class ReplayGatewayAdditionalTests(unittest.TestCase):
     def test_exact_read_surface_replays_recorded_envelopes(self):
         requests = [
-            ({"operation": "get_market_state", "codes": ["HK.00700"]}, [{"code": "HK.00700"}]),
+            (
+                {"operation": "get_market_state", "codes": ["HK.00700"]},
+                [{"code": "HK.00700", "market_state": "MORNING"}],
+            ),
             (
                 {
                     "operation": "get_trading_days",
@@ -272,7 +287,13 @@ class ReplayGatewayAdditionalTests(unittest.TestCase):
                     "account_ref": "demo",
                     "codes": ["HK.00700"],
                 },
-                {"account_ref": "demo", "positions": []},
+                {
+                    "account_ref": "demo",
+                    "currency": "HKD",
+                    "total_assets": 100_000.0,
+                    "available_funds": 75_000.0,
+                    "positions": [],
+                },
             ),
         ]
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -307,7 +328,13 @@ class ReplayGatewayAdditionalTests(unittest.TestCase):
     def test_replay_code_inputs_match_live_normalization(self):
         request = {"operation": "get_market_snapshot", "codes": ["HK.00700"]}
         with tempfile.TemporaryDirectory() as temp_dir:
-            SnapshotRecorder(temp_dir).record(replay_envelope(request, []), "codes")
+            SnapshotRecorder(temp_dir).record(
+                replay_envelope(
+                    request,
+                    [{"code": "HK.00700", "last_price": 500.0}],
+                ),
+                "codes",
+            )
             gateway = ReplayGateway(temp_dir)
 
             single = gateway.get_market_snapshot(" hk.00700 ")
@@ -337,8 +364,20 @@ class ReplayGatewayAdditionalTests(unittest.TestCase):
             "option_cond_type": "ALL",
         }
         rows = [
-            {"code": "HK.CALL", "expiry": "2026-08-28", "strike": 500.0, "option_type": "CALL"},
-            {"code": "HK.PUT", "expiry": "2026-08-28", "strike": 500.0, "option_type": "PUT"},
+            {
+                "code": "HK.CALL",
+                "underlying": "HK.00700",
+                "expiry": "2026-08-28",
+                "strike": 500.0,
+                "option_type": "CALL",
+            },
+            {
+                "code": "HK.PUT",
+                "underlying": "HK.00700",
+                "expiry": "2026-08-28",
+                "strike": 500.0,
+                "option_type": "PUT",
+            },
         ]
         with tempfile.TemporaryDirectory() as temp_dir:
             SnapshotRecorder(temp_dir).record(replay_envelope(chain_request, rows), "chain")
@@ -361,8 +400,20 @@ class ReplayGatewayAdditionalTests(unittest.TestCase):
             "option_cond_type": "ALL",
         }
         duplicates = [
-            {"code": "HK.A", "expiry": "2026-08-28", "strike": 500.0, "option_type": "CALL"},
-            {"code": "HK.B", "expiry": "2026-08-28", "strike": 500.0, "option_type": "CALL"},
+            {
+                "code": "HK.A",
+                "underlying": "HK.00700",
+                "expiry": "2026-08-28",
+                "strike": 500.0,
+                "option_type": "CALL",
+            },
+            {
+                "code": "HK.B",
+                "underlying": "HK.00700",
+                "expiry": "2026-08-28",
+                "strike": 500.0,
+                "option_type": "CALL",
+            },
         ]
         with tempfile.TemporaryDirectory() as temp_dir:
             SnapshotRecorder(temp_dir).record(
@@ -429,23 +480,56 @@ class DecisionAndRecorderAdditionalTests(unittest.TestCase):
 
     def test_decision_service_reports_unconfigured_account_capability(self):
         class Gateway:
+            mode = DataMode.REPLAY
+
             def health(self):
-                return replay_envelope({"operation": "health"}, {"ready": True})
+                return replay_envelope(
+                    {"operation": "health"}, {"ready": True, "server_version": None}
+                )
 
             def capabilities(self):
-                return replay_envelope({"operation": "capabilities"}, {})
+                return replay_envelope(
+                    {"operation": "capabilities"},
+                    {
+                        "market_data": True,
+                        "account_read": False,
+                        "strategy_combination_quote": True,
+                        "execution": False,
+                        "real_trading": False,
+                    },
+                )
 
-            def get_market_state(self, _codes):
-                return replay_envelope({"operation": "get_market_state"}, [])
+            def get_market_state(self, codes):
+                return replay_envelope(
+                    {"operation": "get_market_state", "codes": codes},
+                    [{"code": codes[0], "market_state": "MORNING"}],
+                )
 
-            def get_market_snapshot(self, _codes):
-                return replay_envelope({"operation": "get_market_snapshot"}, [])
+            def get_market_snapshot(self, codes):
+                return replay_envelope(
+                    {"operation": "get_market_snapshot", "codes": codes},
+                    [{"code": codes[0], "last_price": 500.0}],
+                )
 
-            def get_expiration_dates(self, _underlying):
-                return replay_envelope({"operation": "get_expiration_dates"}, [])
+            def get_expiration_dates(self, underlying):
+                return replay_envelope(
+                    {"operation": "get_expiration_dates", "underlying": underlying},
+                    [{"expiry": "2026-08-28"}],
+                )
 
-            def get_option_chain(self, _request):
-                return replay_envelope({"operation": "get_option_chain"}, [])
+            def get_option_chain(self, request):
+                return replay_envelope(
+                    {"operation": "get_option_chain", **request.to_dict()},
+                    [
+                        {
+                            "code": "HK.CALL",
+                            "underlying": request.underlying,
+                            "expiry": request.start,
+                            "option_type": "CALL",
+                            "strike": 500.0,
+                        }
+                    ],
+                )
 
         result = DecisionInputService(Gateway(), account_gateway=object()).refresh_decision_inputs(
             {"underlying": "HK.00700", "expiry": "2026-08-28", "account_ref": "demo"}
@@ -456,26 +540,63 @@ class DecisionAndRecorderAdditionalTests(unittest.TestCase):
 
     def test_live_decision_service_preserves_unconfigured_account_error(self):
         class LiveGateway:
-            def _item(self, operation, data):
-                return replay_envelope({"operation": operation}, data, mode=DataMode.LIVE)
+            mode = DataMode.LIVE
 
             def health(self):
-                return self._item("health", {"ready": True})
+                return replay_envelope(
+                    {"operation": "health"},
+                    {"ready": True, "server_version": None, "account_logged_in": 1},
+                    mode=DataMode.LIVE,
+                )
 
             def capabilities(self):
-                return self._item("capabilities", {})
+                return replay_envelope(
+                    {"operation": "capabilities"},
+                    {
+                        "market_data": True,
+                        "account_read": False,
+                        "strategy_combination_quote": True,
+                        "execution": False,
+                        "real_trading": False,
+                    },
+                    mode=DataMode.LIVE,
+                )
 
-            def get_market_state(self, _codes):
-                return self._item("get_market_state", [])
+            def get_market_state(self, codes):
+                return replay_envelope(
+                    {"operation": "get_market_state", "codes": codes},
+                    [{"code": codes[0], "market_state": "MORNING"}],
+                    mode=DataMode.LIVE,
+                )
 
-            def get_market_snapshot(self, _codes):
-                return self._item("get_market_snapshot", [])
+            def get_market_snapshot(self, codes):
+                return replay_envelope(
+                    {"operation": "get_market_snapshot", "codes": codes},
+                    [{"code": codes[0], "last_price": 500.0}],
+                    mode=DataMode.LIVE,
+                )
 
-            def get_expiration_dates(self, _underlying):
-                return self._item("get_expiration_dates", [])
+            def get_expiration_dates(self, underlying):
+                return replay_envelope(
+                    {"operation": "get_expiration_dates", "underlying": underlying},
+                    [{"expiry": "2026-08-28"}],
+                    mode=DataMode.LIVE,
+                )
 
-            def get_option_chain(self, _request):
-                return self._item("get_option_chain", [])
+            def get_option_chain(self, request):
+                return replay_envelope(
+                    {"operation": "get_option_chain", **request.to_dict()},
+                    [
+                        {
+                            "code": "HK.CALL",
+                            "underlying": request.underlying,
+                            "expiry": request.start,
+                            "option_type": "CALL",
+                            "strike": 500.0,
+                        }
+                    ],
+                    mode=DataMode.LIVE,
+                )
 
         result = DecisionInputService(
             LiveGateway(), account_gateway=object()

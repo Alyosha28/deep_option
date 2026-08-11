@@ -103,33 +103,24 @@ class LiveNormalizationTests(unittest.TestCase):
         self.assertEqual(result.status, EnvelopeStatus.OK)
         self.assertEqual(result.source_time_utc, "2026-08-12T20:00:00+00:00")
 
-    def test_option_quotes_are_plural_and_attach_leg_codes(self):
+    def test_option_quotes_preserve_and_verify_provider_leg_identity(self):
         class QuoteContext(FakeQuoteContext):
             def get_option_quote(self, legs):
                 self.calls.append(("get_option_quote", list(legs)))
+                option_type = "PUT" if "PUT" in legs[0].code else "CALL"
                 return 0, FakeFrame(
                     [
                         {
-                            "price": 12.0,
-                            "mid_price": 11.9,
+                            "price": 10.0 if option_type == "PUT" else 12.0,
+                            "mid_price": 9.9 if option_type == "PUT" else 11.9,
                             "implied_volatility": 31.2,
                             "open_interest": 1234,
                             "expire_time": "2026-08-28",
                             "strike_price": 500.0,
                             "contract_size": 100,
                             "exercise_type": "AMERICAN",
-                            "delta": 0.5,
-                        },
-                        {
-                            "price": 10.0,
-                            "mid_price": 9.9,
-                            "implied_volatility": 32.0,
-                            "open_interest": 987,
-                            "expire_time": "2026-08-28",
-                            "strike_price": 500.0,
-                            "contract_size": 100,
-                            "exercise_type": "AMERICAN",
-                            "delta": -0.5,
+                            "option_type": option_type,
+                            "delta": -0.5 if option_type == "PUT" else 0.5,
                         },
                     ]
                 )
@@ -143,6 +134,31 @@ class LiveNormalizationTests(unittest.TestCase):
         self.assertEqual(result.data[0]["contract_size"], 100)
         self.assertEqual(result.data[0]["implied_volatility"], 31.2)
         self.assertNotIn("delta", result.data[0])
+
+        class ReorderedQuote(FakeQuoteContext):
+            def get_option_quote(self, legs):
+                wrong_type = "PUT" if "CALL" in legs[0].code else "CALL"
+                return 0, FakeFrame(
+                    [
+                        {
+                            "price": 10.0,
+                            "option_type": wrong_type,
+                            "expire_time": "2026-08-28",
+                            "strike_price": 500.0,
+                            "contract_size": 100.0,
+                        },
+                    ]
+                )
+
+        class MissingContractFacts(FakeQuoteContext):
+            def get_option_quote(self, _legs):
+                return 0, FakeFrame([{"price": 12.0}])
+
+        reordered = live_gateway(ReorderedQuote()).get_option_quotes(legs)
+        missing = live_gateway(MissingContractFacts()).get_option_quotes(legs)
+
+        self.assertEqual(reordered.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+        self.assertEqual(missing.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
 
     def test_empty_critical_chain_is_not_reported_as_ok(self):
         class EmptyChain(FakeQuoteContext):
@@ -221,6 +237,7 @@ class SdkBoundaryTests(unittest.TestCase):
         captured: dict[str, object] = {}
         buy_action = object()
         simulate_env = object()
+        hkd_currency = object()
         none_market = object()
 
         class OptionStrategyLeg:
@@ -245,6 +262,7 @@ class SdkBoundaryTests(unittest.TestCase):
         fake_futu.OptionStrategyLeg = OptionStrategyLeg
         fake_futu.OptionStrategyAction = types.SimpleNamespace(BUY=buy_action, SELL=object())
         fake_futu.TrdEnv = types.SimpleNamespace(SIMULATE=simulate_env)
+        fake_futu.Currency = types.SimpleNamespace(HKD=hkd_currency)
         fake_futu.TrdMarket = types.SimpleNamespace(NONE=none_market, HK=object())
         fake_futu.SecurityFirm = types.SimpleNamespace(FUTUSECURITIES=object())
 
@@ -252,17 +270,68 @@ class SdkBoundaryTests(unittest.TestCase):
         with patch.dict(sys.modules, {"futu": fake_futu}):
             gateway = FutuLiveGateway(
                 account_bindings={"demo": binding},
+                account_context_factory=lambda _binding: account_context,
                 opend_probe=lambda *_args: True,
                 clock=lambda: FIXED_NOW,
             )
             gateway.get_strategy_quote([OptionLeg("HK.CALL", "BUY", 1)])
-            gateway.get_account_risk_summary("demo")
+            account_result = gateway.get_account_risk_summary("demo")
 
-        self.assertIs(captured["account_kwargs"]["filter_trdmarket"], none_market)
+        self.assertTrue(captured["quote_kwargs"]["is_async_connect"])
+        self.assertEqual(account_result.status, EnvelopeStatus.OK)
         strategy_call = next(args for name, args in quote_context.calls if name == "get_option_strategy_analysis")
         self.assertIs(strategy_call[0].action, buy_action)
-        for _, kwargs in account_context.calls:
+        for name, kwargs in account_context.calls:
+            if name == "set_sync_query_connect_timeout":
+                continue
+            self.assertEqual(kwargs["trd_env"], "SIMULATE")
+            self.assertEqual(kwargs["currency"], "HKD")
+
+    def test_account_worker_uses_none_market_and_sdk_enums(self):
+        from src.futu_account_worker import query_account
+
+        captured: dict[str, object] = {}
+        simulate_env = object()
+        hkd_currency = object()
+        none_market = object()
+        security_firm = object()
+        account_context = FakeAccountContext()
+
+        def make_account(**kwargs):
+            captured["account_kwargs"] = kwargs
+            return account_context
+
+        fake_futu = types.ModuleType("futu")
+        fake_futu.OpenSecTradeContext = make_account
+        fake_futu.TrdEnv = types.SimpleNamespace(SIMULATE=simulate_env)
+        fake_futu.Currency = types.SimpleNamespace(HKD=hkd_currency)
+        fake_futu.TrdMarket = types.SimpleNamespace(NONE=none_market)
+        fake_futu.SecurityFirm = types.SimpleNamespace(FUTUSECURITIES=security_firm)
+        with patch.dict(sys.modules, {"futu": fake_futu}):
+            result = query_account(
+                {
+                    "host": "127.0.0.1",
+                    "port": 11111,
+                    "acc_id": 123456,
+                    "trd_env": "SIMULATE",
+                    "currency": "HKD",
+                    "security_firm": "FUTUSECURITIES",
+                }
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertIs(captured["account_kwargs"]["filter_trdmarket"], none_market)
+        timeout_call = next(
+            kwargs
+            for name, kwargs in account_context.calls
+            if name == "set_sync_query_connect_timeout"
+        )
+        self.assertEqual(timeout_call["timeout"], 5.0)
+        for name, kwargs in account_context.calls:
+            if name == "set_sync_query_connect_timeout":
+                continue
             self.assertIs(kwargs["trd_env"], simulate_env)
+            self.assertIs(kwargs["currency"], hkd_currency)
 
 
 class ReplayHardeningTests(unittest.TestCase):

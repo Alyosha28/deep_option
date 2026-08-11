@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from src.decision_inputs import DecisionInputService
 from src.futu_adapter import FutuLiveGateway
@@ -38,6 +40,45 @@ def gateway(quote, **kwargs):
 
 
 def envelope(mode, operation, data, *, status=EnvelopeStatus.OK):
+    requests = {
+        "get_market_state": {"operation": operation, "codes": ["HK.00700"]},
+        "get_market_snapshot": {"operation": operation, "codes": ["HK.00700"]},
+        "get_expiration_dates": {"operation": operation, "underlying": "HK.00700"},
+        "get_option_chain": {
+            "operation": operation,
+            "underlying": "HK.00700",
+            "start": "2026-08-28",
+            "end": "2026-08-28",
+            "option_type": "ALL",
+            "option_cond_type": "ALL",
+        },
+    }
+    if operation == "health" and isinstance(data, dict):
+        data = {"server_version": None, **data}
+    elif operation == "capabilities" and data == {}:
+        data = {
+            "market_data": True,
+            "account_read": False,
+            "strategy_combination_quote": True,
+            "execution": False,
+            "real_trading": False,
+        }
+    elif operation == "get_market_state" and data == []:
+        data = [{"code": "HK.00700", "market_state": "MORNING"}]
+    elif operation == "get_market_snapshot" and data == []:
+        data = [{"code": "HK.00700", "last_price": 500.0}]
+    elif operation == "get_expiration_dates" and data == []:
+        data = [{"expiry": "2026-08-28"}]
+    elif operation == "get_option_chain" and data == []:
+        data = [
+            {
+                "code": "HK.CALL",
+                "underlying": "HK.00700",
+                "expiry": "2026-08-28",
+                "option_type": "CALL",
+                "strike": 500.0,
+            }
+        ]
     return DataEnvelope(
         mode=mode,
         origin_source="FUTU",
@@ -46,7 +87,7 @@ def envelope(mode, operation, data, *, status=EnvelopeStatus.OK):
         freshness_status=(
             FreshnessStatus.FROZEN if mode is DataMode.REPLAY else FreshnessStatus.FRESH
         ),
-        request={"operation": operation},
+        request=requests.get(operation, {"operation": operation}),
         status=status,
         data=data,
         entitlements={},
@@ -56,6 +97,73 @@ def envelope(mode, operation, data, *, status=EnvelopeStatus.OK):
 
 
 class LiveSchemaAndLimitTests(unittest.TestCase):
+    def test_default_account_worker_has_a_hard_parent_deadline(self):
+        live = gateway(
+            FakeQuoteContext(),
+            account_bindings={"demo": AccountBinding("demo", 123456)},
+        )
+        with patch(
+            "src.futu_adapter.subprocess.run",
+            side_effect=subprocess.TimeoutExpired("worker", 20.0),
+        ):
+            result = live.get_account_risk_summary("demo")
+
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.ACCOUNT_UNAVAILABLE)
+        self.assertTrue(result.typed_error.retryable)
+
+    def test_closed_gateway_never_launches_default_account_worker(self):
+        live = gateway(
+            FakeQuoteContext(),
+            account_bindings={"demo": AccountBinding("demo", 123456)},
+        )
+        live.close()
+
+        with patch("src.futu_adapter.subprocess.run") as launch:
+            result = live.get_account_risk_summary("demo")
+
+        launch.assert_not_called()
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.OPEND_UNAVAILABLE)
+
+    def test_default_account_worker_success_is_schema_checked_and_redacted(self):
+        live = gateway(
+            FakeQuoteContext(),
+            account_bindings={"demo": AccountBinding("demo", 123456)},
+        )
+        worker_payload = {
+            "ok": True,
+            "info": [
+                {
+                    "total_assets": 100_000.0,
+                    "available_funds": 75_000.0,
+                    "currency": "HKD",
+                }
+            ],
+            "positions": [
+                {
+                    "code": "HK.00700",
+                    "quantity": 100.0,
+                    "market_value": 50_000.0,
+                    "currency": "HKD",
+                }
+            ],
+        }
+        completed = subprocess.CompletedProcess(
+            args=["worker"],
+            returncode=0,
+            stdout=json.dumps(worker_payload),
+            stderr="",
+        )
+        with patch("src.futu_adapter.subprocess.run", return_value=completed) as launch:
+            result = live.get_account_risk_summary("demo", ["HK.00700"])
+
+        self.assertEqual(result.status, EnvelopeStatus.OK)
+        self.assertEqual(result.data["positions"][0]["code"], "HK.00700")
+        self.assertNotIn("123456", result.to_json_line())
+        command = launch.call_args.args[0]
+        self.assertNotIn("123456", " ".join(command))
+
     def test_sdk_import_error_is_constant_and_redacted(self):
         def missing_sdk():
             raise ImportError("/home/alice/private/sdk.py bearer top-secret")
@@ -141,8 +249,31 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
         self.assertEqual(strategy.typed_error.code, GatewayErrorCode.NOT_FOUND)
         self.assertEqual(chain.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
 
+    def test_crossed_strategy_market_fails_closed(self):
+        class Crossed(FakeQuoteContext):
+            def get_option_strategy_analysis(self, _legs):
+                return 0, FakeFrame([{"bid1": 21.0, "ask1": 20.0}])
+
+        result = gateway(Crossed()).get_strategy_quote(
+            [OptionLeg("HK.CALL", "BUY", 1)]
+        )
+
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+
     def test_option_quote_cardinality_must_match_requested_legs(self):
-        live = gateway(FakeQuoteContext())
+        class DuplicateRows(FakeQuoteContext):
+            def get_option_quote(self, _legs):
+                row = {
+                    "price": 12.0,
+                    "option_type": "CALL",
+                    "expire_time": "2026-08-28",
+                    "strike_price": 500.0,
+                    "contract_size": 100.0,
+                }
+                return 0, FakeFrame([row, dict(row)])
+
+        live = gateway(DuplicateRows())
 
         result = live.get_option_quotes(
             [OptionLeg("HK.CALL", "BUY", 1), OptionLeg("HK.PUT", "BUY", 1)]
@@ -186,6 +317,29 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
 
         self.assertEqual(result.source_time_utc, "2026-08-12T01:00:00+00:00")
         self.assertEqual(result.freshness_status, FreshnessStatus.STALE)
+
+    def test_any_future_timestamp_makes_multisymbol_snapshot_unknown(self):
+        quote = FakeQuoteContext(
+            snapshot_data=FakeFrame(
+                [
+                    {
+                        "code": "HK.00700",
+                        "update_time": "2026-08-12T02:00:00+00:00",
+                        "last_price": 500.0,
+                    },
+                    {
+                        "code": "HK.09988",
+                        "update_time": "2026-08-12T03:00:00+00:00",
+                        "last_price": 100.0,
+                    },
+                ]
+            )
+        )
+
+        result = gateway(quote).get_market_snapshot(["HK.00700", "HK.09988"])
+
+        self.assertEqual(result.status, EnvelopeStatus.PARTIAL)
+        self.assertEqual(result.freshness_status, FreshnessStatus.UNKNOWN)
 
     def test_snapshot_requires_exact_code_and_timestamp_coverage(self):
         missing_code = FakeQuoteContext(
@@ -253,6 +407,25 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
         self.assertEqual(snapshot.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
         self.assertEqual(chain.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
 
+    def test_provider_rows_are_bounded_before_dataframe_materialization(self):
+        class OversizedFrame:
+            def __len__(self):
+                return 10_001
+
+            def to_dict(self, *_args, **_kwargs):
+                raise AssertionError("oversized frames must not be materialized")
+
+        class OversizedChain(FakeQuoteContext):
+            def get_option_chain(self, _code, **_kwargs):
+                return 0, OversizedFrame()
+
+        result = gateway(OversizedChain()).get_option_chain(
+            OptionChainRequest("HK.00700", "2026-08-28", "2026-08-28")
+        )
+
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+
     def test_future_source_timestamp_is_not_marked_fresh(self):
         quote = FakeQuoteContext(
             snapshot_data=FakeFrame(
@@ -316,6 +489,22 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
 
                 self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
 
+    def test_account_risk_rejects_malformed_positions_before_filtering(self):
+        class MalformedPosition(FakeAccountContext):
+            def position_list_query(self, **kwargs):
+                self.calls.append(("position_list_query", dict(kwargs)))
+                return 0, FakeFrame([{"quantity": "unknown"}])
+
+        live = gateway(
+            FakeQuoteContext(),
+            account_context_factory=lambda _binding: MalformedPosition(),
+            account_bindings={"demo": AccountBinding("demo", 123456)},
+        )
+
+        result = live.get_account_risk_summary("demo", codes=["HK.00700"])
+
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+
     def test_close_is_terminal_and_does_not_reconnect(self):
         contexts = []
 
@@ -336,6 +525,29 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
 
         self.assertEqual(len(contexts), 1)
         self.assertEqual(after_close.typed_error.code, GatewayErrorCode.OPEND_UNAVAILABLE)
+
+    def test_close_failure_is_reported_and_retried(self):
+        class FailOnceClose(FakeQuoteContext):
+            def __init__(self):
+                super().__init__()
+                self.close_calls = 0
+
+            def close(self):
+                self.close_calls += 1
+                if self.close_calls == 1:
+                    raise OSError("close failed")
+                self.closed = True
+
+        quote = FailOnceClose()
+        live = gateway(quote)
+        self.assertEqual(live.health().status, EnvelopeStatus.OK)
+
+        with self.assertRaisesRegex(RuntimeError, "failed to close"):
+            live.close()
+        live.close()
+
+        self.assertEqual(quote.close_calls, 2)
+        self.assertTrue(quote.closed)
 
     def test_account_entitlement_is_labeled_as_account_read(self):
         class Denied(FakeAccountContext):
@@ -374,6 +586,92 @@ class LiveSchemaAndLimitTests(unittest.TestCase):
 
 
 class OrchestrationIsolationTests(unittest.TestCase):
+    def test_unavailable_capability_stops_before_market_calls(self):
+        class NoMarketData:
+            mode = DataMode.REPLAY
+
+            def __init__(self):
+                self.calls = []
+
+            def health(self):
+                self.calls.append("health")
+                return envelope(DataMode.REPLAY, "health", {"ready": True})
+
+            def capabilities(self):
+                self.calls.append("capabilities")
+                return DataEnvelope(
+                    mode=DataMode.REPLAY,
+                    origin_source="FUTU",
+                    captured_at_utc=NOW,
+                    source_time_utc=None,
+                    freshness_status=FreshnessStatus.FROZEN,
+                    request={"operation": "capabilities"},
+                    status=EnvelopeStatus.OK,
+                    data={
+                        "market_data": False,
+                        "account_read": False,
+                        "strategy_combination_quote": False,
+                        "execution": False,
+                        "real_trading": False,
+                    },
+                    entitlements={},
+                    warnings=[],
+                    typed_error=None,
+                )
+
+            def get_market_state(self, _codes):
+                self.calls.append("market_state")
+                raise AssertionError
+
+        gateway_stub = NoMarketData()
+        result = DecisionInputService(gateway_stub).refresh_decision_inputs(
+            {"underlying": "HK.00700", "expiry": "2026-08-28"}
+        )
+
+        self.assertEqual(gateway_stub.calls, ["health", "capabilities"])
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.ENTITLEMENT_DENIED)
+
+    def test_explicit_empty_position_codes_are_invalid(self):
+        class NeverCalled:
+            mode = DataMode.REPLAY
+
+            def health(self):
+                raise AssertionError
+
+        service = DecisionInputService(NeverCalled())
+        for value in ([], False, 0, ""):
+            with self.subTest(value=value):
+                result = service.refresh_decision_inputs(
+                    {
+                        "underlying": "HK.00700",
+                        "expiry": "2026-08-28",
+                        "account_ref": "demo",
+                        "position_codes": value,
+                    }
+                )
+                self.assertEqual(result.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
+
+    def test_sensitive_invalid_scenario_values_return_constant_typed_errors(self):
+        class NeverCalled:
+            mode = DataMode.LIVE
+
+            def health(self):
+                raise AssertionError("invalid scenarios must fail before gateway access")
+
+        service = DecisionInputService(NeverCalled())
+        for unsafe_value in ("/root/private", "123456"):
+            with self.subTest(value=unsafe_value):
+                result = service.refresh_decision_inputs(
+                    {
+                        "underlying": "HK.00700",
+                        "expiry": "2026-08-28",
+                        "option_type": unsafe_value,
+                    }
+                )
+                encoded = result.to_json_line()
+                self.assertEqual(result.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
+                self.assertNotIn(unsafe_value, encoded)
+
     def test_live_account_scenario_stops_when_trade_session_is_logged_out(self):
         class LoggedOut:
             mode = DataMode.LIVE
@@ -424,6 +722,38 @@ class OrchestrationIsolationTests(unittest.TestCase):
 
         self.assertEqual(ledger.calls, 2)
         self.assertEqual(results[-1].typed_error.code, GatewayErrorCode.RATE_LIMITED)
+
+    def test_refresh_deadline_is_checked_after_the_final_component(self):
+        current = [100.0]
+
+        class SlowFinal:
+            mode = DataMode.REPLAY
+
+            def health(self):
+                return envelope(DataMode.REPLAY, "health", {"ready": True})
+
+            def capabilities(self):
+                return envelope(DataMode.REPLAY, "capabilities", {})
+
+            def get_market_state(self, _codes):
+                return envelope(DataMode.REPLAY, "get_market_state", [])
+
+            def get_market_snapshot(self, _codes):
+                return envelope(DataMode.REPLAY, "get_market_snapshot", [])
+
+            def get_expiration_dates(self, _underlying):
+                return envelope(DataMode.REPLAY, "get_expiration_dates", [])
+
+            def get_option_chain(self, _request):
+                current[0] += 31.0
+                return envelope(DataMode.REPLAY, "get_option_chain", [])
+
+        result = DecisionInputService(
+            SlowFinal(),
+            monotonic=lambda: current[0],
+        ).refresh_decision_inputs({"underlying": "HK.00700", "expiry": "2026-08-28"})
+
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.UPSTREAM_ERROR)
 
     def test_invalid_live_scenario_keeps_live_mode(self):
         class Live:
@@ -622,12 +952,18 @@ class OrchestrationIsolationTests(unittest.TestCase):
                 return envelope(DataMode.LIVE, "health", {"ready": True})
 
         ledger = Ledger()
-        result = DecisionInputService(ledger).refresh_decision_inputs(
-            {"underlying": "HK.00700", "expiry": "2026-08-28", "account_ref": 123456}
-        )
+        for raw_ref in (123456, 0, False, [], {}, ""):
+            with self.subTest(raw_ref=raw_ref):
+                result = DecisionInputService(ledger).refresh_decision_inputs(
+                    {
+                        "underlying": "HK.00700",
+                        "expiry": "2026-08-28",
+                        "account_ref": raw_ref,
+                    }
+                )
 
-        self.assertFalse(ledger.called)
-        self.assertEqual(result.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
+                self.assertFalse(ledger.called)
+                self.assertEqual(result.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
 
 
 class ReplayInputTests(unittest.TestCase):
@@ -739,7 +1075,7 @@ class ReplayInputTests(unittest.TestCase):
             recorder = SnapshotRecorder(temp_dir)
             oversized = DataEnvelope(
                 mode=DataMode.REPLAY,
-                origin_source="TEST",
+                origin_source="REPLAY",
                 captured_at_utc="2026-08-12T02:00:01+00:00",
                 source_time_utc=None,
                 freshness_status=FreshnessStatus.FROZEN,

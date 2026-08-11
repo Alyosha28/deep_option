@@ -133,6 +133,9 @@ class ReplayGatewayTests(unittest.TestCase):
         result = gateway.get_option_chain(
             OptionChainRequest("HK.00700", "2026-08-28", "2026-08-28", option_type="CALL")
         )
+        resolved = gateway.resolve_option_code(
+            "HK.00700", "2026-08-28", 500.0, "CALL"
+        )
 
         self.assertEqual(result.status, EnvelopeStatus.PARTIAL)
         self.assertEqual(result.mode, DataMode.REPLAY)
@@ -140,3 +143,6 @@ class ReplayGatewayTests(unittest.TestCase):
         self.assertEqual(result.freshness_status, FreshnessStatus.FROZEN)
         self.assertEqual([row["code"] for row in result.data], ["HK.CALL"])
         self.assertEqual(result.captured_at_utc, "2026-08-08T03:54:35.202000+00:00")
+        self.assertEqual(resolved.status, EnvelopeStatus.PARTIAL)
+        self.assertEqual(resolved.data["code"], "HK.CALL")
+        self.assertTrue(any("legacy" in warning.lower() for warning in resolved.warnings))

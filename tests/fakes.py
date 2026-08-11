@@ -22,6 +22,7 @@ class FakeFrame:
 class FakeQuoteContext:
     def __init__(self, *, snapshot_ret: int = 0, snapshot_data: Any = None):
         self.snapshot_ret = snapshot_ret
+        self._dynamic_snapshot = snapshot_data is None
         self.snapshot_data = snapshot_data or FakeFrame(
             [
                 {
@@ -48,6 +49,9 @@ class FakeQuoteContext:
         self.calls: list[tuple[str, Any]] = []
         self.closed = False
 
+    def set_sync_query_connect_timeout(self, timeout):
+        self.calls.append(("set_sync_query_connect_timeout", timeout))
+
     def get_global_state(self):
         self.calls.append(("get_global_state", None))
         return 0, {
@@ -67,6 +71,39 @@ class FakeQuoteContext:
 
     def get_market_snapshot(self, codes):
         self.calls.append(("get_market_snapshot", list(codes)))
+        if self._dynamic_snapshot:
+            rows = []
+            for code in codes:
+                row = {
+                    "code": code,
+                    "name": code,
+                    "update_time": "2026-08-12T02:00:00+00:00",
+                    "last_price": 500.0,
+                    "open_price": 498.0,
+                    "high_price": 505.0,
+                    "low_price": 495.0,
+                    "prev_close_price": 497.0,
+                    "volume": 1000,
+                    "turnover": 500000.0,
+                    "bid_price": 499.8,
+                    "ask_price": 500.2,
+                    "bid_vol": 10,
+                    "ask_vol": 12,
+                    "lot_size": 100,
+                }
+                upper_code = code.upper()
+                if "CALL" in upper_code or "PUT" in upper_code:
+                    row.update(
+                        {
+                            "last_price": 12.0,
+                            "option_type": "PUT" if "PUT" in upper_code else "CALL",
+                            "strike_time": "2026-08-28",
+                            "option_strike_price": 500.0,
+                            "option_contract_size": 100.0,
+                        }
+                    )
+                rows.append(row)
+            return self.snapshot_ret, FakeFrame(rows)
         return self.snapshot_ret, self.snapshot_data
 
     def get_option_expiration_date(self, code):
@@ -95,7 +132,19 @@ class FakeQuoteContext:
 
     def get_option_quote(self, legs):
         self.calls.append(("get_option_quote", list(legs)))
-        return 0, FakeFrame([{"code": legs[0].code, "price": 12.0, "option_delta": 0.5}])
+        return 0, FakeFrame(
+            [
+                {
+                    "price": 12.0,
+                    "option_type": "PUT" if "PUT" in leg.code.upper() else "CALL",
+                    "expire_time": "2026-08-28",
+                    "strike_price": 500.0,
+                    "contract_size": 100.0,
+                    "option_delta": 0.5,
+                }
+                for leg in legs
+            ]
+        )
 
     def get_option_strategy_analysis(self, legs):
         self.calls.append(("get_option_strategy_analysis", list(legs)))
@@ -111,6 +160,9 @@ class FakeAccountContext:
     def __init__(self):
         self.calls: list[tuple[str, dict[str, Any]]] = []
         self.closed = False
+
+    def set_sync_query_connect_timeout(self, timeout):
+        self.calls.append(("set_sync_query_connect_timeout", {"timeout": timeout}))
 
     def accinfo_query(self, **kwargs):
         self.calls.append(("accinfo_query", dict(kwargs)))

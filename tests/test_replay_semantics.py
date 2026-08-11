@@ -12,6 +12,7 @@ from src.gateway import (
     DataMode,
     EnvelopeStatus,
     FreshnessStatus,
+    GatewayError,
     GatewayErrorCode,
     OptionChainRequest,
     OptionLeg,
@@ -99,6 +100,16 @@ class ReplayPayloadSemanticsTests(unittest.TestCase):
 
         self.assert_schema_mismatch(result)
 
+        negative = self._replay(
+            request,
+            [
+                {"code": "HK.CALL", "price": -1.0},
+                {"code": "HK.PUT", "mid_price": -0.5},
+            ],
+            lambda gateway: gateway.get_option_quotes(legs),
+        )
+        self.assert_schema_mismatch(negative)
+
     def test_strategy_quote_requires_exactly_one_bid_ask_row(self):
         legs = [OptionLeg("HK.CALL", "BUY", 1)]
         request = {
@@ -113,6 +124,13 @@ class ReplayPayloadSemanticsTests(unittest.TestCase):
         )
 
         self.assert_schema_mismatch(result)
+
+        crossed = self._replay(
+            request,
+            [{"bid1": 21.0, "ask1": 20.0}],
+            lambda gateway: gateway.get_strategy_quote(legs),
+        )
+        self.assert_schema_mismatch(crossed)
 
     def test_account_risk_requires_a_core_funding_fact(self):
         request = {
@@ -148,6 +166,64 @@ class ReplayPayloadSemanticsTests(unittest.TestCase):
 
         self.assertEqual(result.status, EnvelopeStatus.OK)
         self.assertEqual(result.data["positions"], [])
+
+    def test_account_positions_require_identity_quantity_currency_and_filter_membership(self):
+        request = {
+            "operation": "get_account_risk_summary",
+            "account_ref": "demo",
+            "codes": ["HK.00700"],
+        }
+        malformed = {
+            "account_ref": "demo",
+            "currency": "HKD",
+            "total_assets": 100_000.0,
+            "available_funds": 75_000.0,
+            "positions": [{"code": "HK.09988", "quantity": "unknown"}],
+        }
+
+        result = self._replay(
+            request,
+            malformed,
+            lambda gateway: gateway.get_account_risk_summary("demo", ["HK.00700"]),
+        )
+
+        self.assert_schema_mismatch(result)
+
+    def test_option_chain_rejects_duplicate_contract_codes(self):
+        request = {
+            "operation": "get_option_chain",
+            "underlying": "HK.00700",
+            "start": "2026-08-28",
+            "end": "2026-08-28",
+            "option_type": "ALL",
+            "option_cond_type": "ALL",
+        }
+        row = {
+            "code": "HK.CALL",
+            "underlying": "HK.00700",
+            "expiry": "2026-08-28",
+            "option_type": "CALL",
+            "strike": 500.0,
+        }
+        selector = OptionChainRequest("HK.00700", "2026-08-28", "2026-08-28")
+
+        duplicate_code = self._replay(
+            request,
+            [row, dict(row)],
+            lambda gateway: gateway.get_option_chain(selector),
+        )
+        self.assert_schema_mismatch(duplicate_code)
+
+    def test_code_row_identity_rejects_unhashable_provider_values(self):
+        request = {"operation": "get_market_state", "codes": ["HK.00700"]}
+
+        result = self._replay(
+            request,
+            [{"code": [], "market_state": "MORNING"}],
+            lambda gateway: gateway.get_market_state(["HK.00700"]),
+        )
+
+        self.assert_schema_mismatch(result)
 
     def test_other_public_read_operations_reject_malformed_payloads(self):
         cases = [
@@ -196,6 +272,13 @@ class ReplayPayloadSemanticsTests(unittest.TestCase):
         for request, data, invoke in cases:
             with self.subTest(operation=request["operation"]):
                 self.assert_schema_mismatch(self._replay(request, data, invoke))
+
+        negative_snapshot = self._replay(
+            {"operation": "get_market_snapshot", "codes": ["HK.00700"]},
+            [{"code": "HK.00700", "last_price": -0.01}],
+            lambda gateway: gateway.get_market_snapshot(["HK.00700"]),
+        )
+        self.assert_schema_mismatch(negative_snapshot)
 
     def test_partial_and_stale_data_payloads_are_also_validated(self):
         request = {"operation": "get_market_snapshot", "codes": ["HK.00700"]}
@@ -247,7 +330,7 @@ class ReplayCaptureCoherenceTests(unittest.TestCase):
             incoherent = gateway.get_market_snapshot(["HK.00700"])
 
         self.assertEqual(first.status, EnvelopeStatus.OK)
-        self.assert_schema_mismatch(incoherent)
+        self.assert_error_code(incoherent, GatewayErrorCode.REPLAY_FIXTURE_MISSING)
 
     def test_lookup_prefers_fixture_within_the_configured_capture_window(self):
         market_request = {"operation": "get_market_state", "codes": ["HK.00700"]}
@@ -310,20 +393,154 @@ class ReplayCaptureCoherenceTests(unittest.TestCase):
                 reverse.get_market_state(["HK.00700"]),
             )
 
-        self.assert_schema_mismatch(forward_results[0])
+        self.assert_error_code(forward_results[0], GatewayErrorCode.STALE_DATA)
         self.assertEqual(forward_results[1].status, EnvelopeStatus.OK)
         self.assertEqual(reverse_results[0].status, EnvelopeStatus.OK)
-        self.assert_schema_mismatch(reverse_results[1])
+        self.assert_error_code(reverse_results[1], GatewayErrorCode.STALE_DATA)
+
+    def test_capabilities_ignore_error_and_out_of_window_records(self):
+        error = DataEnvelope(
+            mode=DataMode.LIVE,
+            origin_source="FUTU",
+            captured_at_utc="2026-08-12T02:00:00+00:00",
+            source_time_utc=None,
+            freshness_status=FreshnessStatus.UNKNOWN,
+            request={"operation": "get_account_risk_summary", "account_ref": "demo"},
+            status=EnvelopeStatus.ERROR,
+            data=None,
+            entitlements={},
+            warnings=[],
+            typed_error=GatewayError(
+                code=GatewayErrorCode.ACCOUNT_UNAVAILABLE,
+                message="Futu account query failed",
+                retryable=True,
+            ),
+        )
+        old_market = _envelope(
+            {"operation": "get_market_snapshot", "codes": ["HK.00700"]},
+            [{"code": "HK.00700", "last_price": 500.0}],
+            captured_at="2026-08-12T02:00:00+00:00",
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            self._write(temp_dir, error, old_market)
+            capabilities = ReplayGateway(
+                temp_dir,
+                as_of_utc="2026-08-12T02:05:00+00:00",
+            ).capabilities()
+
+        self.assertFalse(capabilities.data["market_data"])
+        self.assertFalse(capabilities.data["account_read"])
+        self.assertFalse(capabilities.data["strategy_combination_quote"])
+
+    def test_mixed_inventory_advertises_legacy_only_as_unverified(self):
+        account = _envelope(
+            {"operation": "get_account_risk_summary", "account_ref": "demo"},
+            {
+                "account_ref": "demo",
+                "currency": "HKD",
+                "total_assets": 100_000.0,
+                "available_funds": 75_000.0,
+                "positions": [],
+            },
+            captured_at="2026-08-12T02:00:00+00:00",
+        )
+        legacy = {
+            "code": "HK.00700",
+            "data": [
+                {
+                    "code": "HK.CALL",
+                    "stock_owner": "HK.00700",
+                    "option_type": "CALL",
+                    "strike_time": "2026-08-28",
+                    "strike_price": 500.0,
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            self._write(temp_dir, account)
+            Path(temp_dir, "legacy.json").write_text(
+                "2026-08-12 10:00:00,000 | " + json.dumps(legacy),
+                encoding="utf-8",
+            )
+            capabilities = ReplayGateway(
+                temp_dir,
+                allow_legacy=True,
+                as_of_utc="2026-08-12T02:00:00+00:00",
+            ).capabilities()
+
+        self.assertEqual(capabilities.status, EnvelopeStatus.PARTIAL)
+        self.assertTrue(capabilities.data["market_data"])
+        self.assertTrue(capabilities.data["account_read"])
+        self.assertTrue(any("legacy" in warning.lower() for warning in capabilities.warnings))
+
+    def test_unrelated_legacy_does_not_downgrade_canonical_health(self):
+        market = _envelope(
+            {"operation": "get_market_snapshot", "codes": ["HK.00700"]},
+            [{"code": "HK.00700", "last_price": 500.0}],
+            captured_at="2026-08-12T02:00:00+00:00",
+        )
+        legacy = {
+            "code": "HK.09988",
+            "data": [
+                {
+                    "code": "HK.OLD",
+                    "stock_owner": "HK.09988",
+                    "option_type": "CALL",
+                    "strike_time": "2026-08-28",
+                    "strike_price": 100.0,
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            self._write(temp_dir, market)
+            Path(temp_dir, "legacy.json").write_text(
+                "2026-08-12 10:00:00,000 | " + json.dumps(legacy),
+                encoding="utf-8",
+            )
+            gateway = ReplayGateway(
+                temp_dir,
+                allow_legacy=True,
+                as_of_utc="2026-08-12T02:00:00+00:00",
+            )
+            health = gateway.health()
+            capabilities = gateway.capabilities()
+
+        self.assertEqual(health.status, EnvelopeStatus.OK)
+        self.assertTrue(health.data["ready"])
+        self.assertEqual(capabilities.status, EnvelopeStatus.OK)
+        self.assertTrue(capabilities.data["market_data"])
 
     def assert_schema_mismatch(self, result: DataEnvelope) -> None:
+        self.assert_error_code(result, GatewayErrorCode.SCHEMA_MISMATCH)
+
+    def assert_error_code(
+        self, result: DataEnvelope, expected: GatewayErrorCode
+    ) -> None:
         self.assertEqual(result.status, EnvelopeStatus.ERROR)
         error = result.typed_error
         self.assertIsNotNone(error)
         assert error is not None
-        self.assertEqual(error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+        self.assertEqual(error.code, expected)
 
 
 class ReplayMalformedFixtureTests(unittest.TestCase):
+    def test_oversized_integer_is_a_typed_schema_error(self):
+        request = {"operation": "get_market_snapshot", "codes": ["HK.00700"]}
+        malformed = _envelope(
+            request,
+            [{"code": "HK.00700", "last_price": 10**400}],
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            Path(temp_dir, "huge-number.jsonl").write_text(
+                malformed.to_json_line() + "\n",
+                encoding="utf-8",
+            )
+
+            result = ReplayGateway(temp_dir).get_market_snapshot(["HK.00700"])
+
+        self.assertEqual(result.status, EnvelopeStatus.ERROR)
+        self.assertEqual(result.typed_error.code, GatewayErrorCode.SCHEMA_MISMATCH)
+
     def test_deeply_nested_canonical_jsonl_is_a_typed_schema_error(self):
         request = {"operation": "get_market_state", "codes": ["HK.00700"]}
         template = _envelope(request, "DEEP_PAYLOAD").to_json_line()
@@ -404,6 +621,12 @@ class ReplayMalformedFixtureTests(unittest.TestCase):
 
 
 class ReplayBoundaryLimitTests(unittest.TestCase):
+    def test_legacy_flag_requires_a_real_boolean(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            for value in ("false", 1, 0, None):
+                with self.subTest(value=value), self.assertRaises((TypeError, ValueError)):
+                    ReplayGateway(temp_dir, allow_legacy=value)  # type: ignore[arg-type]
+
     def test_resolver_rejects_nonfinite_strikes_and_normalizes_type_aliases(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             gateway = ReplayGateway(temp_dir)

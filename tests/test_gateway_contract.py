@@ -56,6 +56,12 @@ class DataEnvelopeTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             DataEnvelope.from_dict(tampered)
 
+    def test_integrity_check_fails_closed_on_nested_cycles(self):
+        envelope = self._envelope()
+        envelope.data[0]["cycle"] = envelope.data
+
+        self.assertFalse(envelope.verify_integrity())
+
     def test_error_envelope_carries_typed_error(self):
         error = GatewayError(
             code=GatewayErrorCode.OPEND_UNAVAILABLE,
@@ -77,6 +83,34 @@ class DataEnvelopeTests(unittest.TestCase):
         )
 
         self.assertEqual(envelope.to_dict()["typed_error"]["code"], "OPEND_UNAVAILABLE")
+
+    def test_sensitive_identifier_keys_are_rejected_from_all_envelope_channels(self):
+        with self.assertRaises(ValueError):
+            GatewayError(
+                code=GatewayErrorCode.UPSTREAM_ERROR,
+                message="failed",
+                retryable=False,
+                details={"acc_id": 123456},
+            )
+
+        with self.assertRaises(ValueError):
+            DataEnvelope(
+                mode=DataMode.LIVE,
+                origin_source="FUTU",
+                captured_at_utc="2026-08-12T02:00:01+00:00",
+                source_time_utc=None,
+                freshness_status=FreshnessStatus.UNKNOWN,
+                request={"operation": "health"},
+                status=EnvelopeStatus.ERROR,
+                data=None,
+                entitlements={"access_token": "secret"},
+                warnings=[],
+                typed_error=GatewayError(
+                    code=GatewayErrorCode.UPSTREAM_ERROR,
+                    message="failed",
+                    retryable=False,
+                ),
+            )
 
 
 class RequestTypeTests(unittest.TestCase):
@@ -104,4 +138,3 @@ class RequestTypeTests(unittest.TestCase):
             OptionLeg("HK.TCH260828C500000", "BUY", 0)
         with self.assertRaises(ValueError):
             AccountBinding("demo", 123, trd_env="REAL")
-
