@@ -1,0 +1,418 @@
+# GOAI 初赛评审 · 页 06/16 — 端到端决策管线
+# 数据来源: facts.md §1(哈希链)/§3(阶段)/§4(NO_TRADE 口径)/§6(引擎)/§7(审计)/§8(P0a)
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+elements:
+  # ============ 页头（动作标题 + 状态行 + hairline） ============
+  - elementId: head-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: head-eyebrow
+    elementType: text
+    bounds: [78, 26, 300, 14]
+    content:
+      fontSize: 9
+      bold: true
+      letterSpacing: 3
+      color: "$accent"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [left, top]
+      wrap: false
+      text: "06 · DECISION PIPELINE"
+  - elementId: head-title
+    elementType: text
+    bounds: [78, 44, 700, 26]
+    content:
+      style: "$title"
+      align: [left, top]
+      wrap: false
+      text: "七步管线全程留痕：Edge 未过即停，NO_TRADE 是结论"
+  - elementId: head-subtitle
+    elementType: text
+    bounds: [78, 72, 700, 14]
+    content:
+      style: "$subtitle"
+      align: [left, top]
+      wrap: false
+      text: |
+        <p>P0a Replay 端到端已跑通：NO_TRADE 决策卡与 <span style="font-family:Consolas;">7</span> 条审计记录随管线一次生成</p>
+  - elementId: head-status
+    elementType: text
+    bounds: [680, 22, 216, 12]
+    content:
+      fontSize: 8
+      letterSpacing: 2
+      color: "$textSub"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [right, middle]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审   06/16"
+  - elementId: head-hairline
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  # ============ 正文区上：管线轨道 + 连接箭头（静态框架） ============
+  - elementId: flow-track
+    elementType: line
+    bounds: [64, 156, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: chevron-1
+    elementType: shape
+    bounds: [216, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+  - elementId: chevron-2
+    elementType: shape
+    bounds: [386, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+  - elementId: chevron-3
+    elementType: shape
+    bounds: [556, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+  - elementId: chevron-4
+    elementType: shape
+    bounds: [726, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+
+  # ============ 阶段卡 1-5（1×1 table = 单一动画对象；边/编号即状态色） ============
+  - elementId: card-1
+    elementType: table
+    bounds: [64, 108, 152, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    fill: {type: solid, color: "$panel"}
+    rows:
+      - - align: [left, top]
+          border: {style: solid, width: 1, color: "$success"}
+          fill: {type: solid, color: "$panel"}
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          text: |
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$success;">01</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">场景解析</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">parse_scenario</span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$textSub;">未知字段不补造</span></p>
+  - elementId: card-2
+    elementType: table
+    bounds: [234, 108, 152, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    fill: {type: solid, color: "$panel"}
+    rows:
+      - - align: [left, top]
+          border: {style: solid, width: 1, color: "$success"}
+          fill: {type: solid, color: "$panel"}
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          text: |
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$success;">02</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">冻结快照</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">load_frozen_snapshot</span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$textSub;">FROZEN 数据加载</span></p>
+  - elementId: card-3
+    elementType: table
+    bounds: [404, 108, 152, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    fill: {type: solid, color: "$panel"}
+    rows:
+      - - align: [left, top]
+          border: {style: solid, width: 1, color: "$success"}
+          fill: {type: solid, color: "$panel"}
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          text: |
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$success;">03</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">定价·IV·Greeks·成本</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">compute_engine</span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$textSub;">BS · 二叉树 · IV 二分</span></p>
+  - elementId: card-4
+    elementType: table
+    bounds: [574, 108, 152, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    fill: {type: solid, color: "$panel"}
+    rows:
+      - - align: [left, top]
+          border: {style: solid, width: 1, color: "$danger"}
+          fill: {type: solid, color: "$panel"}
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          text: |
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$danger;">04</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">Edge 门 · Risk 门</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; color:$danger;">●</span><span style="font-size:10px; color:$text;"> Edge 门</span><span style="font-size:10px; color:$textSub;"> — </span><span style="font-size:10px; font-family:Consolas; color:$danger;"><strong>FAIL</strong></span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$success;">●</span><span style="font-size:10px; color:$text;"> Risk 门</span><span style="font-size:10px; color:$textSub;"> — </span><span style="font-size:10px; font-family:Consolas; color:$success;"><strong>PASS</strong></span></p>
+  - elementId: card-5
+    elementType: table
+    bounds: [744, 108, 152, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    fill: {type: solid, color: "$panel"}
+    rows:
+      - - align: [left, top]
+          border: {style: solid, width: 1, color: "$accent"}
+          fill: {type: solid, color: "$panel"}
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          text: |
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$accent;">05</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">决策卡</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">build_decision_card</span></p>
+            <p style="margin-left:12px; margin-top:4px; line-height:16px"><span style="font-size:10px; font-family:Consolas; background-color:#22D3EE33; color:$accent;"><strong>NO_TRADE</strong></span></p>
+
+  # ============ 决策卡 → 审计链 连接线 ============
+  - elementId: flow-link
+    elementType: line
+    bounds: [820, 204, 1, 28]
+    viewBox: [1, 28]
+    points: "0.5,0 0.5,28"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1, color: "$border"}
+
+  # ============ 正文区下：审计链横条（面板 + 7 事件/哈希表） ============
+  - elementId: audit-panel
+    elementType: shape
+    bounds: [64, 232, 832, 84]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: audit-table
+    elementType: table
+    bounds: [76, 240, 808, 68]
+    columnWidths: [0.143, 0.143, 0.143, 0.143, 0.143, 0.143, 0.142]
+    rowHeights: [0.32, 0.34, 0.34]
+    rows:
+      - - text: "审计链 · AUDIT TRAIL — JSONL + SHA-256 · 7 条记录，每条链上前一条"
+          colSpan: 7
+          fontSize: 9
+          bold: true
+          letterSpacing: 3
+          color: "$accent"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+      - - text: |
+            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> scenario_parsed</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+        - text: |
+            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> data_loaded</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+        - text: |
+            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> engine_computed</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+        - text: |
+            <p style="margin-left:4px"><span style="color:$danger;">●</span><span style="color:$text;"> edge_gate</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+        - text: |
+            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> risk_gate</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+        - text: |
+            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> action_gate</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+        - text: |
+            <p style="margin-left:4px"><span style="color:$accent;">●</span><span style="color:$text;"> decision_card</span></p>
+          fontSize: 10
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [left, middle]
+      - - text: "a3a5f68b…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+        - text: "afc8b13e…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+        - text: "11e7e30b…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+        - text: "9bd1fb80…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+        - text: "83f636a3…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+        - text: "1b30c27c…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+        - text: "11f311a3…"
+          fontSize: 10
+          color: "$textSub"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [center, middle]
+
+  # ============ 状态图例 ============
+  - elementId: legend-status
+    elementType: text
+    bounds: [64, 344, 832, 14]
+    content:
+      fontSize: 10
+      color: "$textSub"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      align: [left, top]
+      wrap: false
+      text: |
+        <p><span style="color:$success;">●</span> 已通过　　<span style="color:$danger;">●</span> 被阻断　　<span style="color:$accent;">●</span> 当前 / 终点</p>
+
+  # ============ 金句条 ============
+  - elementId: quote-bg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-tick
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-gt
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [center, middle]
+      wrap: false
+      text: ">"
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 780, 40]
+    content:
+      style: "$quote"
+      align: [left, middle]
+      wrap: false
+      text: "NO_TRADE 是成功结果——不会为了展示下单而调低门槛。"
+
+  # ============ 总结条 ============
+  - elementId: concl-bg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: concl-cap
+    elementType: text
+    bounds: [78, 436, 40, 48]
+    content:
+      fontSize: 9
+      bold: true
+      letterSpacing: 3
+      color: "$accent"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+  - elementId: concl-body
+    elementType: text
+    bounds: [130, 436, 754, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p>Edge 未过即停，记录不断：决策卡与 <span style="font-family:Consolas; color:$accent;"><strong>7</strong></span> 条审计记录全量落盘。</p>
+
+  # ============ 页脚 ============
+  - elementId: footer-hairline
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 518, 600, 14]
+    content:
+      style: "$footnote"
+      align: [left, top]
+      wrap: false
+      text: '来源: facts.md §1 · §3 · src/decision_pipeline.py · 决策卡 2026-08-12'
+  - elementId: footer-right
+    elementType: text
+    bounds: [852, 518, 44, 12]
+    content:
+      fontSize: 9
+      color: "$textSub"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [right, middle]
+      wrap: false
+      text: "06 / 16"
+
+animations:
+  # G1（auto，页进入即播）: 标题栏文字 + 轨道
+  - elementId: head-eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: head-title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: head-subtitle
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: flow-track
+    effect: fade-in
+    trigger: withPrevious
+  # G2（click）: 阶段 1 + 审计链横条
+  - elementId: card-1
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  - elementId: flow-link
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: audit-panel
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: audit-table
+    effect: fade-in
+    trigger: withPrevious
+  # G3（click）: 阶段 2→5 依次
+  - elementId: card-2
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  - elementId: card-3
+    effect: wipe-in
+    direction: right
+    trigger: afterPrevious
+  - elementId: card-4
+    effect: wipe-in
+    direction: right
+    trigger: afterPrevious
+  - elementId: card-5
+    effect: wipe-in
+    direction: right
+    trigger: afterPrevious

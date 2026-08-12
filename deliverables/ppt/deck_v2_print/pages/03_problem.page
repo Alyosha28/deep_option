@@ -1,0 +1,147 @@
+pageType: content
+notes: |
+  问题页：五个断裂点让个人投资者无法完成一次可信的期权研究。每个痛点都有可验证后果。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "03"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: PROBLEM · 02
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 五个断裂点，让个人投资者做不了一次可信的期权研究
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 对标现状：Futu 手工流程 · 通用 LLM · 固定脚本
+  - elementId: pain-table
+    elementType: table
+    bounds: [60, 120, 560, 264]
+    style: "$default"
+    columnWidths: [0.42, 0.58]
+    rowHeights: [0.09, 0.182, 0.182, 0.182, 0.182, 0.182]
+    rows:
+      - - text: 断裂点
+        - text: 后果
+      - - text: 行情、规则、账户分散在多页面
+        - text: 研究靠手工拼接，易漏规格与费用
+      - - text: 理论价被当成成交价
+        - text: 忽略 bid/ask、滑点与 tick，盈亏边界失真
+      - - text: 港美股规则差异大
+        - text: 美式/欧式、实物/现金交割混用模板
+      - - text: 通用 LLM 会编造数字
+        - text: 无法承担账户风控与交易权限判断
+      - - text: 结论没有审计
+        - text: 错后无法复盘，也无法向他人复核
+  - elementId: result-plate
+    elementType: shape
+    bounds: [640, 120, 260, 112]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: result-rail
+    elementType: shape
+    bounds: [640, 120, 4, 112]
+    shapeName: rect
+    fill: {type: solid, color: "$down"}
+  - elementId: result-label
+    elementType: text
+    bounds: [660, 132, 220, 16]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$down"
+      text: 结果
+  - elementId: result-text
+    elementType: text
+    bounds: [660, 154, 220, 60]
+    content:
+      style: "$small"
+      text: |
+        <p>要么不敢决策，</p>
+        <p>要么在错误口径上决策。</p>
+  - elementId: quote-plate
+    elementType: shape
+    bounds: [640, 244, 260, 140]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [640, 244, 4, 140]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [660, 256, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [660, 276, 220, 60]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: 不解决可信问题，再多工具也只是更快地犯错。
+  - elementId: gap-note
+    elementType: text
+    bounds: [660, 344, 220, 40]
+    content:
+      style: "$cap"
+      text: 研究缺口：一条让数字可信、结论可拒绝的完整期权研究闭环。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: 问题本质不是缺工具，而是缺一条「数字可信、结论可拒绝」的完整链路。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 来源：docs/PRD.md §1.2 当前痛点
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 03 / 16

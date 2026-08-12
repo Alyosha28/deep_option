@@ -1,0 +1,240 @@
+pageType: content
+notes: |
+  团队页 v4：三栏版式——A/B/C 大衬线字母 + 角色名 + 职责列表（竖向发丝线分隔），底部模块对应一行 + 一行结论；数字与来源沿用 v3。
+background:
+  type: solid
+  color: "$paper"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [48, 28, 500, 14]
+    content:
+      style: "$kicker"
+      text: TEAM · 13
+  - elementId: folio
+    elementType: text
+    bounds: [812, 28, 100, 14]
+    content:
+      style: "$folio"
+      align: [right, top]
+      text: 14 / 16
+  - elementId: title
+    elementType: text
+    bounds: [48, 48, 864, 38]
+    content:
+      style: "$display"
+      text: 三角色分工，覆盖产品、策略与安全三块硬能力
+  - elementId: standfirst
+    elementType: text
+    bounds: [48, 90, 864, 18]
+    content:
+      style: "$standfirst"
+      text: 3 人团队 · 每个角色与项目模块一一对应
+  - elementId: rule-thick
+    elementType: shape
+    bounds: [48, 118, 864, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: rule-thin
+    elementType: shape
+    bounds: [48, 124.5, 864, 0.75]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: t1-letter
+    elementType: text
+    bounds: [48, 142, 272, 44]
+    content:
+      fontFamily: Georgia
+      fontSize: 34
+      bold: true
+      color: "$primary"
+      text: A
+  - elementId: t1-role
+    elementType: text
+    bounds: [48, 192, 272, 20]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 14
+      bold: true
+      color: "$ink"
+      text: 多 Agent 工程与量化研究
+  - elementId: t1-body
+    elementType: text
+    bounds: [48, 218, 272, 90]
+    content:
+      style: "$cap"
+      text: |
+        <p>负责：数据层与 Gateway、Agent 架构、</p>
+        <p>回测与 Demo 工程、方案 PPT</p>
+        <p style="margin-top:6px">沉淀：futu-options-agent Skill、</p>
+        <p>自研定价引擎与回测流水线</p>
+  - elementId: tvr1
+    elementType: line
+    bounds: [332, 142, 1, 250]
+    viewBox: [1, 250]
+    points: "0,0 0,250"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: t2-letter
+    elementType: text
+    bounds: [344, 142, 272, 44]
+    content:
+      fontFamily: Georgia
+      fontSize: 34
+      bold: true
+      color: "$primary"
+      text: B
+  - elementId: t2-role
+    elementType: text
+    bounds: [344, 192, 272, 20]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 14
+      bold: true
+      color: "$ink"
+      text: 港美股期权策略
+  - elementId: t2-body
+    elementType: text
+    bounds: [344, 218, 272, 90]
+    content:
+      style: "$cap"
+      text: |
+        <p>负责：策略规则与场景、Greeks/IV</p>
+        <p>解读、风险检查单、市场知识</p>
+        <p style="margin-top:6px">沉淀：跨式 Hero 用例规则集、</p>
+        <p>港美股差异清单</p>
+  - elementId: tvr2
+    elementType: line
+    bounds: [628, 142, 1, 250]
+    viewBox: [1, 250]
+    points: "0,0 0,250"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: t3-letter
+    elementType: text
+    bounds: [640, 142, 272, 44]
+    content:
+      fontFamily: Georgia
+      fontSize: 34
+      bold: true
+      color: "$primary"
+      text: C
+  - elementId: t3-role
+    elementType: text
+    bounds: [640, 192, 272, 20]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 14
+      bold: true
+      color: "$ink"
+      text: 网络安全与合规
+  - elementId: t3-body
+    elementType: text
+    bounds: [640, 218, 272, 90]
+    content:
+      style: "$cap"
+      text: |
+        <p>负责：合规与审计层、数据授权、</p>
+        <p>安全设计（防注入、密钥、哈希链）</p>
+        <p style="margin-top:6px">沉淀：审计日志与脱敏规范、</p>
+        <p>SFC / HKEX 边界清单</p>
+  - elementId: map-rule
+    elementType: line
+    bounds: [48, 398, 864, 1]
+    viewBox: [864, 1]
+    points: "0,0 864,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: map-line
+    elementType: text
+    bounds: [48, 410, 864, 16]
+    content:
+      style: "$cap"
+      text: 模块对应：A → 数据层 / Agent / Demo　B → 策略引擎 / 场景规则　C → 合规审计 / 数据安全
+  - elementId: conclusion
+    elementType: text
+    bounds: [48, 470, 864, 18]
+    content:
+      style: "$small"
+      color: "$sub"
+      text: 小团队的分工正好覆盖比赛要求的三块硬能力：能跑通的任务闭环、说得清的策略依据、可复核的安全边界。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [48, 506, 864, 1]
+    viewBox: [864, 1]
+    points: "0,0 864,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [48, 512, 700, 14]
+    content:
+      style: "$source"
+      text: 来源：PROJECT_STATE.md §1 团队与分工
+  - elementId: footer-right
+    elementType: text
+    bounds: [612, 512, 300, 14]
+    content:
+      style: "$source"
+      align: [right, top]
+      text: GOAI 港美股期权智能终端
+animations:
+  - elementId: kicker
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+  - elementId: title
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 450
+    easing: ease-out
+    delayMs: 60
+  - elementId: standfirst
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: rule-thick
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+  - elementId: rule-thin
+    effect: wipe-in
+    trigger: withPrevious
+    direction: right
+    durationMs: 350
+  - elementId: t1-letter
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 350
+    delayMs: 60
+  - elementId: t1-role
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: t1-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: t2-letter
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 350
+    delayMs: 60
+  - elementId: t2-role
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: t2-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: t3-letter
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 350
+    delayMs: 60
+  - elementId: t3-role
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: t3-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300

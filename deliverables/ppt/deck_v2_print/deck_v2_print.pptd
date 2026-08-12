@@ -1,0 +1,94 @@
+version: v2
+title: GOAI 港美股期权智能终端 — 初赛方案 v2
+size: [960, 540]
+theme:
+  colors:
+    bg: "#07090D"
+    panel: "#0D1117"
+    deep: "#0A0F14"
+    hairline: "#FFFFFF14"
+    ink: "#F2F5F9"
+    sub: "#8B93A3"
+    faint: "#5A6473"
+    primary: "#38BDF8"
+    primaryA: "#38BDF81A"
+    up: "#16C784"
+    down: "#F6465D"
+    warn: "#F5B942"
+    watermark: "#10151C"
+  textStyles:
+    eyebrow:
+      fontFamily: {latin: Arial, ea: MiSans}
+      fontSize: 10
+      bold: true
+      color: "$primary"
+      letterSpacing: 2
+    watermark:
+      fontFamily: Georgia
+      fontSize: 110
+      bold: true
+      color: "$watermark"
+    title:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 26
+      bold: true
+      color: "$ink"
+      lineHeight: 1.15
+    kpi:
+      fontFamily: {latin: Georgia, ea: Microsoft YaHei}
+      fontSize: 32
+      bold: true
+      color: "$ink"
+    body:
+      fontFamily: {latin: Arial, ea: MiSans}
+      fontSize: 12
+      color: "$ink"
+      lineHeight: 1.5
+    small:
+      fontFamily: {latin: Arial, ea: MiSans}
+      fontSize: 10.5
+      color: "$ink"
+      lineHeight: 1.4
+    sub:
+      fontFamily: {latin: Arial, ea: MiSans}
+      fontSize: 11
+      color: "$sub"
+      lineHeight: 1.35
+    cap:
+      fontFamily: {latin: Arial, ea: MiSans}
+      fontSize: 9
+      color: "$faint"
+      lineHeight: 1.3
+  tableStyles:
+    default:
+      cellStyle:
+        fontFamily: {latin: Arial, ea: MiSans}
+        fontSize: 10.5
+        color: "$ink"
+        lineHeight: 1.25
+        border: [null, null, {style: solid, width: 1, color: "$hairline"}, null]
+        align: [left, middle]
+      firstRowStyle:
+        bold: true
+        color: "#06212B"
+        fill: {type: solid, color: "$primary"}
+      bodyStyles:
+        - {fill: {type: solid, color: "$panel"}}
+        - {fill: {type: solid, color: "$deep"}}
+pages:
+  - pages/01_cover.page
+  - pages/02_summary.page
+  - pages/03_problem.page
+  - pages/04_solution.page
+  - pages/05_product.page
+  - pages/06_hero.page
+  - pages/07_evidence_pnl.page
+  - pages/08_evidence_backtest.page
+  - pages/09_why_agent.page
+  - pages/10_architecture.page
+  - pages/11_trust.page
+  - pages/12_competition.page
+  - pages/13_market.page
+  - pages/14_team.page
+  - pages/15_compliance.page
+  - pages/16_roadmap.page

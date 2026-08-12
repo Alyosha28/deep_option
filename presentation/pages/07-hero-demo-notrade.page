@@ -1,0 +1,302 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  Hero A Demo：诚实的 NO_TRADE。
+  左侧终端窗（概念示意）回放决策路径：场景解析 → FROZEN 冻结数据 → 自研引擎 → 成本/盈亏平衡 →
+  Edge 门 3 项检查全 FAIL（LOW_EDGE）→ Risk 门 PASS + 3 WARN → Action NO_TRADE → 审计链 7 条完整。
+  右侧为到期盈亏双成本口径曲线（ask/mid）与最终裁决框。
+  演示口径：Replay 冻结快照（2026-08-08T11:56:30+08:00），非实时行情；数字全部来自
+  data/decision_card_2026-08-12.json 与 data/hero_inputs.json。
+elements:
+  # ---------- 页头 ----------
+  - elementId: header-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 400, 14]
+    content:
+      style: "$eyebrow"
+      wrap: false
+      text: "07 · HERO A DEMO — HONEST NO_TRADE"
+  - elementId: title
+    elementType: text
+    bounds: [78, 44, 740, 28]
+    content:
+      style: "$title"
+      wrap: false
+      text: "NO_TRADE 是成功结果：证据不足，系统敢说不交易"
+  - elementId: subtitle
+    elementType: text
+    bounds: [78, 72, 740, 16]
+    content:
+      style: "$subtitle"
+      wrap: false
+      text: "Hero A 腾讯业绩跨式全程回放 —— Edge 门 3 项检查全 FAIL，诚实输出 NO_TRADE"
+  - elementId: header-hairline
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: statusbar
+    elementType: text
+    bounds: [676, 22, 220, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, middle]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审 07/16"
+
+  # ---------- 左侧终端窗（概念示意） ----------
+  - elementId: terminal-window
+    elementType: shape
+    bounds: [64, 104, 448, 268]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: term-titlebar
+    elementType: shape
+    bounds: [78, 105, 420, 22]
+    shapeName: rect
+    fill: {type: solid, color: "#10161F"}
+  - elementId: term-dot-1
+    elementType: shape
+    bounds: [86, 113, 6, 6]
+    shapeName: rect
+    fill: {type: solid, color: "$border"}
+  - elementId: term-dot-2
+    elementType: shape
+    bounds: [98, 113, 6, 6]
+    shapeName: rect
+    fill: {type: solid, color: "$border"}
+  - elementId: term-dot-3
+    elementType: shape
+    bounds: [110, 113, 6, 6]
+    shapeName: rect
+    fill: {type: solid, color: "$border"}
+  - elementId: term-name
+    elementType: text
+    bounds: [64, 105, 448, 22]
+    content:
+      style: "$code"
+      color: "$textSub"
+      align: [center, middle]
+      wrap: false
+      text: "goai-decision · HK.00700 · replay"
+
+  # ---------- 终端交互步骤（G2 逐步揭示） ----------
+  - elementId: step1
+    elementType: text
+    bounds: [76, 132, 424, 48]
+    content:
+      style: "$code"
+      align: [left, top]
+      lineHeightPx: 16
+      text: |
+        <p><span style="color:$accent;">$</span> goai run hero --underlying <span style="color:$accent;">HK.00700</span> --mode <span style="color:$accent;">replay</span></p>
+        <p><span style="color:$textSub;">[scenario]</span> 2026-08-12 业绩 · 方向 <span style="color:$accent;">uncertain</span> · 预算 <span style="color:$accent;">5%</span></p>
+        <p><span style="color:$textSub;">[data]</span> <span style="color:$accent;">FROZEN</span> 2026-08-08T11:56:30+08:00 · expected_move 3.916%</p>
+  - elementId: step2
+    elementType: text
+    bounds: [76, 184, 424, 48]
+    content:
+      style: "$code"
+      align: [left, top]
+      lineHeightPx: 16
+      text: |
+        <p><span style="color:$textSub;">[engine]</span> BS/二叉树 + IV 二分 + bump-and-reprice</p>
+        <p><span style="color:$textSub;">[cost]</span> <span style="color:$accent;">8/14</span> 到期 <span style="color:$accent;">480</span> ATM 跨式 × <span style="color:$accent;">2</span> 张 · ask <span style="color:$accent;">2207.0</span>/张</p>
+        <p><span style="color:$textSub;">[be]</span> 盈亏平衡 <span style="color:$accent;">458.905 / 501.095</span> · 最大亏损 <span style="color:$accent;">4414.0</span> HKD</p>
+  - elementId: step3
+    elementType: text
+    bounds: [76, 236, 424, 80]
+    content:
+      style: "$code"
+      align: [left, top]
+      lineHeightPx: 16
+      text: |
+        <p><span style="color:$textSub;">[edge]</span> <span style="color:$accent;">chk1</span> 预期波动 <span style="color:$accent;">3.92%</span> &lt; 盈亏平衡所需 <span style="color:$accent;">4.41%</span> → <span style="color:$danger;">FAIL</span></p>
+        <p><span style="color:$textSub;">[edge]</span> <span style="color:$accent;">chk2</span> 回测 d+2 ROI <span style="color:$accent;">-7.8%</span> · 胜率 <span style="color:$accent;">36.4%</span> → <span style="color:$danger;">FAIL</span></p>
+        <p><span style="color:$textSub;">[edge]</span> <span style="color:$accent;">chk3</span> IV crush -20% 最差 <span style="color:$accent;">-711</span> HKD → <span style="color:$danger;">FAIL</span></p>
+        <p><span style="color:$textSub;">[edge]</span> verdict = <span style="color:$warn;">LOW_EDGE</span> → <span style="color:$danger;">NO_TRADE</span></p>
+        <p><span style="color:$textSub;">[risk]</span> <span style="color:$success;">PASS</span> · 最大亏损 <span style="color:$accent;">4414.0</span> ≤ <span style="color:$accent;">5000</span> HKD · <span style="color:$warn;">3 WARN</span></p>
+  - elementId: step4
+    elementType: text
+    bounds: [76, 320, 424, 48]
+    content:
+      style: "$code"
+      align: [left, top]
+      lineHeightPx: 16
+      text: |
+        <p><span style="color:$textSub;">[action]</span> action = <span style="color:$danger;">NO_TRADE</span> · 无需进入下单步骤</p>
+        <p><span style="color:$textSub;">[next]</span> 可调整期限 / 行权价后重新评估</p>
+        <p><span style="color:$textSub;">[audit]</span> <span style="color:$accent;">7</span> 条 SHA-256 哈希链完整 · snapshot cf567c5985…</p>
+  - elementId: concept-tag
+    elementType: shape
+    bounds: [438, 352, 62, 16]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: concept-tag-text
+    elementType: text
+    bounds: [438, 352, 62, 16]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [center, middle]
+      wrap: false
+      text: "概念示意"
+
+  # ---------- 右侧：到期盈亏曲线 + 裁决框 ----------
+  - elementId: pnl-image
+    elementType: image
+    bounds: [524, 104, 372, 176]
+    src: "media/straddle_pnl.png"
+    fit: {mode: contain}
+  - elementId: pnl-caption
+    elementType: text
+    bounds: [524, 282, 372, 12]
+    content:
+      style: "$footnote"
+      align: [center, middle]
+      wrap: false
+      text: "来源: data/backtest_tencent_straddle.json · 口径: src/backtest_tencent_straddle.py"
+  - elementId: verdict-box
+    elementType: shape
+    bounds: [524, 298, 372, 70]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#F871711F"}
+    border: {style: solid, width: 1, color: "$danger"}
+  - elementId: verdict-tick
+    elementType: shape
+    bounds: [536, 306, 3, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$danger"}
+  - elementId: verdict-text
+    elementType: text
+    bounds: [548, 302, 336, 62]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:13px; color:$danger;"><strong>&gt;&gt;&gt; verdict = NO_TRADE</strong></span></p>
+        <p style="margin-top:4px">Edge <span style="color:$accent;">3</span> 项检查全 <span style="color:$danger;">FAIL</span> · Risk <span style="color:$success;">PASS</span> + <span style="color:$warn;">3 WARN</span></p>
+        <p style="margin-top:2px"><span style="color:$textSub;">不下单 · 不下调门槛 · 审计链 7 条完整</span></p>
+
+  # ---------- 金句条 ----------
+  - elementId: quote-bg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-mark
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [center, middle]
+      wrap: false
+      text: "&gt;"
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 788, 40]
+    content:
+      style: "$quote"
+      align: [left, middle]
+      wrap: false
+      text: "系统敢说「不交易」——不会为了展示下单而调低门槛。"
+
+  # ---------- 总结条 ----------
+  - elementId: sum-bg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: sum-cap
+    elementType: text
+    bounds: [78, 436, 40, 48]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+  - elementId: sum-text
+    elementType: text
+    bounds: [130, 436, 754, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <span style="font-family:Consolas; color:$accent;">NO_TRADE</span> 是成功结果：Edge 门 3 项全 <span style="color:$danger;">FAIL</span>，Risk 门 <span style="color:$success;">PASS</span> + <span style="color:$warn;">3 WARN</span>，审计链 7 条完整。
+
+  # ---------- 页脚 ----------
+  - elementId: footer-hairline
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-source
+    elementType: text
+    bounds: [64, 518, 620, 12]
+    content:
+      style: "$footnote"
+      wrap: false
+      text: "来源: data/decision_card_2026-08-12.json · data/hero_inputs.json · 2026-08-12"
+  - elementId: footer-page
+    elementType: text
+    bounds: [846, 518, 50, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, middle]
+      wrap: false
+      text: "07 / 16"
+
+animations:
+  # G1（auto）：标题栏 + 终端窗 fade-in
+  - {elementId: header-tick, effect: fade-in, trigger: withPrevious}
+  - {elementId: title, effect: fade-in, trigger: withPrevious}
+  - {elementId: subtitle, effect: fade-in, trigger: withPrevious}
+  - {elementId: terminal-window, effect: fade-in, trigger: afterPrevious}
+  # G2（click）：交互步骤 1→4 wipe-in(left) 依次
+  - {elementId: step1, effect: wipe-in, direction: left, trigger: onClick}
+  - {elementId: step2, effect: wipe-in, direction: left, trigger: afterPrevious}
+  - {elementId: step3, effect: wipe-in, direction: left, trigger: afterPrevious}
+  - {elementId: step4, effect: wipe-in, direction: left, trigger: afterPrevious}
+  # G3（click）：NO_TRADE 裁决框 zoom-in
+  - {elementId: verdict-box, effect: zoom-in, trigger: onClick}
+  - {elementId: verdict-tick, effect: fade-in, trigger: withPrevious}
+  - {elementId: verdict-text, effect: fade-in, trigger: withPrevious}

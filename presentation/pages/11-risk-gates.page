@@ -1,0 +1,313 @@
+pageType: content
+notes: |
+  风险硬门与信任边界页。核心信息：Edge 与 Risk 分离（Edge 可明确 NO_TRADE）、Risk 一票否决、审计链 JSONL + SHA-256（Hero 7 条记录，每条链上前一条）、防注入（敏感字段拒绝、遍历上限 10,000）、比赛版本仅 Futu 模拟盘且须用户独立确认、PASS 固定含义（门通过 ≠ 盈利/成交/投资建议）。
+  数字均来自 data/decision_card_2026-08-12.json 与 docs/PRD.md §5.3 / §7：预期波动 3.92% vs 盈亏平衡所需 4.41%、口径 A d+2 平均 ROI -7.8%、IV crush -20% 最差情景 -711 HKD、最大亏损 4,414 ≤ 预算 5,000 HKD、risk_gate decision=PASS 且 blocked=[]（findings 含 PASS 多项与 3 条 WARN，facts.md 未列稳定总数，页面不写总数）、审计链 7 条记录。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 300, 14]
+    content:
+      style: "$eyebrow"
+      wrap: false
+      align: [left, top]
+      text: "11 · RISK GATES"
+  - elementId: headerText
+    elementType: text
+    bounds: [78, 44, 810, 44]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      align: [left, top]
+      text: |
+        <p style="line-height:0.92"><span style="font-size:26px; color:$text"><strong>风险硬门一票否决，模拟动作止于用户独立确认</strong></span></p>
+        <p style="margin-top:4px; line-height:1"><span style="font-family:Consolas">Edge / Risk / Action</span><span> 三道门独立裁决 · 审计链 </span><span style="font-family:Consolas">JSONL + SHA-256</span><span> · 防注入与 </span><span style="font-family:Consolas">PASS</span><span> 语义固化</span></p>
+  - elementId: statusbar
+    elementType: text
+    bounds: [786, 22, 110, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      wrap: false
+      align: [right, top]
+      text: 'GOAI · TERMINAL — 初赛评审  11/16'
+  - elementId: hairline
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: track
+    elementType: line
+    bounds: [64, 156, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: chev1
+    elementType: shape
+    bounds: [266, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+  - elementId: chev2
+    elementType: shape
+    bounds: [472, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+  - elementId: chev3
+    elementType: shape
+    bounds: [678, 148, 16, 16]
+    shapeName: chevron
+    fill: {type: solid, color: "$border"}
+  - elementId: gate1
+    elementType: table
+    bounds: [76, 108, 190, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    rows:
+      - - text: |
+            <p style="line-height:1"><span style="font-size:20px; color:$danger; font-family:Consolas"><strong>01</strong></span><span style="font-size:10px; color:$danger; font-family:Consolas">  LOW_EDGE</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>Edge 门 · 值不值得做</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">3 项检查全 FAIL</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">预期波动 3.92% &lt; 所需 4.41%</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">d+2 ROI -7.8% · IV crush -711</span></p>
+          fill: {type: solid, color: "$panel"}
+          border: {style: solid, width: 1, color: "$danger"}
+          align: [left, top]
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+  - elementId: gate2
+    elementType: table
+    bounds: [282, 108, 190, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    rows:
+      - - text: |
+            <p style="line-height:1"><span style="font-size:20px; color:$success; font-family:Consolas"><strong>02</strong></span><span style="font-size:10px; color:$success; font-family:Consolas">  PASS</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>Risk 门 · 一票否决</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">3 WARN 不阻断，PASS 生效</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">最大亏损 4,414 ≤ 预算 5,000 HKD</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">WARN：LOP · 费用 · 美式交割</span></p>
+          fill: {type: solid, color: "$panel"}
+          border: {style: solid, width: 1, color: "$success"}
+          align: [left, top]
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+  - elementId: gate3
+    elementType: table
+    bounds: [488, 108, 190, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    rows:
+      - - text: |
+            <p style="line-height:1"><span style="font-size:20px; color:$textSub; font-family:Consolas"><strong>03</strong></span><span style="font-size:10px; color:$textSub; font-family:Consolas">  NO_TRADE</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>Action 门 · 动作裁决</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">blocked：Edge 门未过</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">无需进入下单；可调整期限/行权价重估</span></p>
+          fill: {type: solid, color: "$panel"}
+          border: {style: solid, width: 1, color: "$border"}
+          align: [left, top]
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+  - elementId: gate4
+    elementType: table
+    bounds: [694, 108, 190, 96]
+    columnWidths: [1]
+    rowHeights: [1]
+    rows:
+      - - text: |
+            <p style="line-height:1"><span style="font-size:20px; color:$accent; font-family:Consolas"><strong>04</strong></span><span style="font-size:10px; color:$accent; font-family:Consolas">  CHAINED</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>审计链 · 全程留痕</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">JSONL + SHA-256 哈希链</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">7 条记录，每条链上前一条</span></p>
+          fill: {type: solid, color: "$panel"}
+          border: {style: solid, width: 1, color: "$accent"}
+          align: [left, top]
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+  - elementId: bc1Shape
+    elementType: shape
+    bounds: [64, 216, 266, 156]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: bc1Text
+    elementType: text
+    bounds: [76, 228, 242, 132]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px"><strong>防注入 · 敏感字段拒绝</strong></span></p>
+        <p style="margin-top:8px">敏感字段直接拒绝：<span style="font-family:Consolas">password / secret / token / api_key / account_id / order_id</span></p>
+        <p style="margin-top:8px">遍历上限 <span style="font-family:Consolas">10,000</span> 项；外部文本不得改写数值与风控</p>
+        <p style="margin-top:8px"><span style="font-family:Consolas">LLM</span> 不接触 <span style="font-family:Consolas">SDK</span>、账户密钥与订单工具</p>
+  - elementId: bc2Shape
+    elementType: shape
+    bounds: [346, 216, 266, 156]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: bc2Text
+    elementType: text
+    bounds: [358, 228, 242, 132]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px"><strong>动作边界 · 模拟盘 + 独立确认</strong></span></p>
+        <p style="margin-top:8px">比赛版本仅支持 <span style="font-family:Consolas">Futu</span> 模拟盘，动作须用户独立确认</p>
+        <p style="margin-top:8px">确认只授权当前订单摘要，参数变化须重新确认</p>
+        <p style="margin-top:8px">重复点击不产生重复订单，不自动重试 / 补腿 / 撤腿</p>
+  - elementId: bc3Shape
+    elementType: shape
+    bounds: [628, 216, 266, 156]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: bc3Text
+    elementType: text
+    bounds: [640, 228, 242, 132]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px"><strong>PASS 的固定含义</strong></span></p>
+        <p style="margin-top:8px"><span style="font-family:Consolas">PASS</span> = 「当前数据、规则和风险门通过」</p>
+        <p style="margin-top:8px">不表示盈利、成交或投资建议</p>
+        <p style="margin-top:8px"><span style="font-family:Consolas">Edge</span> 可明确 <span style="font-family:Consolas">NO_TRADE</span>，<span style="font-family:Consolas">Risk</span> 独立一票否决</p>
+  - elementId: quoteBg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quoteRail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quoteGuide
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      wrap: false
+      align: [left, middle]
+      text: "&gt;"
+  - elementId: quoteText
+    elementType: text
+    bounds: [96, 384, 784, 40]
+    content:
+      style: "$quote"
+      wrap: false
+      align: [left, middle]
+      text: '「<span style="font-family:Consolas">NO_TRADE</span> 是成功结果——不会为了展示下单而调低门槛」'
+  - elementId: sumBg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: sumCap
+    elementType: text
+    bounds: [78, 436, 46, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      text: 结论
+  - elementId: sumBody
+    elementType: text
+    bounds: [130, 436, 750, 48]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      wrap: false
+      align: [left, middle]
+      text: '<span style="font-family:Consolas">Edge / Risk / Action</span> 独立裁决，<span style="color:$accent; font-family:Consolas">7</span> 条审计链式留痕，风险不过即无确认入口。'
+  - elementId: footerRule
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footerLeft
+    elementType: text
+    bounds: [64, 518, 600, 14]
+    content:
+      style: "$footnote"
+      wrap: false
+      align: [left, top]
+      text: "来源: docs/PRD.md §5.3 / §7 · data/decision_card_2026-08-12.json · 2026-08-12"
+  - elementId: footerRight
+    elementType: text
+    bounds: [740, 518, 156, 14]
+    content:
+      style: "$footnote"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      wrap: false
+      align: [right, top]
+      text: "11 / 16"
+animations:
+  - elementId: tick
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: headerText
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: track
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: gate1
+    effect: wipe-in
+    direction: left
+    trigger: onClick
+  - elementId: chev1
+    effect: wipe-in
+    direction: left
+    trigger: withPrevious
+  - elementId: gate2
+    effect: wipe-in
+    direction: left
+    trigger: afterPrevious
+  - elementId: gate3
+    effect: wipe-in
+    direction: left
+    trigger: onClick
+  - elementId: chev2
+    effect: wipe-in
+    direction: left
+    trigger: withPrevious
+  - elementId: gate4
+    effect: wipe-in
+    direction: left
+    trigger: afterPrevious
+  - elementId: chev3
+    effect: wipe-in
+    direction: left
+    trigger: withPrevious

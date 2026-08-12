@@ -1,0 +1,245 @@
+pageType: content
+notes: |
+  为什么是 Agent：固定计算器缺编排，通用 LLM 缺事实，Agent 补两者的缺口。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "09"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: WHY AGENT · 08
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 固定计算器缺编排，通用 LLM 缺事实，Agent 补两者的缺口
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: LLM 只做理解、编排与解释；所有金融数字、门控与动作许可由确定性工具完成
+  - elementId: c1
+    elementType: shape
+    bounds: [60, 120, 260, 230]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: c1-head
+    elementType: text
+    bounds: [80, 134, 220, 18]
+    content:
+      style: "$small"
+      bold: true
+      color: "$sub"
+      text: 固定计算器
+  - elementId: c1-body
+    elementType: text
+    bounds: [80, 162, 220, 170]
+    content:
+      style: "$cap"
+      text: |
+        <p><strong style="color:$ink;">能</strong>：输入完整后稳定计算</p>
+        <p style="margin-top:6px"><strong style="color:$down;">不能</strong>：</p>
+        <p>· 补全缺失任务与必要追问</p>
+        <p>· 按标的/市场/策略选数据与模型</p>
+        <p>· 失败时降级 Replay / DRAFT_ONLY</p>
+        <p>· 解释 NO_TRADE / BLOCK</p>
+  - elementId: c2
+    elementType: shape
+    bounds: [350, 120, 260, 230]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: c2-head
+    elementType: text
+    bounds: [370, 134, 220, 18]
+    content:
+      style: "$small"
+      bold: true
+      color: "$sub"
+      text: 通用 LLM
+  - elementId: c2-body
+    elementType: text
+    bounds: [370, 162, 220, 170]
+    content:
+      style: "$cap"
+      text: |
+        <p><strong style="color:$ink;">能</strong>：理解与表达自然语言</p>
+        <p style="margin-top:6px"><strong style="color:$down;">不能</strong>：</p>
+        <p>· 保证数字真实与口径正确</p>
+        <p>· 承担账户风控与权限判断</p>
+        <p>· 复算与追溯每个结论</p>
+  - elementId: c3
+    elementType: shape
+    bounds: [640, 120, 260, 230]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+    border: {style: solid, width: 1, color: "$primary"}
+  - elementId: c3-head
+    elementType: text
+    bounds: [660, 134, 220, 18]
+    content:
+      style: "$small"
+      bold: true
+      color: "$primary"
+      text: GOAI Agent
+  - elementId: c3-body
+    elementType: text
+    bounds: [660, 162, 220, 170]
+    content:
+      style: "$cap"
+      text: |
+        <p><strong style="color:$ink;">分工</strong>：LLM 解析场景、</p>
+        <p>编排工具、解释结果</p>
+        <p style="margin-top:6px"><strong style="color:$ink;">确定性引擎</strong>：定价、IV、</p>
+        <p>Greeks、成本、门控、审计</p>
+        <p style="margin-top:6px"><span style="color:$up;">异常处理</span>：Live 不可用 →</p>
+        <p>Replay / DRAFT_ONLY，不静默切换</p>
+  - elementId: agent-increments
+    elementType: text
+    bounds: [60, 372, 840, 20]
+    content:
+      style: "$cap"
+      text: Agent 增量：自然语言补全任务 → 动态选数据与模型 → 失败降级 → 只重算受影响部分 → 解释拒绝而非只给数字
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: LLM 说人话，引擎说真话。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: Agent 的价值不是会聊天，而是把「会理解」与「会算数」接成一条可降级、可解释、可审计的任务闭环。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 来源：docs/PRD.md §1.3 为什么是 Agent
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 09 / 16
+animations:
+  - elementId: c1
+    effect: fade-in
+    trigger: onClick
+    durationMs: 400
+  - elementId: c1-head
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: c1-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: c2
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 400
+    delayMs: 120
+  - elementId: c2-head
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: c2-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: c3
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 450
+    delayMs: 120
+  - elementId: c3-head
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: c3-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: agent-increments
+    effect: fade-in
+    trigger: onClick
+    durationMs: 300
+  - elementId: quote-bar
+    effect: fade-in
+    trigger: onClick
+    durationMs: 350
+  - elementId: quote-rail
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: quote-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: quote-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: takeaway
+    effect: fade-in
+    trigger: onClick
+    durationMs: 400
+  - elementId: takeaway-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300

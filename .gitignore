@@ -15,3 +15,6 @@ __pycache__/
 .agents/skills/*
 !.agents/skills/futu-options-agent/
 !.agents/skills/futu-options-agent/**
+
+# Office lock/temp files
+~$*

@@ -1,0 +1,234 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  三种解法对比：固定计算器只会算、通用 LLM 会编数字、GOAI Agent 让数字全部出自确定性工具。
+  点击一次：对比表 wipe-in(right) 从左到右逐栏揭示三列；再点击一次：结论条 fade-in。
+
+elements:
+  # —— 页头（§4.1）——
+  - elementId: header-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+
+  - elementId: header-eyebrow
+    elementType: text
+    bounds: [78, 26, 300, 12]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "05 · WHY AGENT"
+
+  - elementId: header-title
+    elementType: text
+    bounds: [78, 42, 780, 28]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: 可信来自分工：LLM 管理解与编排，数字全由工具产出
+
+  - elementId: header-subtitle
+    elementType: text
+    bounds: [78, 72, 780, 16]
+    content:
+      style: "$subtitle"
+      align: [left, top]
+      wrap: false
+      text: 三种解法对比：固定计算器只会算、通用 LLM 会编数字、GOAI Agent 让数字全部出自工具。
+
+  - elementId: header-hairline
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: status-line
+    elementType: text
+    bounds: [786, 22, 110, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, middle]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审   05/16"
+
+  # —— 正文：三栏对比表（§5.2）——
+  - elementId: compare-table
+    elementType: table
+    bounds: [64, 104, 832, 268]
+    columnWidths: [0.16, 0.28, 0.28, 0.28]
+    rowHeights: [0.15, 0.16, 0.16, 0.16, 0.16, 0.21]
+    style: "$default"
+    rows:
+      - - text: "维度"
+        - text: "固定计算器"
+        - text: "通用 LLM"
+        - text: "GOAI Agent"
+          color: "$accent"
+          bold: true
+      - - text: "场景理解"
+          bold: true
+        - text: "读不懂「业绩前方向不确定」"
+        - text: "听得懂场景，还能追问补全"
+        - text: "解析场景、编排工具、写结论"
+          color: "$accent"
+          bold: true
+      - - text: "数字从哪来"
+          bold: true
+        - text: "公式写死在代码里"
+        - text: "概率生成，会编数字"
+        - text: "确定性工具产出"
+          color: "$accent"
+          bold: true
+      - - text: "可复算 / 可核验"
+          bold: true
+        - text: "能复算，但只会预设项"
+        - text: "同问不同答，无法核验"
+        - text: "SHA-256 审计，数字可溯源"
+          color: "$accent"
+          bold: true
+      - - text: "出错的表现"
+          bold: true
+        - text: "报错 → 改代码重跑"
+        - text: "错了不自知，还很笃定"
+        - text: "证据不足就 NO_TRADE"
+          color: "$accent"
+          bold: true
+      - - text: "判决"
+          bold: true
+        - text: "会算，但只会算"
+          color: "$textSub"
+        - text: "会编，但数字不可信"
+          color: "$warn"
+        - text: "理解归 LLM，数字归工具"
+          color: "$accent"
+          bold: true
+
+  # —— 金句条（§4.2）——
+  - elementId: quote-bg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+
+  - elementId: quote-prompt
+    elementType: text
+    bounds: [76, 384, 20, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [left, middle]
+      wrap: false
+      text: "&gt;"
+
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 790, 40]
+    content:
+      style: "$quote"
+      align: [left, middle]
+      wrap: false
+      text: 数字的每一次出现，都要答得上「谁算的、依据什么、何时」。
+
+  # —— 总结条（§4.3）——
+  - elementId: conclusion-bg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: conclusion-cap
+    elementType: text
+    bounds: [78, 436, 44, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: 结论
+
+  - elementId: conclusion-body
+    elementType: text
+    bounds: [130, 436, 750, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      wrap: false
+      text: |
+        分工让「会编」退场：理解与表达归 LLM，数字与溯源归工具；数字编造目标为 <span style="color:$accent; font-family:Consolas">0</span>。
+
+  # —— 页脚（§4.4）——
+  - elementId: footer-hairline
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: footer-source
+    elementType: text
+    bounds: [64, 518, 600, 12]
+    content:
+      style: "$footnote"
+      align: [left, top]
+      wrap: false
+      text: '来源: docs/PRD.md §7 溯源要求 · §9.1 验收指标 · facts.md（2026-08-12）'
+
+  - elementId: footer-page
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, middle]
+      wrap: false
+      text: "05 / 16"
+
+animations:
+  # G1 自动组：标题栏 fade-in（页进入即播）
+  - elementId: header-eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-subtitle
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-hairline
+    effect: fade-in
+    trigger: withPrevious
+  # G2 点击组：对比表 wipe-in(right)，从左到右逐栏揭示三列
+  - elementId: compare-table
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  # G3 点击组：结论条 fade-in
+  - elementId: conclusion-bg
+    effect: fade-in
+    trigger: onClick
+  - elementId: conclusion-cap
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: conclusion-body
+    effect: fade-in
+    trigger: withPrevious

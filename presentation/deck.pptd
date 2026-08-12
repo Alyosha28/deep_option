@@ -1,0 +1,92 @@
+version: v2
+title: "GOAI · 期权决策智能体 — 初赛评审"
+size: [960, 540]
+theme:
+  colors:
+    bg: "#0A0E14"
+    panel: "#131A24"
+    border: "#1F2937"
+    text: "#E6EDF3"
+    textSub: "#8B949E"
+    accent: "#22D3EE"
+    success: "#34D399"
+    warn: "#F59E0B"
+    danger: "#F87171"
+  textStyles:
+    title:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 26
+      bold: true
+      color: "$text"
+    subtitle:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+    cardTitle:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 13
+      bold: true
+      color: "$text"
+    body:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+    annotation:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+    footnote:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+    quote:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 14
+      bold: true
+      color: "$text"
+    kpi:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 30
+      bold: true
+      color: "$accent"
+    code:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+    eyebrow:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+  tableStyles:
+    default:
+      cellStyle:
+        color: "$text"
+        fontSize: 11
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$border"}, null]
+      firstRowStyle:
+        bold: true
+        fill: {type: solid, color: "#10161F"}
+        border: [null, null, {style: solid, width: 1, color: "$accent"}, null]
+      lastRowStyle:
+        border: [{style: solid, width: 1, color: "$border"}, null, null, null]
+pages:
+  - pages/01-cover.page
+  - pages/02-positioning.page
+  - pages/03-painpoints.page
+  - pages/04-hero-scenario.page
+  - pages/05-why-agent.page
+  - pages/06-pipeline.page
+  - pages/07-hero-demo-notrade.page
+  - pages/08-decision-card.page
+  - pages/09-data-layer.page
+  - pages/10-pricing-engine.page
+  - pages/11-risk-gates.page
+  - pages/12-competitors.page
+  - pages/13-release-slice.page
+  - pages/14-backtest-evidence.page
+  - pages/15-team-timeline.page
+  - pages/16-closing.page

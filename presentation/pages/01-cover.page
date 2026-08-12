@@ -1,0 +1,96 @@
+pageType: cover
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  封面页：项目名、一句话价值主张、赛道、初赛提交日期与团队 3 人。
+  动画为单个自动组：终端网格装饰 fade-in → 主标题 fade-in → 元信息 fade-in（锁文件 §6 封面行）。
+
+elements:
+  - elementId: decor-grid
+    elementType: shape
+    bounds: [0, 0, 960, 540]
+    shapeName: custom
+    viewBox: [960, 540]
+    path: "M700,46 L940,46 M700,86 L940,86 M700,126 L940,126 M700,46 L700,150 M740,46 L740,150 M780,46 L780,150 M820,46 L820,150 M500,430 L896,430 M500,470 L896,470 M500,510 L896,510"
+    border: {style: solid, width: 1, color: "$border"}
+    opacity: 0.5
+
+  - elementId: decor-brackets
+    elementType: shape
+    bounds: [0, 0, 960, 540]
+    shapeName: custom
+    viewBox: [960, 540]
+    path: "M64,84 L64,94 M64,94 L74,94 M886,500 L896,500 M896,490 L896,500"
+    border: {style: solid, width: 2, color: "$accent"}
+
+  - elementId: statusbar
+    elementType: text
+    bounds: [686, 22, 210, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, middle]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审 01/16"
+
+  - elementId: eyebrow
+    elementType: text
+    bounds: [64, 64, 500, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "GOAI · OPTION DECISION AGENT"
+
+  - elementId: cover-title
+    elementType: text
+    bounds: [64, 104, 832, 64]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 44
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: "GOAI · 期权决策智能体"
+
+  - elementId: cover-info
+    elementType: text
+    bounds: [64, 172, 832, 220]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>GOAI 港美股期权智能终端</p>
+        <p style="margin-top:16px"><span style="font-size:14px; color:$text;"><strong>不替你猜涨跌——把自然语言观点收拢为</strong></span><span style="font-size:14px; color:$accent;"><strong>可核验决策卡</strong></span></p>
+        <p style="margin-top:28px">GOAI 世界人工智能开源大赛 · Boundless Agents · 金融服务赛道</p>
+        <p style="margin-top:12px">初赛提交 <span style="font-family:Consolas;">2026-08-16</span></p>
+        <p style="margin-top:26px"><span style="font-size:13px; color:$text;"><strong>团队 · <span style="font-family:Consolas;">3</span> 人</strong></span></p>
+        <p style="margin-top:6px"><span style="font-family:Consolas; color:$accent;">A</span> 多 Agent 工程与量化研究 · <span style="font-family:Consolas; color:$accent;">B</span> 港美股期权策略 · <span style="font-family:Consolas; color:$accent;">C</span> 网络安全与合规</p>
+
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, middle]
+      wrap: false
+      text: "01 / 16"
+
+animations:
+  - {elementId: decor-grid, effect: fade-in, trigger: withPrevious}
+  - {elementId: decor-brackets, effect: fade-in, trigger: withPrevious}
+  - {elementId: cover-title, effect: fade-in, trigger: afterPrevious}
+  - {elementId: cover-info, effect: fade-in, trigger: afterPrevious}

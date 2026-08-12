@@ -1,0 +1,302 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  页 04/16 · Hero 场景。把「业绩前方向不确定」的模糊诉求冻结为账户、风险硬顶与候选策略三组可复算参数。
+  G1 标题栏与场景面板自动淡入；点击 1 放大参数表；点击 2 上滑推论条。金句与总结承接第 05 页「为什么需要 Agent」。
+elements:
+  - elementId: header-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: header-hairline
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: statusbar-04
+    elementType: text
+    bounds: [786, 22, 110, 14]
+    content:
+      fontSize: 8
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, middle]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审  04/16"
+  - elementId: eyebrow-04
+    elementType: text
+    bounds: [78, 26, 300, 14]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "04 · HERO SCENARIO"
+  - elementId: title-04
+    elementType: text
+    bounds: [78, 44, 818, 24]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "Hero 场景：业绩前方向不明，480 ATM 长跨式进入量化评估"
+  - elementId: subtitle-04
+    elementType: text
+    bounds: [78, 72, 800, 16]
+    content:
+      style: "$subtitle"
+      align: [left, top]
+      wrap: false
+      text: "唯一完整 P0 场景：把模糊诉求转成账户、风险硬顶与候选策略三组可复算参数。"
+  - elementId: scene-panel
+    elementType: shape
+    bounds: [64, 104, 500, 160]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: scene-title
+    elementType: text
+    bounds: [76, 114, 320, 20]
+    content:
+      style: "$cardTitle"
+      align: [left, top]
+      wrap: false
+      text: "场景快照 · SCENARIO"
+  - elementId: scene-badge
+    elementType: shape
+    bounds: [436, 110, 116, 22]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "#F59E0B1F"}
+  - elementId: scene-badge-text
+    elementType: text
+    bounds: [436, 110, 116, 22]
+    content:
+      fontSize: 10
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      color: "$warn"
+      align: [center, middle]
+      wrap: false
+      text: "方向不确定"
+  - elementId: kpi-spot
+    elementType: text
+    bounds: [76, 138, 160, 42]
+    content:
+      style: "$kpi"
+      fontSize: 34
+      align: [left, middle]
+      wrap: false
+      text: "478.8"
+  - elementId: kpi-label
+    elementType: text
+    bounds: [76, 182, 160, 16]
+    content:
+      style: "$annotation"
+      align: [left, top]
+      wrap: false
+      text: "现价 HKD"
+  - elementId: kpi-note
+    elementType: text
+    bounds: [76, 199, 160, 16]
+    content:
+      style: "$annotation"
+      align: [left, top]
+      wrap: false
+      text: '<p>prev_close <span style="font-family:Consolas">479.2</span></p>'
+  - elementId: scene-labels
+    elementType: text
+    bounds: [250, 138, 48, 68]
+    content:
+      style: "$body"
+      color: "$textSub"
+      align: [left, top]
+      text: |
+        <p>标的</p>
+        <p>事件</p>
+        <p>行权价</p>
+        <p>待评估</p>
+  - elementId: scene-values
+    elementType: text
+    bounds: [298, 138, 254, 68]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas">HK.00700</span> · 腾讯控股</p>
+        <p><span style="font-family:Consolas">2026-08-12</span> 业绩公布 · <span style="font-family:Consolas">2026Q2</span></p>
+        <p><span style="font-family:Consolas">480.0</span>（ATM）</p>
+        <p>长跨式（straddle）是否值得交易</p>
+  - elementId: params-table
+    elementType: table
+    bounds: [580, 104, 316, 160]
+    columnWidths: [0.38, 0.62]
+    rowHeights: [0.16, 0.168, 0.168, 0.168, 0.168, 0.168]
+    style: "$default"
+    rows:
+      - - text: "参数"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+        - text: "数值"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          align: [right, middle]
+      - - text: "账户现金"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          bold: true
+        - text: "100,000 HKD"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+      - - text: "单笔风险预算"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          bold: true
+        - text: "5%（上限 5,000 HKD）"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+      - - text: "合约乘数"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          bold: true
+        - text: "100 股/张"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+      - - text: "候选策略"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          bold: true
+        - text: "480 ATM 长跨式 × 2 张"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          bold: true
+          color: "$accent"
+          align: [right, middle]
+      - - text: "主到期"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+          bold: true
+        - text: "2026-08-14（dte 6）"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+  - elementId: inference-bar
+    elementType: shape
+    bounds: [64, 280, 832, 60]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: inference-cap
+    elementType: text
+    bounds: [78, 280, 44, 60]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "推论"
+  - elementId: inference-arrow
+    elementType: shape
+    bounds: [124, 302, 16, 16]
+    shapeName: rightArrow
+    fill: {type: solid, color: "$accent"}
+  - elementId: inference-text
+    elementType: text
+    bounds: [156, 284, 680, 52]
+    content:
+      style: "$body"
+      align: [left, middle]
+      text: |
+        <p>单笔亏损硬顶 = <span style="font-family:Consolas">100,000</span> × <span style="font-family:Consolas">5%</span> = <strong><span style="font-family:Consolas; color:$accent">5,000</span></strong> HKD —— 任何候选策略不得超过</p>
+        <p>候选 = <strong><span style="font-family:Consolas; color:$accent">480 ATM</span></strong> 长跨式 × <span style="font-family:Consolas">2</span> 张 · 主到期 <span style="font-family:Consolas">2026-08-14</span> —— 是否值得买，由引擎与回测裁决</p>
+  - elementId: quote-bg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-tick
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-prompt
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontSize: 12
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      bold: true
+      color: "$accent"
+      align: [left, middle]
+      wrap: false
+      text: "&gt;"
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 770, 40]
+    content:
+      style: "$quote"
+      lineHeight: 1.2
+      align: [left, middle]
+      wrap: false
+      text: "先算成本与硬顶，再谈方向与收益。"
+  - elementId: summary-bg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 44, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 750, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      text: '<p>场景已冻结：<span style="font-family:Consolas">10</span> 万港币、单笔 ≤ <span style="font-family:Consolas; color:$accent">5%</span>，候选 <span style="font-family:Consolas">480 ATM</span> 长跨式进入量化评估。</p>'
+  - elementId: footer-hairline
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-source
+    elementType: text
+    bounds: [64, 518, 600, 12]
+    content:
+      style: "$footnote"
+      align: [left, top]
+      wrap: false
+      text: "来源: facts.md §11 + data/decision_card_2026-08-12.json + hero_inputs.json · 快照 2026-08-08"
+  - elementId: footer-page
+    elementType: text
+    bounds: [846, 518, 50, 12]
+    content:
+      style: "$footnote"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [right, middle]
+      wrap: false
+      text: "04 / 16"
+animations:
+  - elementId: eyebrow-04
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: title-04
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: subtitle-04
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: scene-panel
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: params-table
+    effect: zoom-in
+    trigger: onClick
+  - elementId: inference-bar
+    effect: wipe-in
+    direction: up
+    trigger: onClick

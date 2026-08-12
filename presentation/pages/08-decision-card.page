@@ -1,0 +1,279 @@
+# 页 08/16 · 决策卡：四种结论枚举 + 首屏六件事 + 溯源要求
+# 版式：design-lock §5.4 决策卡六宫格（2×3，单卡 266×126，gap 16，起点 (64,104)）
+# 焦点卡 = 卡 01（当前结论与用户含义）：accent 边框 + accentA8 底，本轮 NO_TRADE 高亮
+# 动画：design-lock §6 第 08 行 —— G1 标题栏+六卡框架 fade-in（auto）；G2 卡 1–3 wipe-in(up)；G3 卡 4–6 wipe-in(up)
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: 首屏六件事按 PRD §3.4：结论与含义 / 三条依据 / 成本与最大亏损 / 数据模式与时间 / 改变结论的条件 / 唯一下一步。焦点卡展示四种结论枚举，本轮为 NO_TRADE。数字均引自 data/decision_card_2026-08-12.json（facts.md §1/§4）。
+elements:
+  # ---- 六卡框架（2×3）：普通 5 卡底合并为一个 custom shape，焦点卡单独圆角矩形 ----
+  - elementId: frame-main
+    elementType: shape
+    bounds: [64, 104, 830, 268]
+    shapeName: custom
+    viewBox: [830, 268]
+    path: "M288,0 L542,0 Q548,0 548,6 L548,120 Q548,126 542,126 L288,126 Q282,126 282,120 L282,6 Q282,0 288,0 Z M570,0 L824,0 Q830,0 830,6 L830,120 Q830,126 824,126 L570,126 Q564,126 564,120 L564,6 Q564,0 570,0 Z M6,142 L260,142 Q266,142 266,148 L266,262 Q266,268 260,268 L6,268 Q0,268 0,262 L0,148 Q0,142 6,142 Z M288,142 L542,142 Q548,142 548,148 L548,262 Q548,268 542,268 L288,268 Q282,268 282,262 L282,148 Q282,142 288,142 Z M570,142 L824,142 Q830,142 830,148 L830,262 Q830,268 824,268 L570,268 Q564,268 564,262 L564,148 Q564,142 570,142 Z"
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: frame-focus
+    elementType: shape
+    bounds: [64, 104, 266, 126]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+    border: {style: solid, width: 1, color: "$accent"}
+
+  # ---- 卡 01（焦点卡）：当前结论与用户含义 + 四种结论枚举，NO_TRADE 高亮 ----
+  - elementId: card1
+    elementType: text
+    bounds: [76, 116, 242, 102]
+    content:
+      style: "$body"
+      lineHeight: 1.2
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">01</span><span style="font-size:13px; font-weight:bold; color:$text;">  当前结论与用户含义</span></p>
+        <p style="margin-top:2px;"><span style="font-family:Consolas; font-size:18px; font-weight:bold; color:$accent;">NO_TRADE</span><span style="font-size:10px; color:$textSub;">  成本和证据不支持交易</span></p>
+        <p style="margin-top:2px;"><span style="font-family:Consolas; font-size:9px; color:$textSub;">BLOCK</span><span style="font-size:9px; color:$textSub;">  数据/规格/账户或风险硬门未过</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; color:$textSub;">DRAFT_ONLY</span><span style="font-size:9px; color:$textSub;">  可研究出草稿，不能提交</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; color:$textSub;">READY_FOR_CONFIRMATION</span><span style="font-size:9px; color:$textSub;">  客观门过·用户确认模拟</span></p>
+
+  # ---- 卡 02：最关键的三条依据 ----
+  - elementId: card2
+    elementType: text
+    bounds: [358, 116, 242, 102]
+    content:
+      style: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">02</span><span style="font-size:13px; font-weight:bold; color:$text;">  三条关键依据</span></p>
+        <p style="margin-top:4px;"><span style="font-size:11px; color:$text;">① 预期波动 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">3.92%</span><span style="font-size:11px; color:$text;"> &lt; 盈亏平衡 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">4.41%</span></p>
+        <p><span style="font-size:11px; color:$text;">② 回测 d+2 平均 ROI </span><span style="font-family:Consolas; font-size:11px; color:$accent;">-7.8%</span><span style="font-size:11px; color:$text;"> · 胜率 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">36.4%</span></p>
+        <p><span style="font-size:11px; color:$text;">③ IV </span><span style="font-family:Consolas; font-size:11px; color:$accent;">-20%</span><span style="font-size:11px; color:$text;"> 最差情景 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">-711</span><span style="font-size:11px; color:$text;"> HKD</span></p>
+
+  # ---- 卡 03：可成交成本与最大亏损 ----
+  - elementId: card3
+    elementType: text
+    bounds: [640, 116, 242, 102]
+    content:
+      style: "$body"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">03</span><span style="font-size:13px; font-weight:bold; color:$text;">  可成交成本与最大亏损</span></p>
+        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:16px; font-weight:bold; color:$accent;">2,207 × 2</span><span style="font-size:10px; color:$textSub;"> HKD/张 · ask 口径</span></p>
+        <p><span style="font-family:Consolas; font-size:16px; font-weight:bold; color:$text;">= 4,414</span><span style="font-size:10px; color:$textSub;"> 最大亏损 ≤ 预算 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">5,000</span><span style="font-size:10px; color:$textSub;"> HKD</span></p>
+        <p><span style="font-size:10px; color:$textSub;">预算 = 现金 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">100,000 × 5%</span><span style="font-size:10px; color:$textSub;">（风险预算）</span></p>
+
+  # ---- 卡 04：数据模式与时间（含溯源要素：来源 + 快照 SHA-256 + 审计链） ----
+  - elementId: card4
+    elementType: text
+    bounds: [76, 258, 242, 102]
+    content:
+      style: "$body"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">04</span><span style="font-size:13px; font-weight:bold; color:$text;">  数据模式与时间</span></p>
+        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:11px; font-weight:bold; color:$accent;">REPLAY · FROZEN</span></p>
+        <p><span style="font-family:Consolas; font-size:11px; color:$text;">2026-08-08T11:56:30+08:00</span></p>
+        <p><span style="font-size:10px; color:$textSub;">来源 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">futuapi/OpenD 127.0.0.1:11111</span></p>
+        <p><span style="font-size:10px; color:$textSub;">快照 SHA-256 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">cf567c59…</span><span style="font-size:10px; color:$textSub;"> · 审计链 7 条</span></p>
+
+  # ---- 卡 05：哪些条件会改变结论 ----
+  - elementId: card5
+    elementType: text
+    bounds: [358, 258, 242, 102]
+    content:
+      style: "$body"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">05</span><span style="font-size:13px; font-weight:bold; color:$text;">  什么会改变结论</span></p>
+        <p style="margin-top:4px;"><span style="font-size:10px; color:$text;">· 业绩日实际波动 &gt; 盈亏平衡 </span><span style="font-family:Consolas; font-size:10px; color:$text;">4.41%</span></p>
+        <p><span style="font-size:10px; color:$text;">· 换 8/28 到期或更低成本结构</span></p>
+        <p><span style="font-size:10px; color:$text;">· Live 行情 + 费用/滑点政策后成本变化</span></p>
+        <p><span style="font-size:10px; color:$text;">· 回测样本更新改变 Edge 结论</span></p>
+
+  # ---- 卡 06：当前唯一可用的下一步 ----
+  - elementId: card6
+    elementType: text
+    bounds: [640, 258, 242, 102]
+    content:
+      style: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">06</span><span style="font-size:13px; font-weight:bold; color:$text;">  唯一可用的下一步</span></p>
+        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:11px; font-weight:bold; color:$accent;">NO_TRADE</span><span style="font-size:11px; color:$text;"> → 无需进入下单步骤</span></p>
+        <p><span style="font-size:11px; color:$text;">Edge 门未过：预期波动不足以覆盖成本</span></p>
+        <p><span style="font-size:11px; color:$text;">可调整期限/行权价后重新评估</span></p>
+
+  # ---- 页头（锁文件 §4.1）----
+  - elementId: head-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: head-eyebrow
+    elementType: text
+    bounds: [78, 26, 300, 14]
+    content:
+      style: "$eyebrow"
+      wrap: false
+      align: [left, top]
+      text: "08 · DECISION CARD"
+  - elementId: head-title
+    elementType: text
+    bounds: [78, 44, 818, 48]
+    content:
+      lineHeight: 1.1
+      align: [left, top]
+      text: |
+        <p><span style="font-size:26px; font-weight:bold; color:$text;">一张决策卡六件事：本轮 </span><span style="font-family:Consolas; font-size:26px; font-weight:bold; color:$text;">NO_TRADE</span><span style="font-size:26px; font-weight:bold; color:$text;">，不为展示降门槛</span></p>
+        <p style="margin-top:2px;"><span style="font-size:12px; color:$textSub;">四种结论枚举 · 首屏六件事 · 逐条溯源；焦点卡 = 本轮裁决</span></p>
+  - elementId: head-status
+    elementType: text
+    bounds: [586, 22, 200, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      wrap: false
+      align: [right, top]
+      text: "GOAI · TERMINAL — 初赛评审   08/16"
+  - elementId: head-rule
+    elementType: line
+    bounds: [64, 91, 832, 2]
+    viewBox: [1, 2]
+    points: "0,1 1,1"
+    curve: sharp
+    border: {style: solid, width: 1, color: "$border"}
+
+  # ---- 金句条（锁文件 §4.2）----
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-mark
+    elementType: text
+    bounds: [76, 384, 18, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [left, middle]
+      text: ">"
+  - elementId: quote-text
+    elementType: text
+    bounds: [98, 384, 788, 40]
+    content:
+      style: "$quote"
+      lineHeight: 1.2
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p><span style="font-family:Consolas;">NO_TRADE</span> 是成功结果。不会为了展示下单而调低门槛。</p>
+
+  # ---- 总结条（锁文件 §4.3）----
+  - elementId: sum-bar
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: sum-cap
+    elementType: text
+    bounds: [78, 436, 44, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      text: "结论"
+  - elementId: sum-text
+    elementType: text
+    bounds: [130, 436, 760, 48]
+    content:
+      style: "$body"
+      wrap: false
+      align: [left, middle]
+      text: |
+        <p>金融数字只来自 <span style="font-family:Consolas;">Futu</span>、冻结快照或确定性引擎，<span style="font-family:Consolas;">LLM</span> 不估算，逐条可溯源。</p>
+
+  # ---- 页脚（锁文件 §4.4）----
+  - elementId: foot-rule
+    elementType: line
+    bounds: [64, 511, 832, 2]
+    viewBox: [1, 2]
+    points: "0,1 1,1"
+    curve: sharp
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: foot-src
+    elementType: text
+    bounds: [64, 518, 700, 14]
+    content:
+      style: "$footnote"
+      wrap: false
+      align: [left, top]
+      text: "来源: data/decision_card_2026-08-12.json · 2026-08-12"
+  - elementId: foot-page
+    elementType: text
+    bounds: [826, 518, 70, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      wrap: false
+      align: [right, top]
+      text: "08 / 16"
+
+# 动画（锁文件 §6 第 08 行）：G1 标题栏+六卡框架 fade-in（auto）；G2 卡 1–3 wipe-in(up) 同时；G3 卡 4–6 wipe-in(up) 同时
+animations:
+  - elementId: head-eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: head-title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: frame-main
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: frame-focus
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: card1
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: card2
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: card3
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: card4
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: card5
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: card6
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious

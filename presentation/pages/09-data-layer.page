@@ -1,0 +1,371 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  左侧为数据层四组件卡片；右侧为四层架构线框（概念示意）。
+  口径：Live/Replay 同合同、只读边界、20s 可终止 worker、Replay 兜底（yfinance 429 教训）。
+elements:
+  # ===== 页头 =====
+  - elementId: header-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: header-eyebrow
+    elementType: text
+    bounds: [78, 26, 400, 12]
+    content:
+      style: "$eyebrow"
+      align: [left, top]
+      wrap: false
+      text: "09 · DATA LAYER"
+  - elementId: header-title
+    elementType: text
+    bounds: [78, 44, 700, 42]
+    content:
+      style: "$title"
+      lineHeight: 1
+      align: [left, top]
+      text: |
+        <p>只读边界、<span style="font-family:Consolas">20s</span> 可终止 worker、回放兜底：现场稳定不靠运气</p>
+        <p style="margin-top:2px"><span style="font-size:12px; color:$textSub">数据层组件清单与分层架构：Live 与 Replay 一份合同，边界外没有任何交易方法</span></p>
+  - elementId: header-hairline
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    curve: sharp
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: header-status
+    elementType: text
+    bounds: [786, 22, 110, 12]
+    content:
+      fontSize: 8
+      color: "$textSub"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      letterSpacing: 2
+      align: [right, top]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审   09/16"
+
+  # ===== 左侧：组件卡片 =====
+  - elementId: card-1
+    elementType: shape
+    bounds: [64, 104, 320, 60]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-1-title
+    elementType: text
+    bounds: [76, 112, 296, 16]
+    content:
+      style: "$cardTitle"
+      align: [left, top]
+      wrap: false
+      text: '<span style="font-family:Consolas; color:$accent">01</span> DataEnvelope · 数据信封'
+  - elementId: card-1-body
+    elementType: text
+    bounds: [76, 131, 296, 28]
+    content:
+      style: "$annotation"
+      lineHeight: 1.35
+      align: [left, top]
+      text: |
+        <p>统一 <span style="font-family:Consolas">LIVE/REPLAY</span>：来源时间、freshness、typed error</p>
+        <p>与 <span style="font-family:Consolas">SHA-256</span> 快照身份</p>
+  - elementId: card-2
+    elementType: shape
+    bounds: [64, 172, 320, 60]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-2-title
+    elementType: text
+    bounds: [76, 180, 296, 16]
+    content:
+      style: "$cardTitle"
+      align: [left, top]
+      wrap: false
+      text: '<span style="font-family:Consolas; color:$accent">02</span> 双 Gateway · 同合同'
+  - elementId: card-2-body
+    elementType: text
+    bounds: [76, 199, 296, 28]
+    content:
+      style: "$annotation"
+      lineHeight: 1.35
+      align: [left, top]
+      text: |
+        <p>FutuLiveGateway 惰性导入 SDK、只读 Context；</p>
+        <p>ReplayGateway 确定性回放、不导入 SDK</p>
+  - elementId: card-3
+    elementType: shape
+    bounds: [64, 240, 320, 60]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-3-title
+    elementType: text
+    bounds: [76, 248, 296, 16]
+    content:
+      style: "$cardTitle"
+      align: [left, top]
+      wrap: false
+      text: '<span style="font-family:Consolas; color:$accent">03</span> SnapshotRecorder'
+  - elementId: card-3-body
+    elementType: text
+    bounds: [76, 267, 296, 28]
+    content:
+      style: "$annotation"
+      lineHeight: 1.35
+      align: [left, top]
+      text: |
+        <p>线程安全 <span style="font-family:Consolas">JSONL</span> 录制 <span style="font-family:Consolas">data/snapshots/</span>；原始授权行情</p>
+        <p>只存本地，不重新分发</p>
+  - elementId: card-4
+    elementType: shape
+    bounds: [64, 308, 320, 60]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-4-title
+    elementType: text
+    bounds: [76, 316, 296, 16]
+    content:
+      style: "$cardTitle"
+      align: [left, top]
+      wrap: false
+      text: '<span style="font-family:Consolas; color:$accent">04</span> 只读边界 · <span style="font-family:Consolas">20s</span> worker'
+  - elementId: card-4-body
+    elementType: text
+    bounds: [76, 335, 296, 28]
+    content:
+      style: "$annotation"
+      lineHeight: 1.35
+      align: [left, top]
+      text: |
+        <p>无下单/改单/撤单/解锁；<span style="font-family:Consolas">20s</span> 硬截止可终止读账户，</p>
+        <p>超时 <span style="font-family:Consolas">ACCOUNT_UNAVAILABLE</span></p>
+
+  # ===== 右侧：架构分层示意 =====
+  - elementId: layer-1
+    elementType: shape
+    bounds: [400, 104, 496, 56]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#10161F"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: layer-1-text
+    elementType: text
+    bounds: [412, 110, 470, 44]
+    content:
+      style: "$cardTitle"
+      lineHeight: 1
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent">L1</span> 数据接入 · 双 Gateway 同合同</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">FUTU LIVE 惰性导入 SDK · 只读 Context ⇄ REPLAY 确定性回放 · <span style="font-family:Consolas">60s</span> 一致性窗口</span></p>
+  - elementId: layer-2
+    elementType: shape
+    bounds: [400, 168, 496, 56]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#10161F"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: layer-2-text
+    elementType: text
+    bounds: [412, 174, 470, 44]
+    content:
+      style: "$cardTitle"
+      lineHeight: 1
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent">L2</span> 数据封装 · 身份与来源可追溯</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">DataEnvelope: freshness · typed error · <span style="font-family:Consolas">SHA-256</span> ｜ SnapshotRecorder: <span style="font-family:Consolas">JSONL</span> 本地录制</span></p>
+  - elementId: layer-3
+    elementType: shape
+    bounds: [400, 232, 496, 56]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#10161F"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: layer-3-text
+    elementType: text
+    bounds: [412, 238, 470, 44]
+    content:
+      style: "$cardTitle"
+      lineHeight: 1
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent">L3</span> 只读边界 · 交易方法零暴露</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">无下单/改单/撤单/解锁 · OpenD <span style="font-family:Consolas">127.0.0.1:11111</span> · <span style="font-family:Consolas">20s</span> 可终止 worker · 超时 <span style="font-family:Consolas">ACCOUNT_UNAVAILABLE</span></span></p>
+  - elementId: layer-4
+    elementType: shape
+    bounds: [400, 296, 496, 56]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#10161F"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: layer-4-text
+    elementType: text
+    bounds: [412, 302, 470, 44]
+    content:
+      style: "$cardTitle"
+      lineHeight: 1
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent">L4</span> 兜底 · Replay 保证现场稳定</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">Live 失败 → 明确回放（用户确认），不静默切换 · yfinance 429（2026-08-08 实测）→ 快照回放</span></p>
+  - elementId: concept-tag
+    elementType: shape
+    bounds: [784, 354, 112, 18]
+    shapeName: roundRect
+    adjustments: [50000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: concept-tag-text
+    elementType: text
+    bounds: [784, 354, 112, 18]
+    content:
+      fontSize: 9
+      color: "$textSub"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      align: [center, middle]
+      text: 概念示意
+
+  # ===== 金句条 =====
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-mark
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [left, middle]
+      wrap: false
+      text: "&gt;"
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 780, 40]
+    content:
+      style: "$quote"
+      lineHeight: 1.2
+      align: [left, middle]
+      wrap: false
+      text: "现场稳定不是赌出来的：快照回放，不靠免费行情的脸色。"
+
+  # ===== 总结条 =====
+  - elementId: summary-bar
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 40, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      text: 结论
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 750, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      text: |
+        <p>同合同 + 只读边界 + <span style="font-family:Consolas; color:$accent">20s</span> 可终止 worker：断网即明确回放，绝不静默降级。</p>
+
+  # ===== 页脚 =====
+  - elementId: footer-line
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    curve: sharp
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 518, 700, 12]
+    content:
+      style: "$footnote"
+      align: [left, top]
+      wrap: false
+      text: "来源: README.md · PROJECT_STATE.md §5 §9 · 口径: facts.md §5"
+  - elementId: footer-right
+    elementType: text
+    bounds: [820, 518, 76, 12]
+    content:
+      fontSize: 9
+      color: "$textSub"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [right, top]
+      wrap: false
+      text: "09 / 16"
+
+animations:
+  # G1（auto）: 标题栏 fade-in
+  - elementId: header-tick
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-hairline
+    effect: fade-in
+    trigger: withPrevious
+  # G2（click）: 层 1 → 层 2 wipe-in(right) 依次
+  - elementId: layer-1
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  - elementId: layer-1-text
+    effect: wipe-in
+    direction: right
+    trigger: withPrevious
+  - elementId: layer-2
+    effect: wipe-in
+    direction: right
+    trigger: afterPrevious
+  - elementId: layer-2-text
+    effect: wipe-in
+    direction: right
+    trigger: withPrevious
+  # G3（click）: 层 3 → 层 4 wipe-in(right) 依次
+  - elementId: layer-3
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  - elementId: layer-3-text
+    effect: wipe-in
+    direction: right
+    trigger: withPrevious
+  - elementId: layer-4
+    effect: wipe-in
+    direction: right
+    trigger: afterPrevious
+  - elementId: layer-4-text
+    effect: wipe-in
+    direction: right
+    trigger: withPrevious

@@ -1,0 +1,455 @@
+pageType: content
+notes: |
+  方案页：输入一句自然语言，输出一张决策卡；五阶段闭环显式对应赛道评审口径。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "04"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: SOLUTION · 03
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 从一句自然语言到一张决策卡：五阶段任务闭环
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 输入示例：「腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。」
+  - elementId: node1
+    elementType: shape
+    bounds: [60, 132, 152, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: node1-text
+    elementType: text
+    bounds: [60, 144, 152, 22]
+    content:
+      style: "$small"
+      bold: true
+      align: [center, middle]
+      text: 场景解析
+  - elementId: arrow1
+    elementType: line
+    bounds: [212, 153, 20, 2]
+    viewBox: [20, 2]
+    points: "0,1 20,1"
+    arrow: [null, arrow]
+    border: {style: solid, width: 1.5, color: "$primary"}
+  - elementId: node2
+    elementType: shape
+    bounds: [232, 132, 152, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: node2-text
+    elementType: text
+    bounds: [232, 144, 152, 22]
+    content:
+      style: "$small"
+      bold: true
+      align: [center, middle]
+      text: 数据 / 冻结快照
+  - elementId: arrow2
+    elementType: line
+    bounds: [384, 153, 20, 2]
+    viewBox: [20, 2]
+    points: "0,1 20,1"
+    arrow: [null, arrow]
+    border: {style: solid, width: 1.5, color: "$primary"}
+  - elementId: node3
+    elementType: shape
+    bounds: [404, 132, 152, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: node3-text
+    elementType: text
+    bounds: [404, 144, 152, 22]
+    content:
+      style: "$small"
+      bold: true
+      align: [center, middle]
+      text: 引擎计算
+  - elementId: arrow3
+    elementType: line
+    bounds: [556, 153, 20, 2]
+    viewBox: [20, 2]
+    points: "0,1 20,1"
+    arrow: [null, arrow]
+    border: {style: solid, width: 1.5, color: "$primary"}
+  - elementId: node4
+    elementType: shape
+    bounds: [576, 132, 152, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: node4-text
+    elementType: text
+    bounds: [576, 144, 152, 22]
+    content:
+      style: "$small"
+      bold: true
+      align: [center, middle]
+      text: 门控判定
+  - elementId: arrow4
+    elementType: line
+    bounds: [728, 153, 20, 2]
+    viewBox: [20, 2]
+    points: "0,1 20,1"
+    arrow: [null, arrow]
+    border: {style: solid, width: 1.5, color: "$primary"}
+  - elementId: node5
+    elementType: shape
+    bounds: [748, 132, 152, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: node5-text
+    elementType: text
+    bounds: [748, 144, 152, 22]
+    content:
+      style: "$small"
+      bold: true
+      color: "#06212B"
+      align: [center, middle]
+      text: 决策卡 + 审计
+  - elementId: cap1
+    elementType: text
+    bounds: [60, 186, 152, 16]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: 只补必要字段
+  - elementId: cap2
+    elementType: text
+    bounds: [232, 186, 152, 16]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: Live 或 Replay，固定 as_of
+  - elementId: cap3
+    elementType: text
+    bounds: [404, 186, 152, 16]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: BS / 二叉树 / 成本口径
+  - elementId: cap4
+    elementType: text
+    bounds: [576, 186, 152, 16]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: Edge / Risk / Action
+  - elementId: cap5
+    elementType: text
+    bounds: [748, 186, 152, 16]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: 证据 + 审计链
+  - elementId: loop-head
+    elementType: text
+    bounds: [60, 222, 400, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 任务闭环 · 对应赛道评审口径
+  - elementId: loop-chips
+    elementType: text
+    bounds: [60, 244, 840, 20]
+    content:
+      style: "$cap"
+      text: 用户输入 → 任务理解 → 流程编排 → 知识库/工具调用 → 结果交付 → 异常处理 → 效果验证
+  - elementId: states-head
+    elementType: text
+    bounds: [60, 286, 400, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 四种合法输出状态
+  - elementId: s1-label
+    elementType: text
+    bounds: [60, 312, 195, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "$warn"
+      text: NO_TRADE
+  - elementId: s1-desc
+    elementType: text
+    bounds: [60, 334, 195, 34]
+    content:
+      style: "$cap"
+      text: 成本与证据不支持交易，明确拒绝
+  - elementId: vline1
+    elementType: line
+    bounds: [270, 316, 1, 52]
+    viewBox: [1, 52]
+    points: "0,0 0,52"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s2-label
+    elementType: text
+    bounds: [285, 312, 195, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "$down"
+      text: BLOCK
+  - elementId: s2-desc
+    elementType: text
+    bounds: [285, 334, 195, 34]
+    content:
+      style: "$cap"
+      text: 数据、规格或风险硬门未通过
+  - elementId: vline2
+    elementType: line
+    bounds: [495, 316, 1, 52]
+    viewBox: [1, 52]
+    points: "0,0 0,52"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s3-label
+    elementType: text
+    bounds: [510, 312, 195, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "$sub"
+      text: DRAFT_ONLY
+  - elementId: s3-desc
+    elementType: text
+    bounds: [510, 334, 195, 34]
+    content:
+      style: "$cap"
+      text: 可研究并生成草稿，不能提交
+  - elementId: vline3
+    elementType: line
+    bounds: [720, 316, 1, 52]
+    viewBox: [1, 52]
+    points: "0,0 0,52"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s4-label
+    elementType: text
+    bounds: [735, 312, 165, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "$up"
+      text: READY_FOR_CONFIRMATION
+  - elementId: s4-desc
+    elementType: text
+    bounds: [735, 334, 165, 34]
+    content:
+      style: "$cap"
+      text: 客观门通过，待用户确认模拟
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: 敢拒绝，才值得被信任。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: 输出不追求下单：NO_TRADE、BLOCK 与 DRAFT_ONLY 都是合法结论；每次运行产出结论、依据、成本、数据模式与唯一可用下一步。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 来源：docs/PRD.md §3 核心用户旅程 · 赛道要求：任务闭环七环节
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 04 / 16
+animations:
+  - elementId: node1
+    effect: fly-in
+    trigger: onClick
+    direction: right
+    durationMs: 350
+  - elementId: node1-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: arrow1
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 200
+  - elementId: node2
+    effect: fly-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+    delayMs: 90
+  - elementId: node2-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: arrow2
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 200
+  - elementId: node3
+    effect: fly-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+    delayMs: 90
+  - elementId: node3-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: arrow3
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 200
+  - elementId: node4
+    effect: fly-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+    delayMs: 90
+  - elementId: node4-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: arrow4
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 200
+  - elementId: node5
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 450
+    delayMs: 100
+  - elementId: node5-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: loop-head
+    effect: fade-in
+    trigger: onClick
+    durationMs: 300
+  - elementId: loop-chips
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: states-head
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: s1-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s1-desc
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s2-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s2-desc
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s3-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s3-desc
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s4-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: s4-desc
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: quote-bar
+    effect: fade-in
+    trigger: onClick
+    durationMs: 350
+  - elementId: quote-rail
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: quote-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: quote-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: takeaway
+    effect: fade-in
+    trigger: onClick
+    durationMs: 400
+  - elementId: takeaway-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300

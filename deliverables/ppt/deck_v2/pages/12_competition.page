@@ -1,0 +1,207 @@
+pageType: content
+notes: |
+  竞品页：差异不在算法，而在可信闭环。表内评价为依据公开研究的定性判断。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "12"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: COMPETITION · 11
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 差异不在算法，而在可信闭环：可复算、可审计、敢拒绝
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 对比维度：数据、数值可信、账户约束、审计溯源、允许 NO_TRADE
+  - elementId: diff-table
+    elementType: table
+    bounds: [60, 120, 600, 252]
+    style: "$default"
+    columnWidths: [0.28, 0.15, 0.15, 0.15, 0.14, 0.13]
+    rowHeights: [0.1, 0.18, 0.18, 0.18, 0.18, 0.18]
+    rows:
+      - - text: 方案
+        - text: 数据
+        - text: 数值可信
+        - text: 账户约束
+        - text: 审计
+        - text: NO_TRADE
+      - - text: Futu 手工流程
+        - text: 强
+        - text: 中
+        - text: 中
+        - text: 无
+        - text: 无
+      - - text: 通用 LLM
+        - text: 弱
+        - text: 弱
+        - text: 无
+        - text: 无
+        - text: 无
+      - - text: 固定脚本
+        - text: 中
+        - text: 强
+        - text: 弱
+        - text: 无
+        - text: 无
+      - - text: Moomoo Engine
+        - text: 强
+        - text: 中
+        - text: 中
+        - text: 无
+        - text: 无
+      - - text: Moontower
+        - text: 中
+        - text: 中
+        - text: 无
+        - text: 无
+        - text: 无
+      - - text: GOAI（本方案）
+          bold: true
+          color: "#06212B"
+          fill: {type: solid, color: "$primary"}
+        - text: 强
+          bold: true
+          color: "#06212B"
+          fill: {type: solid, color: "$primary"}
+        - text: 强
+          bold: true
+          color: "#06212B"
+          fill: {type: solid, color: "$primary"}
+        - text: 强
+          bold: true
+          color: "#06212B"
+          fill: {type: solid, color: "$primary"}
+        - text: 强
+          bold: true
+          color: "#06212B"
+          fill: {type: solid, color: "$primary"}
+        - text: 强
+          bold: true
+          color: "#06212B"
+          fill: {type: solid, color: "$primary"}
+  - elementId: dim-head
+    elementType: text
+    bounds: [690, 120, 210, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 为什么是这五个维度
+  - elementId: dim-text
+    elementType: text
+    bounds: [690, 144, 210, 170]
+    content:
+      style: "$cap"
+      text: |
+        <p>· 数据：是否真实、带时间</p>
+        <p>· 数值：能否复算</p>
+        <p>· 账户：是否算现金与保证金</p>
+        <p>· 审计：错了能否复盘</p>
+        <p>· NO_TRADE：敢不敢拒绝</p>
+        <p style="margin-top:8px">评审可逐项回到本方案前页证据。</p>
+  - elementId: quote-plate
+    elementType: shape
+    bounds: [690, 322, 210, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [690, 322, 4, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-text
+    elementType: text
+    bounds: [706, 332, 184, 38]
+    content:
+      style: "$small"
+      fontSize: 10.5
+      bold: true
+      text: 数据、账户、审计、拒绝——四件事做齐，才是可信终端。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: 护城河 = 对话场景 → 账户约束求解 + 流动性/事件预警 + 可复核审计；竞品信息来自公开研究（research/01-market-landscape.md）。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 来源：research/01-market-landscape.md（方向性判断，2026-08 公开资料）
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 12 / 16
+animations:
+  - elementId: diff-table
+    effect: fade-in
+    trigger: onClick
+    durationMs: 450
+    easing: ease-out
+  - elementId: dim-head
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: dim-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: quote-plate
+    effect: fade-in
+    trigger: onClick
+    durationMs: 350
+  - elementId: quote-rail
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: quote-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: takeaway
+    effect: fade-in
+    trigger: onClick
+    durationMs: 400
+  - elementId: takeaway-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300

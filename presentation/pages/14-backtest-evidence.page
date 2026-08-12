@@ -1,0 +1,240 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  回测证据与验收指标页（14/16）。
+  左：口径 A/B d+2 平均 ROI 对比图（media/backtest_roi_comparison.png，16:9，fit contain）。
+  右：PRD §9 验收指标目标值表 + 回测 4 条 caveats。
+  数字来源 data/backtest_tencent_straddle.json（facts.md §2 / §9），日期 2026-08-12。
+elements:
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 300, 14]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "14 · BACKTEST EVIDENCE"
+  - elementId: title
+    elementType: text
+    bounds: [78, 44, 700, 24]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "回测负期望成立：口径可解释、证据可溯源"
+  - elementId: subtitle
+    elementType: text
+    bounds: [78, 72, 700, 14]
+    content:
+      style: "$subtitle"
+      align: [left, middle]
+      wrap: false
+      text: "口径 A/B d+2 平均 ROI 对比 · PRD §9 验收指标 · 4 条回测 caveats"
+  - elementId: statusbar
+    elementType: text
+    bounds: [620, 22, 276, 14]
+    content:
+      fontSize: 8
+      fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, middle]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审  14/16"
+  - elementId: hairline-head
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-chart
+    elementType: shape
+    bounds: [64, 104, 400, 268]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-chart-title
+    elementType: text
+    bounds: [76, 114, 376, 18]
+    content:
+      style: "$cardTitle"
+      align: [left, middle]
+      wrap: false
+      text: "d+2 平均 ROI · 口径 A（engine）vs 口径 B（proxy）"
+  - elementId: roi-chart
+    elementType: image
+    bounds: [76, 138, 376, 186]
+    src: "media/backtest_roi_comparison.png"
+    fit: {mode: contain}
+  - elementId: chart-caption
+    elementType: text
+    bounds: [76, 328, 376, 14]
+    content:
+      style: "$annotation"
+      align: [left, middle]
+      wrap: false
+      text: "口径 A d+2 平均 -7.8%（n=11）· 口径 B d+2 平均 -47.5%（n=19）"
+  - elementId: chart-note
+    elementType: text
+    bounds: [76, 344, 376, 24]
+    content:
+      style: "$footnote"
+      align: [left, middle]
+      wrap: true
+      text: "来源: data/backtest_tencent_straddle.json · 口径: src/backtest_tencent_straddle.py"
+  - elementId: table-title
+    elementType: text
+    bounds: [480, 108, 416, 16]
+    content:
+      style: "$cardTitle"
+      align: [left, middle]
+      wrap: false
+      text: "PRD §9 验收指标（目标值）"
+  - elementId: metrics-table
+    elementType: table
+    bounds: [480, 128, 416, 116]
+    columnWidths: [0.42, 0.4, 0.18]
+    rowHeights: [0.16, 0.168, 0.168, 0.168, 0.168, 0.168]
+    style: "$default"
+    rows:
+      - - {text: 验收指标, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: 目标值, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: 切片, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+      - - {text: 关键数字与事实溯源率, bold: true, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: "100%", align: [right, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+        - {text: P0a+, align: [center, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+      - - {text: Replay 稳定性, bold: true, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: "连续 10 次一致", align: [right, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+        - {text: P0a+, align: [center, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+      - - {text: 风控/动作泄漏, bold: true, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: "0 次", align: [right, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+        - {text: 全部, align: [center, middle], fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+      - - {text: 场景字段解析准确率, bold: true, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: "≥ 95%", align: [right, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+        - {text: P0a+, align: [center, middle], fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}}
+      - - {text: 能力声明真实性, bold: true, fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: 不超最高切片, align: [right, middle], fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+        - {text: 全部, align: [center, middle], fontFamily: {latin: Arial, ea: "Microsoft YaHei"}}
+  - elementId: caveats-card
+    elementType: shape
+    bounds: [480, 252, 416, 120]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: caveats-title
+    elementType: text
+    bounds: [492, 260, 392, 16]
+    content:
+      style: "$cardTitle"
+      align: [left, middle]
+      wrap: false
+      text: "回测 caveats（4 条）"
+  - elementId: caveats-items
+    elementType: text
+    bounds: [492, 282, 392, 78]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent"><strong>01</strong></span> 历史期权链 bid/ask 不可得，成本按 IV 定价 + 5% 滑点近似</p>
+        <p><span style="font-family:Consolas; color:$accent"><strong>02</strong></span> 平仓按到期内在价值，忽略剩余时间价值（偏保守或偏乐观）</p>
+        <p><span style="font-family:Consolas; color:$accent"><strong>03</strong></span> 样本仅单标的 11~19 个财报期，t 统计量仅供量级参考</p>
+        <p><span style="font-family:Consolas; color:$accent"><strong>04</strong></span> 当前 2026/Q2 为在途模拟订单，属于样本外前瞻验证</p>
+  - elementId: quote-panel
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-prompt
+    elementType: text
+    bounds: [72, 384, 24, 40]
+    content:
+      fontSize: 12
+      fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}
+      bold: true
+      color: "$accent"
+      align: [center, middle]
+      wrap: false
+      text: ">"
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 788, 40]
+    content:
+      style: "$quote"
+      align: [left, middle]
+      wrap: false
+      text: "证据的价值不在结论好坏，而在别人能否重新算出同一个数。"
+  - elementId: summary-panel
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 44, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+  - elementId: summary-body
+    elementType: text
+    bounds: [130, 436, 754, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p>P0a 已跑通：两口径 d+2 一致为负，关键数字溯源率 <span style="color:$accent">100%</span>，审计链完整。</p>
+  - elementId: hairline-foot
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-source
+    elementType: text
+    bounds: [64, 518, 520, 12]
+    content:
+      style: "$footnote"
+      align: [left, middle]
+      wrap: false
+      text: "来源: data/backtest_tencent_straddle.json · docs/PRD.md §9 · 2026-08-12"
+  - elementId: footer-page
+    elementType: text
+    bounds: [816, 518, 80, 12]
+    content:
+      fontSize: 9
+      fontFamily: {latin: Consolas, ea: "Microsoft YaHei"}
+      color: "$textSub"
+      align: [right, middle]
+      wrap: false
+      text: "14 / 16"
+animations:
+  - {elementId: eyebrow, effect: fade-in, trigger: withPrevious}
+  - {elementId: title, effect: fade-in, trigger: withPrevious}
+  - {elementId: subtitle, effect: fade-in, trigger: withPrevious}
+  - {elementId: card-chart, effect: fade-in, trigger: withPrevious}
+  - {elementId: roi-chart, effect: zoom-in, trigger: onClick}
+  - {elementId: chart-caption, effect: fade-in, trigger: withPrevious}
+  - {elementId: chart-note, effect: fade-in, trigger: withPrevious}
+  - {elementId: metrics-table, effect: wipe-in, direction: up, trigger: onClick}
+  - {elementId: table-title, effect: wipe-in, direction: up, trigger: withPrevious}
+  - {elementId: caveats-card, effect: fade-in, trigger: withPrevious}

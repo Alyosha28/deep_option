@@ -1,0 +1,161 @@
+pageType: content
+notes: |
+  证据页二：历史 11–19 个财报期买入业绩跨式整体负期望；样本小，结论是证据强度不足。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "08"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: EVIDENCE · 07
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 历史 11–19 个财报期：买入业绩跨式整体负期望
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 口径 A = 引擎 + 历史 IV（n=11）· 口径 B = 市场预期波动代理（n=19）· 按到期内在价值平仓
+  - elementId: bt-chart
+    elementType: chart
+    bounds: [60, 120, 560, 264]
+    data:
+      cols: [horizon, A, B]
+      rows:
+        - ["d+1", -2.4, -49.1]
+        - ["d+2", -7.8, -47.5]
+        - ["d+5", 21.0, -22.6]
+    title:
+      text: 各持有期平均 ROI（%）
+      fontSize: 12
+      color: "$ink"
+    legend: {show: true, position: top, fontSize: 9, color: "$sub"}
+    fontFamily: {latin: Arial, ea: MiSans}
+    xAxis: {label: {fontSize: 9, color: "$sub"}, axisLine: {color: "$hairline"}, gridLine: {show: false}}
+    yAxis: {label: {numberFormat: "0.0", fontSize: 9, color: "$sub"}, axisLine: {color: "$hairline"}, gridLine: {color: "#FFFFFF14", width: 1}}
+    series:
+      - type: bar
+        encode: {x: horizon, y: A}
+        name: 口径A（n=11）
+        fill: "$primary"
+        dataLabels: {show: true, numberFormat: "0.0", fontSize: 9, color: "$sub"}
+      - type: bar
+        encode: {x: horizon, y: B}
+        name: 口径B（n=19）
+        fill: "$warn"
+        dataLabels: {show: true, numberFormat: "0.0", fontSize: 9, color: "$sub"}
+  - elementId: win-plate
+    elementType: shape
+    bounds: [640, 120, 260, 96]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: win-label
+    elementType: text
+    bounds: [660, 132, 220, 16]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: d+2 胜率
+  - elementId: win-text
+    elementType: text
+    bounds: [660, 154, 220, 48]
+    content:
+      style: "$small"
+      text: |
+        <p>口径A：<span style="font-size:17px; color:$down;">36%</span></p>
+        <p>口径B：<span style="font-size:17px; color:$down;">16%</span></p>
+  - elementId: caveat-head
+    elementType: text
+    bounds: [640, 236, 260, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 口径边界
+  - elementId: caveat-text
+    elementType: text
+    bounds: [640, 258, 260, 122]
+    content:
+      style: "$cap"
+      text: |
+        <p>· 历史 bid/ask 不可得，引擎成本按 IV + 5% 滑点近似</p>
+        <p>· 平仓按到期内在价值，忽略剩余时间价值</p>
+        <p>· 单标的 11–19 期，t 统计量仅作量级参考</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: 样本少的时候，诚实比自信值钱。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: 2025–2026 转好但样本少：结论是证据强度不足，而非机会不存在。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 数据：backtest_tencent_straddle.json（stats · engine/proxy）
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 08 / 16

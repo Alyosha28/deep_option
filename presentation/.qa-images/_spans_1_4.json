@@ -1,0 +1,3418 @@
+{
+ "1": [
+  {
+   "bbox": [
+    701.6,
+    24.8,
+    815.1,
+    34.1
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "G O A I  ·  T E R M I N A L  —  "
+  },
+  {
+   "bbox": [
+    819.3,
+    23.7,
+    861.8,
+    34.2
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "初赛评审 "
+  },
+  {
+   "bbox": [
+    865.8,
+    24.8,
+    895.9,
+    34.1
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "0 1 / 1 6"
+  },
+  {
+   "bbox": [
+    64.0,
+    66.9,
+    68.9,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "G"
+  },
+  {
+   "bbox": [
+    71.9,
+    66.9,
+    76.9,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    79.9,
+    66.9,
+    84.8,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "A"
+  },
+  {
+   "bbox": [
+    87.8,
+    66.9,
+    92.8,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    95.8,
+    66.9,
+    108.7,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " ·"
+  },
+  {
+   "bbox": [
+    111.7,
+    66.9,
+    124.6,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " O"
+  },
+  {
+   "bbox": [
+    127.6,
+    66.9,
+    132.6,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "P"
+  },
+  {
+   "bbox": [
+    135.6,
+    66.9,
+    140.5,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "T"
+  },
+  {
+   "bbox": [
+    143.5,
+    66.9,
+    148.5,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    151.5,
+    66.9,
+    156.4,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    159.4,
+    66.9,
+    164.4,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    167.4,
+    66.9,
+    180.3,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " D"
+  },
+  {
+   "bbox": [
+    183.3,
+    66.9,
+    188.3,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "E"
+  },
+  {
+   "bbox": [
+    191.3,
+    66.9,
+    196.2,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "C"
+  },
+  {
+   "bbox": [
+    199.2,
+    66.9,
+    204.2,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    207.2,
+    66.9,
+    212.1,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "S"
+  },
+  {
+   "bbox": [
+    215.1,
+    66.9,
+    220.1,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    223.1,
+    66.9,
+    228.1,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    231.0,
+    66.9,
+    236.0,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    239.0,
+    66.9,
+    251.9,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " A"
+  },
+  {
+   "bbox": [
+    254.9,
+    66.9,
+    259.9,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "G"
+  },
+  {
+   "bbox": [
+    262.9,
+    66.9,
+    267.8,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "E"
+  },
+  {
+   "bbox": [
+    270.8,
+    66.9,
+    275.8,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    278.8,
+    66.9,
+    283.7,
+    77.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "T"
+  },
+  {
+   "bbox": [
+    64.0,
+    119.1,
+    215.3,
+    168.2
+   ],
+   "font": "Arial-BoldMT",
+   "size": 44.0,
+   "color": "#e6edf3",
+   "text": "GOAI · "
+  },
+  {
+   "bbox": [
+    226.2,
+    112.3,
+    534.2,
+    170.4
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 44.0,
+   "color": "#e6edf3",
+   "text": "期权决策智能体"
+  },
+  {
+   "bbox": [
+    64.0,
+    178.9,
+    97.3,
+    192.3
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "GOAI "
+  },
+  {
+   "bbox": [
+    100.2,
+    177.0,
+    208.0,
+    192.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "港美股期权智能终端"
+  },
+  {
+   "bbox": [
+    64.0,
+    214.0,
+    402.8,
+    232.5
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 14.0,
+   "color": "#000000",
+   "text": "不替你猜涨跌——把自然语言观点收拢为可核验决策卡"
+  },
+  {
+   "bbox": [
+    64.0,
+    266.5,
+    97.3,
+    279.9
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "GOAI "
+  },
+  {
+   "bbox": [
+    100.2,
+    264.7,
+    223.6,
+    280.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "世界人工智能开源大赛 "
+  },
+  {
+   "bbox": [
+    226.6,
+    266.5,
+    340.4,
+    279.9
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "· Boundless Agents · "
+  },
+  {
+   "bbox": [
+    343.5,
+    264.7,
+    415.4,
+    280.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "金融服务赛道"
+  },
+  {
+   "bbox": [
+    64.0,
+    296.9,
+    115.5,
+    312.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "初赛提交 "
+  },
+  {
+   "bbox": [
+    118.4,
+    298.5,
+    184.2,
+    312.5
+   ],
+   "font": "Consolas",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "2026-08-16"
+  },
+  {
+   "bbox": [
+    64.0,
+    343.4,
+    93.8,
+    360.6
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "团队 "
+  },
+  {
+   "bbox": [
+    96.9,
+    345.4,
+    104.8,
+    359.9
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "· "
+  },
+  {
+   "bbox": [
+    104.8,
+    345.2,
+    111.9,
+    360.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "3"
+  },
+  {
+   "bbox": [
+    118.6,
+    343.4,
+    131.6,
+    360.6
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "人"
+  },
+  {
+   "bbox": [
+    64.0,
+    372.5,
+    70.6,
+    386.6
+   ],
+   "font": "Consolas",
+   "size": 12.0,
+   "color": "#000000",
+   "text": "A"
+  },
+  {
+   "bbox": [
+    76.8,
+    370.9,
+    92.3,
+    386.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "多 "
+  },
+  {
+   "bbox": [
+    95.2,
+    372.7,
+    129.8,
+    386.1
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "Agent "
+  },
+  {
+   "bbox": [
+    132.8,
+    370.9,
+    220.2,
+    386.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "工程与量化研究 "
+  },
+  {
+   "bbox": [
+    223.2,
+    372.7,
+    230.5,
+    386.1
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "· "
+  },
+  {
+   "bbox": [
+    230.5,
+    372.5,
+    237.1,
+    386.6
+   ],
+   "font": "Consolas",
+   "size": 12.0,
+   "color": "#000000",
+   "text": "B"
+  },
+  {
+   "bbox": [
+    243.4,
+    370.9,
+    330.8,
+    386.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "港美股期权策略 "
+  },
+  {
+   "bbox": [
+    333.8,
+    372.7,
+    341.1,
+    386.1
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "· "
+  },
+  {
+   "bbox": [
+    341.1,
+    372.5,
+    347.7,
+    386.6
+   ],
+   "font": "Consolas",
+   "size": 12.0,
+   "color": "#000000",
+   "text": "C"
+  },
+  {
+   "bbox": [
+    353.9,
+    370.9,
+    437.8,
+    386.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "网络安全与合规"
+  },
+  {
+   "bbox": [
+    861.3,
+    520.3,
+    895.9,
+    530.9
+   ],
+   "font": "Consolas",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "01 / 16"
+  }
+ ],
+ "2": [
+  {
+   "bbox": [
+    78.0,
+    28.9,
+    82.9,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "0"
+  },
+  {
+   "bbox": [
+    85.9,
+    28.9,
+    90.9,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "2"
+  },
+  {
+   "bbox": [
+    93.9,
+    28.9,
+    106.8,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " ·"
+  },
+  {
+   "bbox": [
+    109.8,
+    28.9,
+    122.7,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " P"
+  },
+  {
+   "bbox": [
+    125.7,
+    28.9,
+    130.7,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    133.7,
+    28.9,
+    138.6,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "S"
+  },
+  {
+   "bbox": [
+    141.6,
+    28.9,
+    146.6,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    149.6,
+    28.9,
+    154.5,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "T"
+  },
+  {
+   "bbox": [
+    157.5,
+    28.9,
+    162.5,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    165.5,
+    28.9,
+    170.4,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    173.4,
+    28.9,
+    178.4,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    181.4,
+    28.9,
+    186.4,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    189.3,
+    28.9,
+    194.3,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    197.3,
+    28.9,
+    202.3,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "G"
+  },
+  {
+   "bbox": [
+    692.8,
+    22.6,
+    806.3,
+    31.9
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "G O A I  ·  T E R M I N A L  —  "
+  },
+  {
+   "bbox": [
+    810.5,
+    21.4,
+    861.8,
+    32.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "初赛评审   "
+  },
+  {
+   "bbox": [
+    865.8,
+    22.6,
+    895.8,
+    31.9
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "0 2 / 1 6"
+  },
+  {
+   "bbox": [
+    78.0,
+    46.0,
+    442.1,
+    80.3
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 26.0,
+   "color": "#e6edf3",
+   "text": "不猜方向，只交付可核验决策卡"
+  },
+  {
+   "bbox": [
+    78.0,
+    76.2,
+    389.6,
+    92.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "一句话定位与两个支撑论点：可核验决策卡、敢说不交易。"
+  },
+  {
+   "bbox": [
+    64.0,
+    111.8,
+    220.0,
+    146.1
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 26.0,
+   "color": "#000000",
+   "text": "不替你猜涨跌"
+  },
+  {
+   "bbox": [
+    64.0,
+    158.2,
+    423.6,
+    174.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#000000",
+   "text": "把自然语言观点收拢为可核验决策卡；每个数字可溯源，每条结论带"
+  },
+  {
+   "bbox": [
+    64.0,
+    176.9,
+    100.0,
+    192.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#000000",
+   "text": "依据。"
+  },
+  {
+   "bbox": [
+    64.0,
+    213.0,
+    106.8,
+    226.2
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "输入示例 "
+  },
+  {
+   "bbox": [
+    109.2,
+    214.5,
+    158.5,
+    225.7
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "· PRD §3.2"
+  },
+  {
+   "bbox": [
+    64.0,
+    232.6,
+    236.4,
+    245.8
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "「腾讯业绩快到了，方向不确定。账户 "
+  },
+  {
+   "bbox": [
+    238.6,
+    234.1,
+    252.5,
+    245.3
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "10 "
+  },
+  {
+   "bbox": [
+    254.9,
+    232.6,
+    347.5,
+    245.8
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "万港币，单笔最多亏 "
+  },
+  {
+   "bbox": [
+    349.8,
+    234.1,
+    364.3,
+    245.3
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "5%"
+  },
+  {
+   "bbox": [
+    364.3,
+    232.6,
+    426.4,
+    245.8
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": " ，帮我看看跨"
+  },
+  {
+   "bbox": [
+    64.0,
+    248.2,
+    93.9,
+    261.4
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "式。」"
+  },
+  {
+   "bbox": [
+    64.0,
+    281.5,
+    152.2,
+    296.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "输出：决策卡结论"
+  },
+  {
+   "bbox": [
+    158.7,
+    283.0,
+    207.1,
+    295.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "NO_TRADE"
+  },
+  {
+   "bbox": [
+    207.1,
+    281.5,
+    309.1,
+    296.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#000000",
+   "text": " ，成功结果而非失败"
+  },
+  {
+   "bbox": [
+    460.0,
+    118.4,
+    615.6,
+    135.5
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "把观点收拢为可核验决策卡"
+  },
+  {
+   "bbox": [
+    460.0,
+    150.4,
+    509.4,
+    185.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 30.0,
+   "color": "#000000",
+   "text": "90s"
+  },
+  {
+   "bbox": [
+    526.6,
+    167.3,
+    589.4,
+    180.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "首次用户即获 "
+  },
+  {
+   "bbox": [
+    591.7,
+    168.9,
+    625.5,
+    180.0
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "Replay "
+  },
+  {
+   "bbox": [
+    627.9,
+    167.3,
+    667.8,
+    180.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "决策价值"
+  },
+  {
+   "bbox": [
+    460.0,
+    197.6,
+    509.4,
+    232.6
+   ],
+   "font": "Consolas-Bold",
+   "size": 30.0,
+   "color": "#000000",
+   "text": "60s"
+  },
+  {
+   "bbox": [
+    526.6,
+    214.5,
+    599.4,
+    227.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "应用就绪后形成 "
+  },
+  {
+   "bbox": [
+    601.7,
+    216.1,
+    622.8,
+    227.2
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "Live "
+  },
+  {
+   "bbox": [
+    625.1,
+    214.5,
+    655.0,
+    227.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "决策卡"
+  },
+  {
+   "bbox": [
+    460.0,
+    236.9,
+    599.6,
+    250.1
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#000000",
+   "text": "所有模拟动作仍须用户独立确认"
+  },
+  {
+   "bbox": [
+    460.0,
+    281.0,
+    534.9,
+    295.6
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "NO_TRADE "
+  },
+  {
+   "bbox": [
+    538.0,
+    279.1,
+    706.6,
+    296.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "是成功结果，敢说「不交易」"
+  },
+  {
+   "bbox": [
+    460.0,
+    307.4,
+    825.5,
+    321.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "不会为了展示下单而调低门槛；定位为决策支持——不做执行、不做荐股。"
+  },
+  {
+   "bbox": [
+    460.0,
+    334.8,
+    508.4,
+    347.6
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "NO_TRADE"
+  },
+  {
+   "bbox": [
+    511.6,
+    334.9,
+    521.1,
+    347.2
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "= "
+  },
+  {
+   "bbox": [
+    523.8,
+    333.2,
+    656.0,
+    347.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "当前成本和证据不支持交易"
+  },
+  {
+   "bbox": [
+    96.0,
+    396.4,
+    306.4,
+    414.9
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 14.0,
+   "color": "#e6edf3",
+   "text": "不猜涨跌，但每个结论都可核验。"
+  },
+  {
+   "bbox": [
+    78.0,
+    455.1,
+    99.0,
+    467.0
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "结论"
+  },
+  {
+   "bbox": [
+    130.0,
+    454.0,
+    273.2,
+    468.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "把观点收拢为可核验决策卡；"
+  },
+  {
+   "bbox": [
+    276.1,
+    455.6,
+    324.5,
+    468.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "NO_TRADE"
+  },
+  {
+   "bbox": [
+    330.4,
+    454.0,
+    506.7,
+    468.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "是成功结果；不做执行、不做荐股。"
+  },
+  {
+   "bbox": [
+    64.0,
+    519.6,
+    82.0,
+    531.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "来源"
+  },
+  {
+   "bbox": [
+    84.1,
+    521.0,
+    259.7,
+    531.0
+   ],
+   "font": "ArialMT",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": ": docs/PRD.md / README.md · 2026-08-12"
+  },
+  {
+   "bbox": [
+    861.3,
+    520.9,
+    896.0,
+    531.4
+   ],
+   "font": "Consolas",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "02 / 16"
+  }
+ ],
+ "3": [
+  {
+   "bbox": [
+    78.0,
+    28.9,
+    82.9,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "0"
+  },
+  {
+   "bbox": [
+    85.9,
+    28.9,
+    90.9,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "3"
+  },
+  {
+   "bbox": [
+    93.9,
+    28.9,
+    106.8,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " ·"
+  },
+  {
+   "bbox": [
+    109.8,
+    28.9,
+    122.7,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " P"
+  },
+  {
+   "bbox": [
+    125.7,
+    28.9,
+    130.7,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "A"
+  },
+  {
+   "bbox": [
+    133.7,
+    28.9,
+    138.6,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    141.6,
+    28.9,
+    146.6,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    149.6,
+    28.9,
+    154.5,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "P"
+  },
+  {
+   "bbox": [
+    157.5,
+    28.9,
+    162.5,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    165.5,
+    28.9,
+    170.4,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    173.4,
+    28.9,
+    178.4,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    181.4,
+    28.9,
+    186.4,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "T"
+  },
+  {
+   "bbox": [
+    189.3,
+    28.9,
+    194.3,
+    39.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "S"
+  },
+  {
+   "bbox": [
+    692.8,
+    22.6,
+    806.3,
+    31.9
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "G O A I  ·  T E R M I N A L  —  "
+  },
+  {
+   "bbox": [
+    810.5,
+    21.4,
+    861.8,
+    32.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "初赛评审   "
+  },
+  {
+   "bbox": [
+    865.8,
+    22.6,
+    895.8,
+    31.9
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "0 3 / 1 6"
+  },
+  {
+   "bbox": [
+    78.0,
+    46.0,
+    702.2,
+    80.3
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 26.0,
+   "color": "#e6edf3",
+   "text": "四个痛点，指向同一个缺口：数据可溯源、成本可成交"
+  },
+  {
+   "bbox": [
+    78.0,
+    76.2,
+    451.5,
+    92.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "定义问题域：为什么需要一个期权决策中间层——本页给出四个断点。"
+  },
+  {
+   "bbox": [
+    76.0,
+    116.9,
+    85.9,
+    127.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "01"
+  },
+  {
+   "bbox": [
+    76.0,
+    139.1,
+    170.6,
+    156.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "信息分散：行情 "
+  },
+  {
+   "bbox": [
+    173.7,
+    141.0,
+    180.9,
+    155.6
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "/ "
+  },
+  {
+   "bbox": [
+    184.0,
+    139.1,
+    213.8,
+    156.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "规则 "
+  },
+  {
+   "bbox": [
+    216.9,
+    141.0,
+    224.1,
+    155.6
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "/ "
+  },
+  {
+   "bbox": [
+    227.3,
+    139.1,
+    305.1,
+    156.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "社区各在一处"
+  },
+  {
+   "bbox": [
+    76.0,
+    171.4,
+    527.9,
+    185.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "拼一张完整的决策图，需要手动跑遍行情、交易规则、社区观点多个渠道，再逐一对齐口径。"
+  },
+  {
+   "bbox": [
+    612.0,
+    116.9,
+    621.9,
+    127.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "02"
+  },
+  {
+   "bbox": [
+    612.0,
+    139.1,
+    733.4,
+    156.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "理论价 ≠ 可成交价："
+  },
+  {
+   "bbox": [
+    736.4,
+    141.0,
+    768.8,
+    155.6
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "exec "
+  },
+  {
+   "bbox": [
+    771.9,
+    139.1,
+    797.9,
+    156.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "口径"
+  },
+  {
+   "bbox": [
+    612.0,
+    173.1,
+    632.8,
+    185.4
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "mid "
+  },
+  {
+   "bbox": [
+    635.5,
+    171.4,
+    782.1,
+    185.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "只是观察值；买入成本必须按 "
+  },
+  {
+   "bbox": [
+    784.9,
+    173.1,
+    814.6,
+    185.4
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "ask × "
+  },
+  {
+   "bbox": [
+    817.3,
+    171.4,
+    842.6,
+    185.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "乘数 "
+  },
+  {
+   "bbox": [
+    845.3,
+    173.1,
+    854.8,
+    185.4
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "+ "
+  },
+  {
+   "bbox": [
+    857.5,
+    171.4,
+    882.7,
+    185.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "费用 "
+  },
+  {
+   "bbox": [
+    612.0,
+    192.9,
+    621.5,
+    205.2
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "+ "
+  },
+  {
+   "bbox": [
+    624.2,
+    191.2,
+    657.2,
+    205.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "滑点，"
+  },
+  {
+   "bbox": [
+    659.9,
+    192.9,
+    686.2,
+    205.2
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "exec "
+  },
+  {
+   "bbox": [
+    688.9,
+    191.2,
+    777.1,
+    205.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "口径才算真成本。"
+  },
+  {
+   "bbox": [
+    76.0,
+    248.9,
+    85.9,
+    259.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "03"
+  },
+  {
+   "bbox": [
+    76.0,
+    271.0,
+    222.5,
+    288.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "港股规则差异：美式实物 "
+  },
+  {
+   "bbox": [
+    225.5,
+    273.0,
+    243.5,
+    287.5
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "vs "
+  },
+  {
+   "bbox": [
+    246.7,
+    271.0,
+    298.6,
+    288.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "欧式现金"
+  },
+  {
+   "bbox": [
+    76.0,
+    303.4,
+    551.8,
+    317.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "个股期权美式、实物交割；指数期权欧式、现金结算——混淆行权与交割方式，盈亏与风险都会算"
+  },
+  {
+   "bbox": [
+    76.0,
+    323.2,
+    98.0,
+    337.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "错。"
+  },
+  {
+   "bbox": [
+    612.0,
+    256.9,
+    621.9,
+    267.4
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "04"
+  },
+  {
+   "bbox": [
+    612.0,
+    281.0,
+    642.2,
+    295.6
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "LLM "
+  },
+  {
+   "bbox": [
+    645.3,
+    279.1,
+    723.2,
+    296.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#000000",
+   "text": "编造金融数字"
+  },
+  {
+   "bbox": [
+    612.0,
+    311.4,
+    692.4,
+    325.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "金融数字编造为 "
+  },
+  {
+   "bbox": [
+    695.2,
+    313.1,
+    704.4,
+    325.4
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "0 "
+  },
+  {
+   "bbox": [
+    707.0,
+    311.4,
+    883.4,
+    325.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "是硬指标；每个数字必须能回答「来"
+  },
+  {
+   "bbox": [
+    612.0,
+    331.2,
+    648.3,
+    345.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "源文件 "
+  },
+  {
+   "bbox": [
+    651.0,
+    332.9,
+    660.5,
+    345.2
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "+ "
+  },
+  {
+   "bbox": [
+    663.2,
+    331.2,
+    729.3,
+    345.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "字段路径」。"
+  },
+  {
+   "bbox": [
+    96.0,
+    396.4,
+    348.4,
+    414.9
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 14.0,
+   "color": "#e6edf3",
+   "text": "看得见行情，算不清成本，信不过结论。"
+  },
+  {
+   "bbox": [
+    78.0,
+    455.1,
+    99.0,
+    467.0
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "结论"
+  },
+  {
+   "bbox": [
+    130.0,
+    454.0,
+    526.8,
+    468.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "四个断点落在数据、定价、规则与信任上；后面的方案必须逐一打通，缺一不可。"
+  },
+  {
+   "bbox": [
+    64.0,
+    519.6,
+    82.0,
+    531.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "来源"
+  },
+  {
+   "bbox": [
+    84.1,
+    521.0,
+    213.7,
+    531.0
+   ],
+   "font": "ArialMT",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": ": docs/PRD.md / README.md · "
+  },
+  {
+   "bbox": [
+    215.8,
+    519.6,
+    254.5,
+    531.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "痛点归纳 "
+  },
+  {
+   "bbox": [
+    256.6,
+    521.0,
+    302.6,
+    531.0
+   ],
+   "font": "ArialMT",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "2026-08-12"
+  },
+  {
+   "bbox": [
+    861.3,
+    520.9,
+    896.0,
+    531.4
+   ],
+   "font": "Consolas",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "03 / 16"
+  }
+ ],
+ "4": [
+  {
+   "bbox": [
+    697.2,
+    25.8,
+    810.7,
+    35.1
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "G O A I  ·  T E R M I N A L  —  "
+  },
+  {
+   "bbox": [
+    814.9,
+    24.7,
+    861.8,
+    35.2
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "初赛评审  "
+  },
+  {
+   "bbox": [
+    865.8,
+    25.8,
+    895.8,
+    35.1
+   ],
+   "font": "Consolas",
+   "size": 8.0,
+   "color": "#8b949e",
+   "text": "0 4 / 1 6"
+  },
+  {
+   "bbox": [
+    78.0,
+    29.4,
+    82.9,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "0"
+  },
+  {
+   "bbox": [
+    85.9,
+    29.4,
+    90.9,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "4"
+  },
+  {
+   "bbox": [
+    93.9,
+    29.4,
+    106.8,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " ·"
+  },
+  {
+   "bbox": [
+    109.8,
+    29.4,
+    122.7,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " H"
+  },
+  {
+   "bbox": [
+    125.7,
+    29.4,
+    130.7,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "E"
+  },
+  {
+   "bbox": [
+    133.7,
+    29.4,
+    138.6,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "R"
+  },
+  {
+   "bbox": [
+    141.6,
+    29.4,
+    146.6,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    149.6,
+    29.4,
+    162.5,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": " S"
+  },
+  {
+   "bbox": [
+    165.5,
+    29.4,
+    170.4,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "C"
+  },
+  {
+   "bbox": [
+    173.4,
+    29.4,
+    178.4,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "E"
+  },
+  {
+   "bbox": [
+    181.4,
+    29.4,
+    186.4,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "N"
+  },
+  {
+   "bbox": [
+    189.3,
+    29.4,
+    194.3,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "A"
+  },
+  {
+   "bbox": [
+    197.3,
+    29.4,
+    202.3,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "R"
+  },
+  {
+   "bbox": [
+    205.3,
+    29.4,
+    210.2,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "I"
+  },
+  {
+   "bbox": [
+    213.2,
+    29.4,
+    218.2,
+    39.9
+   ],
+   "font": "Consolas-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "O"
+  },
+  {
+   "bbox": [
+    78.0,
+    46.0,
+    144.4,
+    75.0
+   ],
+   "font": "Arial-BoldMT",
+   "size": 26.0,
+   "color": "#e6edf3",
+   "text": "Hero "
+  },
+  {
+   "bbox": [
+    150.8,
+    42.0,
+    436.9,
+    76.3
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 26.0,
+   "color": "#e6edf3",
+   "text": "场景：业绩前方向不明，"
+  },
+  {
+   "bbox": [
+    443.5,
+    46.0,
+    555.6,
+    75.0
+   ],
+   "font": "Arial-BoldMT",
+   "size": 26.0,
+   "color": "#e6edf3",
+   "text": "480 ATM "
+  },
+  {
+   "bbox": [
+    562.1,
+    42.0,
+    796.2,
+    76.3
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 26.0,
+   "color": "#e6edf3",
+   "text": "长跨式进入量化评估"
+  },
+  {
+   "bbox": [
+    78.0,
+    74.2,
+    129.5,
+    90.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "唯一完整 "
+  },
+  {
+   "bbox": [
+    132.4,
+    76.0,
+    150.4,
+    89.4
+   ],
+   "font": "ArialMT",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "P0 "
+  },
+  {
+   "bbox": [
+    153.3,
+    74.2,
+    513.3,
+    90.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 12.0,
+   "color": "#8b949e",
+   "text": "场景：把模糊诉求转成账户、风险硬顶与候选策略三组可复算参数。"
+  },
+  {
+   "bbox": [
+    76.0,
+    116.4,
+    131.7,
+    133.5
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 13.0,
+   "color": "#e6edf3",
+   "text": "场景快照 "
+  },
+  {
+   "bbox": [
+    134.8,
+    118.4,
+    211.2,
+    132.9
+   ],
+   "font": "Arial-BoldMT",
+   "size": 13.0,
+   "color": "#e6edf3",
+   "text": "· SCENARIO"
+  },
+  {
+   "bbox": [
+    469.1,
+    115.6,
+    518.9,
+    128.8
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#f59e0b",
+   "text": "方向不确定"
+  },
+  {
+   "bbox": [
+    76.0,
+    145.4,
+    169.3,
+    185.2
+   ],
+   "font": "Consolas-Bold",
+   "size": 34.0,
+   "color": "#22d3ee",
+   "text": "478.8"
+  },
+  {
+   "bbox": [
+    76.0,
+    183.8,
+    98.9,
+    197.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 10.0,
+   "color": "#8b949e",
+   "text": "现价 "
+  },
+  {
+   "bbox": [
+    101.3,
+    185.3,
+    122.3,
+    196.5
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#8b949e",
+   "text": "HKD"
+  },
+  {
+   "bbox": [
+    76.0,
+    202.3,
+    127.0,
+    213.5
+   ],
+   "font": "ArialMT",
+   "size": 10.0,
+   "color": "#8b949e",
+   "text": "prev_close "
+  },
+  {
+   "bbox": [
+    126.9,
+    202.2,
+    154.3,
+    213.9
+   ],
+   "font": "Consolas",
+   "size": 10.0,
+   "color": "#8b949e",
+   "text": "479.2"
+  },
+  {
+   "bbox": [
+    250.0,
+    143.9,
+    272.0,
+    158.4
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#8b949e",
+   "text": "标的"
+  },
+  {
+   "bbox": [
+    250.0,
+    163.7,
+    272.0,
+    178.3
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#8b949e",
+   "text": "事件"
+  },
+  {
+   "bbox": [
+    250.0,
+    183.6,
+    283.0,
+    198.1
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#8b949e",
+   "text": "行权价"
+  },
+  {
+   "bbox": [
+    250.0,
+    203.4,
+    283.0,
+    217.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#8b949e",
+   "text": "待评估"
+  },
+  {
+   "bbox": [
+    298.0,
+    145.5,
+    346.4,
+    158.3
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "HK.00700"
+  },
+  {
+   "bbox": [
+    346.5,
+    145.6,
+    356.3,
+    157.9
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " · "
+  },
+  {
+   "bbox": [
+    359.0,
+    143.9,
+    403.1,
+    158.4
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "腾讯控股"
+  },
+  {
+   "bbox": [
+    298.0,
+    165.3,
+    358.5,
+    178.1
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "2026-08-12"
+  },
+  {
+   "bbox": [
+    364.4,
+    163.7,
+    411.7,
+    178.3
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "业绩公布 "
+  },
+  {
+   "bbox": [
+    414.4,
+    165.4,
+    421.1,
+    177.7
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "· "
+  },
+  {
+   "bbox": [
+    421.2,
+    165.3,
+    457.5,
+    178.1
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "2026Q2"
+  },
+  {
+   "bbox": [
+    298.0,
+    185.1,
+    328.2,
+    197.9
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "480.0"
+  },
+  {
+   "bbox": [
+    328.2,
+    183.6,
+    342.0,
+    198.1
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " （"
+  },
+  {
+   "bbox": [
+    344.6,
+    185.2,
+    367.0,
+    197.5
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "ATM"
+  },
+  {
+   "bbox": [
+    367.0,
+    183.6,
+    380.7,
+    198.1
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " ）"
+  },
+  {
+   "bbox": [
+    298.0,
+    203.4,
+    342.1,
+    217.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "长跨式（"
+  },
+  {
+   "bbox": [
+    344.8,
+    205.1,
+    383.9,
+    217.3
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "straddle"
+  },
+  {
+   "bbox": [
+    383.9,
+    203.4,
+    463.9,
+    217.9
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " ）是否值得交易"
+  },
+  {
+   "bbox": [
+    587.2,
+    109.6,
+    609.2,
+    124.1
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "参数"
+  },
+  {
+   "bbox": [
+    866.7,
+    109.6,
+    888.7,
+    124.1
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "数值"
+  },
+  {
+   "bbox": [
+    587.2,
+    135.8,
+    631.3,
+    150.3
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "账户现金"
+  },
+  {
+   "bbox": [
+    822.0,
+    137.3,
+    888.6,
+    150.2
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "100,000 HKD"
+  },
+  {
+   "bbox": [
+    587.2,
+    162.7,
+    653.3,
+    177.2
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "单笔风险预算"
+  },
+  {
+   "bbox": [
+    766.7,
+    164.2,
+    778.8,
+    177.1
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "5%"
+  },
+  {
+   "bbox": [
+    778.8,
+    162.7,
+    817.8,
+    177.2
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " （上限 "
+  },
+  {
+   "bbox": [
+    820.5,
+    164.2,
+    875.0,
+    177.1
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "5,000 HKD"
+  },
+  {
+   "bbox": [
+    875.0,
+    162.7,
+    888.8,
+    177.2
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " ）"
+  },
+  {
+   "bbox": [
+    587.2,
+    189.5,
+    631.3,
+    204.0
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "合约乘数"
+  },
+  {
+   "bbox": [
+    828.5,
+    191.1,
+    852.7,
+    203.9
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "100 "
+  },
+  {
+   "bbox": [
+    855.4,
+    189.5,
+    866.4,
+    204.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "股"
+  },
+  {
+   "bbox": [
+    869.1,
+    191.1,
+    875.1,
+    203.9
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "/"
+  },
+  {
+   "bbox": [
+    875.1,
+    189.5,
+    888.8,
+    204.0
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " 张"
+  },
+  {
+   "bbox": [
+    587.2,
+    216.4,
+    631.3,
+    230.9
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "候选策略"
+  },
+  {
+   "bbox": [
+    760.6,
+    217.9,
+    809.0,
+    230.8
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#22d3ee",
+   "text": "480 ATM "
+  },
+  {
+   "bbox": [
+    811.8,
+    216.4,
+    848.1,
+    230.9
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#22d3ee",
+   "text": "长跨式 "
+  },
+  {
+   "bbox": [
+    850.8,
+    217.9,
+    875.0,
+    230.8
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#22d3ee",
+   "text": "× 2 "
+  },
+  {
+   "bbox": [
+    877.8,
+    216.4,
+    888.8,
+    230.9
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#22d3ee",
+   "text": "张"
+  },
+  {
+   "bbox": [
+    587.2,
+    243.3,
+    620.2,
+    257.8
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "主到期"
+  },
+  {
+   "bbox": [
+    767.8,
+    244.8,
+    828.3,
+    257.7
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "2026-08-14"
+  },
+  {
+   "bbox": [
+    828.3,
+    243.3,
+    842.1,
+    257.8
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " （"
+  },
+  {
+   "bbox": [
+    844.8,
+    244.8,
+    875.0,
+    257.7
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "dte 6"
+  },
+  {
+   "bbox": [
+    875.0,
+    243.3,
+    888.8,
+    257.8
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " ）"
+  },
+  {
+   "bbox": [
+    78.0,
+    305.1,
+    99.0,
+    317.0
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "推论"
+  },
+  {
+   "bbox": [
+    156.0,
+    296.2,
+    225.4,
+    310.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "单笔亏损硬顶 "
+  },
+  {
+   "bbox": [
+    228.1,
+    297.8,
+    237.6,
+    310.1
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "= "
+  },
+  {
+   "bbox": [
+    237.6,
+    297.7,
+    280.0,
+    310.5
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "100,000"
+  },
+  {
+   "bbox": [
+    280.1,
+    297.8,
+    292.6,
+    310.1
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " × "
+  },
+  {
+   "bbox": [
+    292.7,
+    297.7,
+    304.8,
+    310.5
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "5%"
+  },
+  {
+   "bbox": [
+    304.8,
+    297.8,
+    317.4,
+    310.1
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " = "
+  },
+  {
+   "bbox": [
+    317.4,
+    297.7,
+    347.7,
+    310.5
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "5,000"
+  },
+  {
+   "bbox": [
+    347.8,
+    297.8,
+    402.2,
+    310.1
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " HKD —— "
+  },
+  {
+   "bbox": [
+    405.0,
+    296.2,
+    515.3,
+    310.7
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "任何候选策略不得超过"
+  },
+  {
+   "bbox": [
+    156.0,
+    316.0,
+    181.3,
+    330.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "候选 "
+  },
+  {
+   "bbox": [
+    183.9,
+    317.6,
+    193.4,
+    329.9
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "= "
+  },
+  {
+   "bbox": [
+    193.5,
+    317.5,
+    235.8,
+    330.3
+   ],
+   "font": "Consolas-Bold",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "480 ATM"
+  },
+  {
+   "bbox": [
+    241.7,
+    316.0,
+    278.0,
+    330.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "长跨式 "
+  },
+  {
+   "bbox": [
+    280.7,
+    317.6,
+    290.2,
+    329.9
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "× "
+  },
+  {
+   "bbox": [
+    290.2,
+    317.5,
+    296.2,
+    330.3
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "2"
+  },
+  {
+   "bbox": [
+    302.0,
+    316.0,
+    316.2,
+    330.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "张 "
+  },
+  {
+   "bbox": [
+    318.9,
+    317.6,
+    325.6,
+    329.9
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "· "
+  },
+  {
+   "bbox": [
+    328.3,
+    316.0,
+    364.6,
+    330.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "主到期 "
+  },
+  {
+   "bbox": [
+    367.3,
+    317.5,
+    427.9,
+    330.3
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "2026-08-14"
+  },
+  {
+   "bbox": [
+    428.0,
+    317.6,
+    456.2,
+    329.9
+   ],
+   "font": "ArialMT",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " —— "
+  },
+  {
+   "bbox": [
+    458.9,
+    316.0,
+    613.4,
+    330.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "是否值得买，由引擎与回测裁决"
+  },
+  {
+   "bbox": [
+    76.0,
+    399.2,
+    102.3,
+    413.2
+   ],
+   "font": "Consolas-Bold",
+   "size": 12.0,
+   "color": "#22d3ee",
+   "text": "&gt;"
+  },
+  {
+   "bbox": [
+    96.0,
+    396.4,
+    320.4,
+    414.9
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 14.0,
+   "color": "#e6edf3",
+   "text": "先算成本与硬顶，再谈方向与收益。"
+  },
+  {
+   "bbox": [
+    78.0,
+    455.1,
+    99.0,
+    467.0
+   ],
+   "font": "MicrosoftYaHei-Bold",
+   "size": 9.0,
+   "color": "#22d3ee",
+   "text": "结论"
+  },
+  {
+   "bbox": [
+    130.0,
+    456.0,
+    196.2,
+    470.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "场景已冻结："
+  },
+  {
+   "bbox": [
+    198.9,
+    457.6,
+    211.0,
+    470.4
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "10"
+  },
+  {
+   "bbox": [
+    216.7,
+    456.0,
+    297.6,
+    470.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "万港币、单笔 ≤ "
+  },
+  {
+   "bbox": [
+    300.3,
+    457.6,
+    312.4,
+    470.4
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#000000",
+   "text": "5%"
+  },
+  {
+   "bbox": [
+    312.4,
+    456.0,
+    351.4,
+    470.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": " ，候选 "
+  },
+  {
+   "bbox": [
+    354.1,
+    457.6,
+    396.4,
+    470.4
+   ],
+   "font": "Consolas",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "480 ATM"
+  },
+  {
+   "bbox": [
+    402.3,
+    456.0,
+    512.6,
+    470.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 11.0,
+   "color": "#e6edf3",
+   "text": "长跨式进入量化评估。"
+  },
+  {
+   "bbox": [
+    64.0,
+    519.6,
+    82.0,
+    531.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "来源"
+  },
+  {
+   "bbox": [
+    84.1,
+    521.0,
+    380.1,
+    531.0
+   ],
+   "font": "ArialMT",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": ": facts.md §11 + data/decision_card_2026-08-12.json + hero_inputs.json · "
+  },
+  {
+   "bbox": [
+    382.3,
+    519.6,
+    403.0,
+    531.5
+   ],
+   "font": "MicrosoftYaHei",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "快照 "
+  },
+  {
+   "bbox": [
+    405.1,
+    521.0,
+    451.2,
+    531.0
+   ],
+   "font": "ArialMT",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "2026-08-08"
+  },
+  {
+   "bbox": [
+    861.3,
+    520.3,
+    896.0,
+    530.9
+   ],
+   "font": "Consolas",
+   "size": 9.0,
+   "color": "#8b949e",
+   "text": "04 / 16"
+  }
+ ]
+}

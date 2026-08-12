@@ -1,0 +1,336 @@
+pageType: final
+notes: |
+  结尾页：路线图落在 P0a/P0b/P0c 与时间线；立场是先把「敢说不交易」做成系统能力。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "16"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: ROADMAP · 15
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 先证明可验证的决策，再接 Live 与模拟闭环
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 三个发布切片（P0a → P0b → P0c），每个都有独立验证门；对外只宣传最高已验证切片
+  - elementId: phase1-box
+    elementType: shape
+    bounds: [60, 120, 260, 170]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: phase1-chip
+    elementType: shape
+    bounds: [60, 120, 260, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$up"}
+  - elementId: phase1-chip-text
+    elementType: text
+    bounds: [76, 126, 230, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "#06212B"
+      text: P0a Replay · 已完成
+  - elementId: phase1-body
+    elementType: text
+    bounds: [80, 164, 220, 112]
+    content:
+      style: "$cap"
+      text: |
+        <p>· 冻结快照 → 决策卡 + 审计链</p>
+        <p>· 端到端 Hero 通过（NO_TRADE）</p>
+        <p>· 当前对外宣传上限</p>
+  - elementId: phase2-box
+    elementType: shape
+    bounds: [350, 120, 260, 170]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: phase2-chip
+    elementType: shape
+    bounds: [350, 120, 260, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: phase2-chip-text
+    elementType: text
+    bounds: [366, 126, 230, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "#06212B"
+      text: P0b Connected Read-only · 开发中
+  - elementId: phase2-body
+    elementType: text
+    bounds: [370, 164, 220, 112]
+    content:
+      style: "$cap"
+      text: |
+        <p>· Live 行情 + 账户只读</p>
+        <p>· 验证：OpenD 权限、新鲜度、降级路径</p>
+        <p>· 产出无副作用草稿</p>
+  - elementId: phase3-box
+    elementType: shape
+    bounds: [640, 120, 260, 170]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: phase3-chip
+    elementType: shape
+    bounds: [640, 120, 260, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$warn"}
+  - elementId: phase3-chip-text
+    elementType: text
+    bounds: [656, 126, 230, 20]
+    content:
+      style: "$small"
+      bold: true
+      color: "#06212B"
+      text: P0c Simulation · 待验证
+  - elementId: phase3-body
+    elementType: text
+    bounds: [660, 164, 220, 112]
+    content:
+      style: "$cap"
+      text: |
+        <p>· 独立确认 + 提交前复核</p>
+        <p>· 幂等 + 异常接管</p>
+        <p>· 验证：无重复订单、人工接管</p>
+  - elementId: ph-arrow1
+    elementType: line
+    bounds: [322, 204, 26, 2]
+    viewBox: [26, 2]
+    points: "0,1 26,1"
+    arrow: [null, arrow]
+    border: {style: solid, width: 1.5, color: "$primary"}
+  - elementId: ph-arrow2
+    elementType: line
+    bounds: [612, 204, 26, 2]
+    viewBox: [26, 2]
+    points: "0,1 26,1"
+    arrow: [null, arrow]
+    border: {style: solid, width: 1.5, color: "$primary"}
+  - elementId: tl-line
+    elementType: line
+    bounds: [60, 356, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: tl-dot1
+    elementType: shape
+    bounds: [110, 351, 10, 10]
+    shapeName: ellipse
+    fill: {type: solid, color: "$up"}
+  - elementId: tl1-text
+    elementType: text
+    bounds: [60, 370, 190, 28]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: |
+        <p><strong style="color:$ink;">8.16</strong></p>
+        <p>初赛提交</p>
+  - elementId: tl-dot2
+    elementType: shape
+    bounds: [310, 351, 10, 10]
+    shapeName: ellipse
+    fill: {type: solid, color: "$primary"}
+  - elementId: tl2-text
+    elementType: text
+    bounds: [255, 370, 120, 28]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: |
+        <p><strong style="color:$ink;">8.17–8.24</strong></p>
+        <p>初赛评审</p>
+  - elementId: tl-dot3
+    elementType: shape
+    bounds: [540, 351, 10, 10]
+    shapeName: ellipse
+    fill: {type: solid, color: "$primary"}
+  - elementId: tl3-text
+    elementType: text
+    bounds: [470, 370, 150, 28]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: |
+        <p><strong style="color:$ink;">8.25–9.10</strong></p>
+        <p>复赛可运行 Demo</p>
+  - elementId: tl-dot4
+    elementType: shape
+    bounds: [800, 351, 10, 10]
+    shapeName: ellipse
+    fill: {type: solid, color: "$warn"}
+  - elementId: tl4-text
+    elementType: text
+    bounds: [740, 370, 160, 28]
+    content:
+      style: "$cap"
+      align: [center, top]
+      text: |
+        <p><strong style="color:$ink;">9.22</strong></p>
+        <p>决赛答辩（杭州）</p>
+  - elementId: band
+    elementType: shape
+    bounds: [60, 424, 840, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: band-rail
+    elementType: shape
+    bounds: [60, 424, 4, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: band-text
+    elementType: text
+    bounds: [82, 436, 796, 44]
+    content:
+      style: "$small"
+      fontSize: 12
+      text: |
+        <p><strong>立场：先把「敢说不交易」做成系统能力，再接入实时数据。</strong></p>
+        <p>让每一次期权决策可核验、可复核、敢拒绝。</p>
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: GOAI 港美股期权智能终端 · 初赛方案 v2
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 16 / 16
+animations:
+  - elementId: phase1-box
+    effect: fade-in
+    trigger: onClick
+    durationMs: 350
+  - elementId: phase1-chip
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: phase1-chip-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: phase1-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: phase2-box
+    effect: fade-in
+    trigger: onClick
+    durationMs: 350
+  - elementId: phase2-chip
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: phase2-chip-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: phase2-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: phase3-box
+    effect: fade-in
+    trigger: onClick
+    durationMs: 350
+  - elementId: phase3-chip
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: phase3-chip-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: phase3-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: tl-line
+    effect: fade-in
+    trigger: onClick
+    durationMs: 300
+  - elementId: tl-dot1
+    effect: zoom-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: tl1-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: tl-dot2
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 300
+    delayMs: 100
+  - elementId: tl2-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: tl-dot3
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 300
+    delayMs: 100
+  - elementId: tl3-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: tl-dot4
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 300
+    delayMs: 100
+  - elementId: tl4-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: band
+    effect: fade-in
+    trigger: onClick
+    durationMs: 400
+  - elementId: band-rail
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: band-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300

@@ -1,0 +1,194 @@
+pageType: content
+notes: |
+  市场页：目标用户与为什么现在。价值主张是 90 秒 Replay 决策价值、60 秒 Live 决策卡。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "13"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: MARKET · WHY NOW · 12
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 服务有认知、缺工具的期权用户，市场窗口已经打开
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 价值主张：90 秒内获得可核验的 Replay 决策价值；应用就绪后 60 秒内形成 Live 决策卡
+  - elementId: user-panel
+    elementType: shape
+    bounds: [60, 120, 420, 264]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: user-rail
+    elementType: shape
+    bounds: [60, 120, 4, 264]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: user-head
+    elementType: text
+    bounds: [84, 134, 372, 18]
+    content:
+      style: "$small"
+      bold: true
+      text: 目标用户
+  - elementId: user-body
+    elementType: text
+    bounds: [84, 162, 372, 92]
+    content:
+      style: "$cap"
+      text: |
+        <p>会用 Futu、理解 Call/Put 与基本风险，</p>
+        <p>但缺少专业终端与完整量化流程的港美股期权投资者。</p>
+        <p style="margin-top:6px">核心任务：</p>
+        <p>· 把「业绩将近、方向不确定、最多亏 5%」转成完整研究任务</p>
+        <p>· 快速知道成本、盈亏边界、IV crush、流动性与账户影响</p>
+        <p>· 明确为什么交易、暂缓或停止，并回到原始数据与计算依据</p>
+  - elementId: user-kpi
+    elementType: text
+    bounds: [84, 306, 372, 60]
+    content:
+      style: "$small"
+      text: |
+        <p><strong style="font-size:16px; color:$primary;">90s</strong>　Replay 决策价值（无需 Futu 账户）</p>
+        <p><strong style="font-size:16px; color:$primary;">60s</strong>　Live 决策卡（应用就绪后目标）</p>
+  - elementId: why1-dot
+    elementType: shape
+    bounds: [520, 132, 8, 8]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: why1-label
+    elementType: text
+    bounds: [536, 128, 364, 18]
+    content:
+      style: "$small"
+      bold: true
+      text: 数据基础设施成熟
+  - elementId: why1-desc
+    elementType: text
+    bounds: [536, 148, 364, 34]
+    content:
+      style: "$cap"
+      text: 富途 OpenAPI + 官方 futuapi Skill 开放实时行情、期权链与模拟盘，个人开发者首次能构建机构式流程
+  - elementId: why2-dot
+    elementType: shape
+    bounds: [520, 202, 8, 8]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: why2-label
+    elementType: text
+    bounds: [536, 198, 364, 18]
+    content:
+      style: "$small"
+      bold: true
+      text: LLM 工具调用成熟
+  - elementId: why2-desc
+    elementType: text
+    bounds: [536, 218, 364, 34]
+    content:
+      style: "$cap"
+      text: 自然语言场景解析 + 工具编排可用，但「会算数」仍需确定性引擎兜底，Agent 层成为增量
+  - elementId: why3-dot
+    elementType: shape
+    bounds: [520, 272, 8, 8]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: why3-label
+    elementType: text
+    bounds: [536, 268, 364, 18]
+    content:
+      style: "$small"
+      bold: true
+      text: 港美股期权散户化
+  - elementId: why3-desc
+    elementType: text
+    bounds: [536, 288, 364, 34]
+    content:
+      style: "$cap"
+      text: 港股个股期权美式/实物交割与 IV crush 让「模板化工具」频繁出错，需要规则显性化的决策支持
+  - elementId: gap-note
+    elementType: text
+    bounds: [520, 336, 380, 34]
+    content:
+      style: "$cap"
+      color: "$sub"
+      text: 市场缺口：Bloomberg 式的流程能力，零售价格 + 中文优先；竞品多为单点计算器或预警，缺账户约束与审计闭环。
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: 用户不缺一个计算器，缺的是一个能负责的决策流程。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: 切入点是业绩事件跨式：高频、规则复杂、IV crush 后果直观；产品先把「敢说不交易」做成可验证的闭环，再扩展标的与策略。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 来源：docs/PRD.md §1 用户与痛点 · research/01-market-landscape.md
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 13 / 16

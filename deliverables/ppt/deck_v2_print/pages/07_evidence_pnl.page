@@ -1,0 +1,154 @@
+pageType: content
+notes: |
+  证据页一：买入跨式的期望收益不成立。左边到期情景损益，右边 IV crush 压力测试。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "07"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: EVIDENCE · 06
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 期望收益不成立：预期波动低于成本，IV crush 后更差
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 到期情景损益（HKD，ask 成本口径）与 IV crush 压力测试
+  - elementId: pnl-table
+    elementType: table
+    bounds: [60, 120, 420, 244]
+    style: "$default"
+    columnWidths: [0.38, 0.31, 0.31]
+    rowHeights: [0.13, 0.29, 0.29, 0.29]
+    rows:
+      - - text: 到期情景
+        - text: 上行 P&L
+        - text: 下行 P&L
+      - - text: ±1× 预期波动
+        - text: "-904"
+          color: "$down"
+        - text: "-424"
+          color: "$down"
+      - - text: ±1.5× 预期波动
+        - text: "+971"
+          color: "$up"
+        - text: "+1,451"
+          color: "$up"
+      - - text: ±2× 预期波动
+        - text: "+2,846"
+          color: "$up"
+        - text: "+3,326"
+          color: "$up"
+  - elementId: pnl-note
+    elementType: text
+    bounds: [60, 374, 420, 18]
+    content:
+      style: "$cap"
+      text: 两腿按到期内在价值估算，未计入业绩后剩余时间价值
+  - elementId: crush-chart
+    elementType: chart
+    bounds: [520, 120, 380, 264]
+    data:
+      cols: [crush, up, down]
+      rows:
+        - ["-20%", -711, -340]
+        - ["-35%", -820, -403]
+        - ["-50%", -873, -422]
+    title:
+      text: IV crush 后 P&L（HKD，方向正确情形）
+      fontSize: 12
+      color: "$ink"
+    legend: {show: true, position: top, fontSize: 9, color: "$sub"}
+    fontFamily: {latin: Arial, ea: MiSans}
+    xAxis: {label: {fontSize: 9, color: "$sub"}, axisLine: {color: "$hairline"}, gridLine: {show: false}}
+    yAxis: {label: {numberFormat: "0", fontSize: 9, color: "$sub"}, axisLine: {color: "$hairline"}, gridLine: {color: "#FFFFFF14", width: 1}}
+    series:
+      - type: bar
+        encode: {x: crush, y: up}
+        name: 上行
+        fill: "$down"
+        dataLabels: {show: true, numberFormat: "0", fontSize: 9, color: "$sub"}
+      - type: bar
+        encode: {x: crush, y: down}
+        name: 下行
+        fill: "$warn"
+        dataLabels: {show: true, numberFormat: "0", fontSize: 9, color: "$sub"}
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: IV 涨上去的便宜，都会在 crush 里还回来。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: IV crush -20% 时，即使方向正确也亏损 -711 HKD——预期波动不足以覆盖买入成本。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 数据：decision_card_2026-08-12.json（proposal_ref）
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 07 / 16

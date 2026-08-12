@@ -1,0 +1,164 @@
+pageType: final
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  结尾页（16/16）：核心信息重述 + 风险提示 + 感谢。
+  页面进入自动播放 G1：金句/标题 fade-in → 确定性数字 KPI fade-in → 完成度与感谢 fade-in（依次）；
+  点击播放 G2：免责声明条 wipe-in（向上）。
+  免责声明为逐字文本（锁文件红线），讲述时不得省略或改写。
+elements:
+  - elementId: bracket-tl
+    elementType: line
+    bounds: [44, 40, 12, 12]
+    viewBox: [12, 12]
+    points: "0,12 0,0 12,0"
+    curve: sharp
+    border: {style: solid, width: 2, color: "$accent"}
+  - elementId: bracket-br
+    elementType: line
+    bounds: [884, 496, 12, 12]
+    viewBox: [12, 12]
+    points: "12,0 12,12 0,12"
+    curve: sharp
+    border: {style: solid, width: 2, color: "$accent"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [64, 44, 832, 16]
+    content:
+      style: "$eyebrow"
+      align: [center, middle]
+      text: "16 · CLOSING"
+  - elementId: quote-block
+    elementType: text
+    bounds: [64, 72, 832, 64]
+    content:
+      style: "$title"
+      align: [center, middle]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent;">NO_TRADE</span> 是成功结果</p>
+        <p style="margin-top:8px"><span style="font-size:12px; color:$textSub;">决策支持，不做执行、不做荐股；不会为了展示下单而调低门槛。</span></p>
+  - elementId: kpi-table
+    elementType: table
+    bounds: [64, 164, 832, 84]
+    columnWidths: [0.25, 0.25, 0.25, 0.25]
+    rowHeights: [0.18, 0.5, 0.32]
+    style:
+      cellStyle:
+        border: null
+        align: [center, middle]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+        color: "$textSub"
+        fontSize: 10
+    rows:
+      - - text: 确定性数字 — 可复算 · 可溯源
+          colSpan: 4
+      - - text: "7"
+          color: "$accent"
+          fontSize: 30
+          bold: true
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+        - text: "100%"
+          color: "$accent"
+          fontSize: 30
+          bold: true
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+        - text: "0"
+          color: "$accent"
+          fontSize: 30
+          bold: true
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+        - text: "90s"
+          color: "$accent"
+          fontSize: 30
+          bold: true
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      - - text: Hero 审计链 SHA-256 记录
+        - text: 关键数字与事实溯源率（目标）
+        - text: 风控 / 动作泄漏（目标）
+        - text: 首次 Replay 价值时间中位数（目标）
+  - elementId: completion-thanks
+    elementType: text
+    bounds: [64, 262, 832, 134]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+      lineHeight: 1.5
+      align: [center, top]
+      text: |
+        <p>诚实完成度 — 对外只宣传最高已验证切片（当前 P0a Replay）</p>
+        <p style="margin-top:10px"><span style="font-family:Consolas; color:$success;">P0a</span> · Replay Decision — 端到端已跑通（2026-08-12）</p>
+        <p><span style="font-family:Consolas; color:$warn;">P0b</span> · Connected Read-only — OpenD health 已验证；完整 Live 决策链路未毕业</p>
+        <p><span style="font-family:Consolas; color:$textSub;">P0c</span> · Connected Simulation — 未毕业，不对外宣称</p>
+        <p style="margin-top:14px"><strong><span style="font-size:14px; color:$text;">谢谢评审</span></strong></p>
+        <p>GOAI Team · 3 人 — 多 Agent 工程与量化研究 / 港美股期权策略 / 网络安全与合规 · 2026-08 初赛评审</p>
+  - elementId: disclaimer-base
+    elementType: shape
+    bounds: [64, 404, 832, 84]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#F59E0B1F"}
+    border: {style: solid, width: 1, color: "$warn"}
+  - elementId: disclaimer-rail
+    elementType: shape
+    bounds: [64, 404, 3, 84]
+    shapeName: rect
+    fill: {type: solid, color: "$warn"}
+  - elementId: disclaimer-label
+    elementType: text
+    bounds: [80, 412, 300, 14]
+    content:
+      style: "$eyebrow"
+      color: "$warn"
+      align: [left, middle]
+      text: 风险提示
+  - elementId: disclaimer-main
+    elementType: text
+    bounds: [80, 430, 800, 52]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$text"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>本项目仅用于研究、教育与比赛演示用途，不构成投资建议，亦不构成任何收益承诺。</strong></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">研究/教育/比赛演示用途，非投资建议，不构成收益承诺</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">决策支持/研究用途，非投资建议，不构成任何交易要约；比赛版本仅支持 Futu 模拟盘且必须由用户独立确认。</span></p>
+  - elementId: page-number
+    elementType: text
+    bounds: [846, 514, 50, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, middle]
+      text: "16 / 16"
+animations:
+  - elementId: quote-block
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: kpi-table
+    effect: fade-in
+    trigger: afterPrevious
+  - elementId: completion-thanks
+    effect: fade-in
+    trigger: afterPrevious
+  - elementId: disclaimer-base
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: disclaimer-rail
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: disclaimer-label
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: disclaimer-main
+    effect: fade-in
+    trigger: withPrevious

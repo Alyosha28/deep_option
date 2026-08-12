@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GOAI 港美股期权智能终端 - 四面板参考 UI（数据为冻结快照，非投资建议）">
+  <title>GOAI · 期权智能终端</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">GOAI</span>
+        <span class="brand-name">期权智能终端</span>
+      </div>
+      <div class="topbar-meta">
+        <span class="chip chip-accent">REPLAY · FROZEN</span>
+        <span class="chip chip-neutral">OpenD 127.0.0.1:11111</span>
+        <span class="chip chip-neutral" id="clock">--:--:--</span>
+      </div>
+      <div class="account-chip">
+        <span>账户 100,000 HKD</span>
+        <span class="dim">风险预算 5%</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <!-- 面板 1：对话与任务 -->
+      <section class="panel panel-chat" aria-label="对话与任务">
+        <div class="panel-head">
+          <h2>对话与任务</h2>
+          <span class="panel-tag">Stage 5/5</span>
+        </div>
+        <div class="chat-log" id="chat-log">
+          <div class="msg msg-user">
+            <p>腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。</p>
+          </div>
+          <div class="msg msg-agent">
+            <p>场景已解析，未补造未知字段：</p>
+            <pre class="json-block">{
+  "underlying": "HK.00700",
+  "view": "uncertain",
+  "horizon": "2026-08-12 业绩",
+  "account_cash_hkd": 100000,
+  "risk_budget_pct": 5,
+  "constraints": ["单笔最多亏损 5%"]
+}</pre>
+            <p>数据模式：REPLAY · FROZEN（2026-08-08 快照）。</p>
+          </div>
+        </div>
+        <ol class="stages" id="stages">
+          <li class="stage done"><span class="stage-dot"></span>场景解析</li>
+          <li class="stage done"><span class="stage-dot"></span>数据获取</li>
+          <li class="stage done"><span class="stage-dot"></span>引擎计算</li>
+          <li class="stage done"><span class="stage-dot"></span>Edge / Risk / Action</li>
+          <li class="stage done"><span class="stage-dot"></span>决策卡 + 审计</li>
+        </ol>
+        <div class="chat-input">
+          <textarea id="scenario-input" rows="3" aria-label="输入期权观点">腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。</textarea>
+          <button class="btn-run" id="run-btn" type="button">重新运行（演示）</button>
+        </div>
+        <p class="footnote">演示 UI：重新运行动画，不产生真实下单。</p>
+      </section>
+
+      <!-- 面板 2：期权链与流动性 -->
+      <section class="panel panel-market" aria-label="期权链与流动性">
+        <div class="underlying-strip">
+          <div>
+            <h1>腾讯控股 <span class="code">HK.00700</span></h1>
+            <p class="dim">2026-08-08 周末快照 · 周五收盘价</p>
+          </div>
+          <div class="quote">
+            <strong class="spot">478.80</strong>
+            <span class="dim">昨收 479.20</span>
+          </div>
+          <dl class="metrics">
+            <div><dt>IV</dt><dd>37.4%</dd></div>
+            <div><dt>IV Rank</dt><dd>72.9</dd></div>
+            <div><dt>IV Pct</dt><dd>85.3</dd></div>
+            <div><dt>HV30</dt><dd>44.5%</dd></div>
+            <div><dt>预期波动</dt><dd class="accent">±3.92%</dd></div>
+          </dl>
+        </div>
+
+        <div class="expiry-tabs" id="expiry-tabs" role="tablist" aria-label="到期日">
+          <button class="expiry-tab active" role="tab" aria-selected="true" data-expiry="2026-08-14" type="button">
+            8/14 主到期 <span class="tag">6 DTE</span>
+          </button>
+          <button class="expiry-tab" role="tab" aria-selected="false" data-expiry="2026-08-28" type="button">
+            8/28 次到期 <span class="tag">20 DTE</span>
+          </button>
+        </div>
+
+        <div class="chain-wrap">
+          <table class="chain" id="chain-table">
+            <caption class="sr-only">期权链：Call / Put 报价、IV 与持仓</caption>
+            <thead>
+              <tr>
+                <th scope="col">到期</th>
+                <th scope="col" colspan="2">Call（买）</th>
+                <th scope="col">Call IV</th>
+                <th scope="col">Call OI</th>
+                <th scope="col">行权价</th>
+                <th scope="col">Put IV</th>
+                <th scope="col">Put OI</th>
+                <th scope="col" colspan="2">Put（买）</th>
+                <th scope="col">价差</th>
+              </tr>
+            </thead>
+            <tbody id="chain-body"><!-- JS 渲染 --></tbody>
+          </table>
+          <p class="note">冻结快照仅录制 ATM 480 合约；完整链未录制，未虚构其他行权价。</p>
+        </div>
+
+        <div class="strategy-grid">
+          <div class="strategy-card">
+            <div class="panel-head">
+              <h3>策略与账户</h3>
+              <span class="panel-tag" id="strategy-expiry-label">8/14 · 6 DTE</span>
+            </div>
+            <div class="strategy-summary">
+              <div class="leg-line">
+                <span>买入跨式</span>
+                <strong id="strategy-lots">2 张 @ 480</strong>
+              </div>
+              <dl class="strategy-metrics">
+                <div><dt>成本 ask / 张</dt><dd id="cost-ask">2,207</dd></div>
+                <div><dt>executable / 张</dt><dd id="cost-exec">2,207</dd></div>
+                <div><dt>最大亏损</dt><dd id="max-loss">4,414 HKD</dd></div>
+                <div><dt>盈亏平衡</dt><dd id="breakeven">458.91 / 501.10</dd></div>
+              </dl>
+            </div>
+            <div class="greeks">
+              <span>Δ <b id="g-delta">-0.69</b></span>
+              <span>Γ <b id="g-gamma">3.03</b></span>
+              <span>ν <b id="g-vega">49.00</b></span>
+              <span>Θ <b id="g-theta">-183.40</b></span>
+              <span>ρ <b id="g-rho">0.10</b></span>
+            </div>
+            <div class="cost-model">
+              <span class="dot-warn"></span>
+              费用/滑点 policy 未冻结（UNVERIFIED），当前以 ask 计
+            </div>
+          </div>
+
+          <div class="payoff-card">
+            <div class="panel-head">
+              <h3>到期情景损益（主到期）</h3>
+              <span class="panel-tag">自研引擎</span>
+            </div>
+            <svg id="payoff-chart" viewBox="0 0 560 250" role="img" aria-label="到期损益曲线">
+              <defs>
+                <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(245,185,66,0.28)"/>
+                  <stop offset="100%" stop-color="rgba(245,185,66,0)"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="iv-crush" id="iv-crush"><!-- JS 渲染 --></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 面板 3：事件与证据 / 决策卡 -->
+      <section class="panel panel-right" aria-label="决策卡、事件与审计">
+        <div class="decision-card">
+          <div class="panel-head">
+            <h2>决策卡</h2>
+            <span class="verdict verdict-no-trade" id="verdict">NO_TRADE</span>
+          </div>
+          <p class="summary" id="summary"></p>
+          <h3>关键证据</h3>
+          <ul class="evidence" id="evidence-list"></ul>
+          <h3>什么会改变结论</h3>
+          <ul class="conditions" id="conditions-list"></ul>
+        </div>
+
+        <div class="gates">
+          <div class="gate">
+            <div class="gate-head"><span>Edge 门</span><span class="tag tag-fail">LOW_EDGE</span></div>
+            <ul class="gate-checks" id="edge-checks"></ul>
+          </div>
+          <div class="gate">
+            <div class="gate-head"><span>Risk 门</span><span class="tag tag-pass">PASS</span></div>
+            <ul class="gate-checks" id="risk-checks"></ul>
+          </div>
+          <div class="gate">
+            <div class="gate-head"><span>Action 门</span><span class="tag tag-fail">NO_TRADE</span></div>
+            <p class="gate-next" id="action-next"></p>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <div class="panel-head">
+            <h3>事件与证据</h3>
+            <span class="panel-tag">2026Q2</span>
+          </div>
+          <dl class="event-metrics">
+            <div><dt>业绩日期</dt><dd>2026-08-12</dd></div>
+            <div><dt>预期 EPS YoY</dt><dd>+4.21%</dd></div>
+            <div><dt>预期营收 YoY</dt><dd>+9.71%</dd></div>
+            <div><dt>历史 IV crush</dt><dd>1.19 / 2.23 pp</dd></div>
+          </dl>
+          <p class="source-line">来源：futuapi 快照 · <span id="captured-at"></span></p>
+        </div>
+
+        <div class="audit-card">
+          <div class="panel-head">
+            <h3>审计链</h3>
+            <span class="panel-tag">SHA-256</span>
+          </div>
+          <ol class="audit-list" id="audit-list"></ol>
+          <p class="note">完整 JSONL 见 research/audit/audit_log.jsonl（本地，不入库）。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>决策支持 / 研究用途，非投资建议 · 不构成交易要约</span>
+      <span>默认模拟盘，任何订单须用户独立确认</span>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

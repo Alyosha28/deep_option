@@ -1,0 +1,478 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  团队三人分工（A/B/C 代号，facts.md §10）与 2026 赛事时间线（北京时间）：
+  8.16 23:59 初赛提交截止（简介约 500 字 + 方案 PPT/PDF）→ 8.24 复赛名单 Top 30 → 9.10 决赛名单 Top 15 → 9.22 杭州线下决赛答辩（次日 9.23 GOAI DAY 颁奖）。
+  来源 PROJECT_STATE.md §1/§6。动画：G1 标题栏+时间轴自动 fade-in；G2 点击揭示节点 1–2；G3 点击揭示节点 3–4。
+elements:
+  # ===== 页头 =====
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 400, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      align: [left, top]
+      text: "15 · TEAM &amp; TIMELINE"
+  - elementId: title
+    elementType: text
+    bounds: [78, 44, 818, 26]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 26
+      bold: true
+      color: "$text"
+      align: [left, top]
+      text: '<span style="font-family:Consolas">3</span> 人分工守住工程·策略·合规三线，按节点推进至杭州决赛'
+  - elementId: subtitle
+    elementType: text
+    bounds: [78, 72, 818, 16]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      align: [left, top]
+      text: '团队构成与 <span style="font-family:Consolas">2026</span> 赛事时间线：分工、里程碑与交付口径（北京时间）'
+  - elementId: header-line
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: statusbar
+    elementType: text
+    bounds: [674, 22, 222, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, top]
+      text: "GOAI · TERMINAL — 初赛评审   15/16"
+
+  # ===== 时间线（正文区上部，轴 y 176，位于正文区中线上方） =====
+  - elementId: axis
+    elementType: line
+    bounds: [64, 174, 832, 4]
+    viewBox: [832, 4]
+    points: "0,2 832,2"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: year-label
+    elementType: text
+    bounds: [64, 132, 50, 16]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$textSub"
+      align: [left, middle]
+      text: "2026"
+  - elementId: n1-date
+    elementType: text
+    bounds: [128, 132, 80, 16]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [center, middle]
+      text: "08.16"
+  - elementId: n2-date
+    elementType: text
+    bounds: [336, 132, 80, 16]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [center, middle]
+      text: "08.24"
+  - elementId: n3-date
+    elementType: text
+    bounds: [544, 132, 80, 16]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [center, middle]
+      text: "09.10"
+  - elementId: n4-date
+    elementType: text
+    bounds: [752, 132, 80, 16]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [center, middle]
+      text: "09.22"
+  - elementId: n1-dot
+    elementType: shape
+    bounds: [164, 172, 8, 8]
+    shapeName: ellipse
+    fill: {type: solid, color: "$accent"}
+  - elementId: n2-dot
+    elementType: shape
+    bounds: [372, 172, 8, 8]
+    shapeName: ellipse
+    fill: {type: solid, color: "$textSub"}
+  - elementId: n3-dot
+    elementType: shape
+    bounds: [580, 172, 8, 8]
+    shapeName: ellipse
+    fill: {type: solid, color: "$textSub"}
+  - elementId: n4-dot
+    elementType: shape
+    bounds: [788, 172, 8, 8]
+    shapeName: donut
+    fill: {type: solid, color: "$accent"}
+  - elementId: n1-text
+    elementType: text
+    bounds: [78, 188, 180, 44]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      color: "$text"
+      lineHeight: 1.35
+      align: [center, top]
+      text: |
+        <p style="text-align:center"><strong><span style="font-size:13px">初赛提交截止</span></strong></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub">简介约 </span><span style="font-size:10px; color:$textSub; font-family:Consolas">500</span><span style="font-size:10px; color:$textSub"> 字 + 方案 PPT/PDF</span></p>
+  - elementId: n2-text
+    elementType: text
+    bounds: [286, 188, 180, 44]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      color: "$text"
+      lineHeight: 1.35
+      align: [center, top]
+      text: |
+        <p style="text-align:center"><strong><span style="font-size:13px">复赛名单公布</span></strong></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub">Top </span><span style="font-size:10px; color:$textSub; font-family:Consolas">30</span></p>
+  - elementId: n3-text
+    elementType: text
+    bounds: [494, 188, 180, 44]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      color: "$text"
+      lineHeight: 1.35
+      align: [center, top]
+      text: |
+        <p style="text-align:center"><strong><span style="font-size:13px">决赛名单公布</span></strong></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub">Top </span><span style="font-size:10px; color:$textSub; font-family:Consolas">15</span></p>
+  - elementId: n4-text
+    elementType: text
+    bounds: [702, 188, 180, 44]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      color: "$text"
+      lineHeight: 1.35
+      align: [center, top]
+      text: |
+        <p style="text-align:center"><strong><span style="font-size:13px">杭州线下决赛答辩</span></strong></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub; font-family:Consolas">9.23</span><span style="font-size:10px; color:$textSub"> GOAI DAY 颁奖</span></p>
+
+  # ===== 团队分工（正文区下部，3 卡横排） =====
+  - elementId: card-a
+    elementType: shape
+    bounds: [64, 240, 266, 132]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-a-num
+    elementType: text
+    bounds: [76, 250, 40, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      text: "A"
+  - elementId: card-a-role
+    elementType: text
+    bounds: [76, 266, 242, 18]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 13
+      bold: true
+      color: "$text"
+      align: [left, top]
+      text: "多 Agent 工程与量化研究"
+  - elementId: card-a-duty
+    elementType: text
+    bounds: [76, 288, 242, 17]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: "数据层 / Agent 架构 / Demo / PPT"
+  - elementId: card-a-line
+    elementType: line
+    bounds: [76, 313, 242, 1]
+    viewBox: [242, 1]
+    points: "0,0.5 242,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-a-assets
+    elementType: text
+    bounds: [76, 321, 242, 44]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+      lineHeight: 1.4
+      align: [left, top]
+      text: "沉淀: futu-options-agent Skill、自研定价引擎与回测流水线"
+  - elementId: card-b
+    elementType: shape
+    bounds: [347, 240, 266, 132]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-b-num
+    elementType: text
+    bounds: [359, 250, 40, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      text: "B"
+  - elementId: card-b-role
+    elementType: text
+    bounds: [359, 266, 242, 18]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 13
+      bold: true
+      color: "$text"
+      align: [left, top]
+      text: "港美股期权策略 · 方向发起人"
+  - elementId: card-b-duty
+    elementType: text
+    bounds: [359, 288, 242, 17]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: "策略规则 / Greeks·IV / 场景与市场知识"
+  - elementId: card-b-line
+    elementType: line
+    bounds: [359, 313, 242, 1]
+    viewBox: [242, 1]
+    points: "0,0.5 242,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-b-assets
+    elementType: text
+    bounds: [359, 321, 242, 44]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+      lineHeight: 1.4
+      align: [left, top]
+      text: "沉淀: 跨式 Hero 用例规则集、港美股差异清单"
+  - elementId: card-c
+    elementType: shape
+    bounds: [630, 240, 266, 132]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-c-num
+    elementType: text
+    bounds: [642, 250, 40, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      text: "C"
+  - elementId: card-c-role
+    elementType: text
+    bounds: [642, 266, 242, 18]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 13
+      bold: true
+      color: "$text"
+      align: [left, top]
+      text: "网络安全与合规"
+  - elementId: card-c-duty
+    elementType: text
+    bounds: [642, 288, 242, 17]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: "合规审计 / 数据授权 / 防注入·密钥·审计链"
+  - elementId: card-c-line
+    elementType: line
+    bounds: [642, 313, 242, 1]
+    viewBox: [242, 1]
+    points: "0,0.5 242,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: card-c-assets
+    elementType: text
+    bounds: [642, 321, 242, 44]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+      lineHeight: 1.4
+      align: [left, top]
+      text: "沉淀: 审计日志与脱敏规范、SFC/HKEX 边界清单"
+
+  # ===== 金句条 =====
+  - elementId: quote-bg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-caret
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [center, middle]
+      text: ">"
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 788, 40]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 14
+      bold: true
+      color: "$text"
+      lineHeight: 1.2
+      align: [left, middle]
+      text: '三人三道闸门：<span style="font-family:Consolas">A</span> 出引擎，<span style="font-family:Consolas">B</span> 定策略，<span style="font-family:Consolas">C</span> 守合规，每个数字可溯源。'
+
+  # ===== 总结条 =====
+  - elementId: summary-bg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 50, 48]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      align: [left, middle]
+      text: "结论"
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 754, 48]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, middle]
+      text: '<span style="font-family:Consolas">3</span> 人覆盖工程 / 策略 / 合规，<span style="font-family:Consolas">8.16</span> 提交后按 <span style="font-family:Consolas">8.24</span> 复赛与 <span style="font-family:Consolas; color:$accent">9.22</span> 决赛推进。'
+
+  # ===== 页脚 =====
+  - elementId: footer-line
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-src
+    elementType: text
+    bounds: [64, 518, 700, 12]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [left, top]
+      text: "来源: PROJECT_STATE.md §1/§6 · facts.md §10 · 2026-08-12"
+  - elementId: footer-page
+    elementType: text
+    bounds: [846, 518, 50, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, top]
+      text: "15 / 16"
+
+animations:
+  # G1（auto）: 标题栏 + 时间轴 fade-in
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: subtitle
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: axis
+    effect: fade-in
+    trigger: withPrevious
+  # G2（click）: 节点 1–2 wipe-in(up) 同时
+  - elementId: n1-dot
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: n1-text
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: n2-dot
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: n2-text
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  # G3（click）: 节点 3–4 wipe-in(up) 同时
+  - elementId: n3-dot
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: n3-text
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: n4-dot
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: n4-text
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious

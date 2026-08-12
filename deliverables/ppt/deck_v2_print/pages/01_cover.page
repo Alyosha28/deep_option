@@ -1,0 +1,283 @@
+pageType: cover
+notes: |
+  封面一句话立住产品：把观点变成一张可核验的决策卡。
+  右侧四个关键数字对应能力边界，底部金句点出「可核验」的产品立场。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: topbar
+    elementType: shape
+    bounds: [0, 0, 220, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: glow
+    elementType: shape
+    bounds: [430, 20, 620, 460]
+    shapeName: ellipse
+    fill:
+      type: gradient
+      gradientType: radial
+      stops:
+        - {position: 0, color: "#38BDF82E"}
+        - {position: 1, color: "#38BDF800"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [60, 64, 640, 18]
+    content:
+      style: "$eyebrow"
+      text: GOAI · BOUNDLESS AGENTS · FINANCE
+  - elementId: title
+    elementType: text
+    bounds: [60, 94, 640, 150]
+    content:
+      style: "$title"
+      fontSize: 46
+      lineHeight: 1.05
+      text: |
+        <p><span style="color:$primary;">GOAI</span> 港美股期权智能终端</p>
+        <p style="margin-top:12px; font-size:22px; color:$sub;">把观点变成一张可核验的决策卡</p>
+  - elementId: tagline-tick
+    elementType: shape
+    bounds: [60, 258, 14, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kpoints-head
+    elementType: text
+    bounds: [60, 268, 400, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 四个关键设计
+  - elementId: chip1
+    elementType: shape
+    bounds: [60, 296, 30, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: chip1-num
+    elementType: text
+    bounds: [60, 302, 30, 18]
+    content:
+      fontFamily: Georgia
+      fontSize: 13
+      bold: true
+      color: "$primary"
+      align: [center, middle]
+      text: "01"
+  - elementId: kp1
+    elementType: text
+    bounds: [102, 294, 540, 34]
+    content:
+      style: "$small"
+      text: |
+        <p><strong>金融数字不由 LLM 产出</strong></p>
+        <p><span style="font-size:9px; color:$sub;">行情、定价、成本、门控逐项可复算</span></p>
+  - elementId: chip2
+    elementType: shape
+    bounds: [60, 338, 30, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: chip2-num
+    elementType: text
+    bounds: [60, 344, 30, 18]
+    content:
+      fontFamily: Georgia
+      fontSize: 13
+      bold: true
+      color: "$primary"
+      align: [center, middle]
+      text: "02"
+  - elementId: kp2
+    elementType: text
+    bounds: [102, 336, 540, 34]
+    content:
+      style: "$small"
+      text: |
+        <p><strong>Edge / Risk / Action 硬门一票否决</strong></p>
+        <p><span style="font-size:9px; color:$sub;">允许 NO_TRADE，不为展示下单调低门槛</span></p>
+  - elementId: chip3
+    elementType: shape
+    bounds: [60, 380, 30, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: chip3-num
+    elementType: text
+    bounds: [60, 386, 30, 18]
+    content:
+      fontFamily: Georgia
+      fontSize: 13
+      bold: true
+      color: "$primary"
+      align: [center, middle]
+      text: "03"
+  - elementId: kp3
+    elementType: text
+    bounds: [102, 378, 540, 34]
+    content:
+      style: "$small"
+      text: |
+        <p><strong>每条证据可溯源</strong></p>
+        <p><span style="font-size:9px; color:$sub;">来源、时间、快照哈希与审计链</span></p>
+  - elementId: chip4
+    elementType: shape
+    bounds: [60, 422, 30, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: chip4-num
+    elementType: text
+    bounds: [60, 428, 30, 18]
+    content:
+      fontFamily: Georgia
+      fontSize: 13
+      bold: true
+      color: "$primary"
+      align: [center, middle]
+      text: "04"
+  - elementId: kp4
+    elementType: text
+    bounds: [102, 420, 540, 34]
+    content:
+      style: "$small"
+      text: |
+        <p><strong>比赛版本无实盘入口</strong></p>
+        <p><span style="font-size:9px; color:$sub;">模拟动作必须用户独立确认</span></p>
+  - elementId: side-panel
+    elementType: shape
+    bounds: [650, 96, 250, 356]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: side-head
+    elementType: text
+    bounds: [674, 112, 202, 16]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 能力边界速览
+  - elementId: s1-num
+    elementType: text
+    bounds: [674, 140, 110, 34]
+    content:
+      style: "$kpi"
+      fontSize: 30
+      text: "4"
+  - elementId: s1-label
+    elementType: text
+    bounds: [788, 150, 90, 26]
+    content:
+      style: "$cap"
+      text: |
+        <p>种合法输出状态</p>
+        <p>NO_TRADE 算成功</p>
+  - elementId: s-rule1
+    elementType: line
+    bounds: [674, 190, 202, 1]
+    viewBox: [202, 1]
+    points: "0,0 202,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s2-num
+    elementType: text
+    bounds: [674, 202, 110, 34]
+    content:
+      style: "$kpi"
+      fontSize: 30
+      text: 100%
+  - elementId: s2-label
+    elementType: text
+    bounds: [788, 212, 90, 26]
+    content:
+      style: "$cap"
+      text: |
+        <p>关键数字溯源</p>
+        <p>零 LLM 编数</p>
+  - elementId: s-rule2
+    elementType: line
+    bounds: [674, 252, 202, 1]
+    viewBox: [202, 1]
+    points: "0,0 202,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s3-num
+    elementType: text
+    bounds: [674, 264, 110, 34]
+    content:
+      style: "$kpi"
+      fontSize: 30
+      text: "0"
+  - elementId: s3-label
+    elementType: text
+    bounds: [788, 274, 90, 26]
+    content:
+      style: "$cap"
+      text: |
+        <p>实盘入口</p>
+        <p>默认只读</p>
+  - elementId: s-rule3
+    elementType: line
+    bounds: [674, 314, 202, 1]
+    viewBox: [202, 1]
+    points: "0,0 202,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s4-num
+    elementType: text
+    bounds: [674, 326, 110, 34]
+    content:
+      style: "$kpi"
+      fontSize: 30
+      text: P0a
+  - elementId: s4-label
+    elementType: text
+    bounds: [788, 336, 90, 26]
+    content:
+      style: "$cap"
+      text: |
+        <p>端到端已验证</p>
+        <p>腾讯 Hero 案例</p>
+  - elementId: s-note
+    elementType: text
+    bounds: [674, 386, 202, 48]
+    content:
+      style: "$cap"
+      text: |
+        <p>LLM 说人话，引擎说真话。</p>
+        <p>数字来自 Futu 冻结快照与自研引擎。</p>
+  - elementId: band
+    elementType: shape
+    bounds: [0, 470, 960, 70]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: [null, null, null, null]
+  - elementId: band-rule
+    elementType: line
+    bounds: [0, 470, 960, 1]
+    viewBox: [960, 1]
+    points: "0,0 960,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: band-quote
+    elementType: text
+    bounds: [60, 490, 840, 30]
+    content:
+      style: "$small"
+      fontSize: 12.5
+      bold: true
+      align: [center, middle]
+      text: 不猜涨跌，把每一次期权决策变得可核验、可复核、敢拒绝。
+  - elementId: band-meta
+    elementType: text
+    bounds: [60, 518, 300, 14]
+    content:
+      style: "$cap"
+      color: "$faint"
+      text: GOAI 港美股期权智能终端 · 初赛方案 · 2026-08
+  - elementId: page-num
+    elementType: text
+    bounds: [700, 518, 200, 14]
+    content:
+      style: "$cap"
+      color: "$faint"
+      align: [right, top]
+      text: 01 / 16

@@ -1,0 +1,241 @@
+pageType: content
+notes: |
+  证据页二：历史 11–19 个财报期买入业绩跨式整体负期望；样本小，结论是证据强度不足。
+background:
+  type: solid
+  color: "$paper"
+elements:
+  - elementId: corner
+    elementType: text
+    bounds: [792, 12, 104, 58]
+    content:
+      style: "$cornerNum"
+      align: [right, top]
+      text: "08"
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 44, 22, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [96, 36, 600, 16]
+    content:
+      style: "$eyebrow"
+      text: EVIDENCE · 07
+  - elementId: title
+    elementType: text
+    bounds: [64, 56, 832, 40]
+    content:
+      style: "$display"
+      fontSize: 26
+      text: 历史 11–19 个财报期：买入业绩跨式整体负期望
+  - elementId: standfirst
+    elementType: text
+    bounds: [64, 100, 832, 18]
+    content:
+      style: "$standfirst"
+      text: 口径 A = 引擎 + 历史 IV（n=11）· 口径 B = 市场预期波动代理（n=19）· 按到期内在价值平仓
+  - elementId: header-rule
+    elementType: line
+    bounds: [64, 124, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: bt-chart
+    elementType: chart
+    bounds: [64, 140, 560, 276]
+    data:
+      cols: [horizon, A, B]
+      rows:
+        - ["d+1", -2.4, -49.1]
+        - ["d+2", -7.8, -47.5]
+        - ["d+5", 21.0, -22.6]
+    title:
+      text: 各持有期平均 ROI（%）
+      fontSize: 12
+      color: "$ink"
+    legend: {show: true, position: top, fontSize: 9, color: "$sub"}
+    fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    xAxis: {label: {fontSize: 9, color: "$sub"}, axisLine: {color: "#191B1F33"}, gridLine: {show: false}}
+    yAxis: {label: {numberFormat: "0.0", fontSize: 9, color: "$sub"}, axisLine: {color: "#191B1F33"}, gridLine: {color: "#191B1F14", width: 1}}
+    series:
+      - type: bar
+        encode: {x: horizon, y: A}
+        name: 口径A（n=11）
+        fill: "$primary"
+        dataLabels: {show: true, numberFormat: "0.0", fontSize: 9, color: "$sub"}
+      - type: bar
+        encode: {x: horizon, y: B}
+        name: 口径B（n=19）
+        fill: "$warn"
+        dataLabels: {show: true, numberFormat: "0.0", fontSize: 9, color: "$sub"}
+  - elementId: win-plate
+    elementType: shape
+    bounds: [640, 140, 256, 88]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: win-label
+    elementType: text
+    bounds: [656, 150, 224, 14]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: d+2 胜率
+  - elementId: win-text
+    elementType: text
+    bounds: [656, 168, 224, 48]
+    content:
+      style: "$small"
+      text: |
+        <p>口径A：<span style="font-size:17px; color:$down;">36%</span></p>
+        <p>口径B：<span style="font-size:17px; color:$down;">16%</span></p>
+  - elementId: caveat-head
+    elementType: text
+    bounds: [640, 240, 256, 16]
+    content:
+      style: "$small"
+      bold: true
+      color: "$sub"
+      text: 口径边界
+  - elementId: caveat-text
+    elementType: text
+    bounds: [640, 258, 256, 128]
+    content:
+      style: "$cap"
+      text: |
+        <p>· 历史 bid/ask 不可得，引擎成本按 IV + 5% 滑点近似</p>
+        <p>· 平仓按到期内在价值，忽略剩余时间价值</p>
+        <p>· 单标的 11–19 期，t 统计量仅作量级参考</p>
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 434, 3, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-text
+    elementType: text
+    bounds: [80, 450, 800, 26]
+    content:
+      style: "$quote"
+      text: '<p><span style="font-size:20px; color:$primary;">“</span>样本少的时候，诚实比自信值钱。</p>'
+  - elementId: takeaway-rule
+    elementType: line
+    bounds: [64, 490, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [64, 493, 832, 24]
+    content:
+      style: "$small"
+      fontSize: 10.5
+      color: "$sub"
+      text: 2025–2026 转好但样本少：结论是证据强度不足，而非机会不存在。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [64, 524, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 521, 650, 19]
+    content:
+      style: "$cap"
+      text: 数据：backtest_tencent_straddle.json（stats · engine/proxy）
+  - elementId: footer-right
+    elementType: text
+    bounds: [704, 521, 192, 19]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 08 / 16
+animations:
+  - elementId: corner
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 400
+  - elementId: tick
+    effect: wipe-in
+    trigger: withPrevious
+    direction: right
+    durationMs: 250
+  - elementId: kicker
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: title
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 450
+    easing: ease-out
+    delayMs: 80
+  - elementId: standfirst
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: header-rule
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+  - elementId: bt-chart
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 450
+    easing: ease-out
+    delayMs: 60
+  - elementId: win-plate
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 350
+    delayMs: 80
+  - elementId: win-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: win-text
+    effect: rise-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: caveat-head
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 60
+  - elementId: caveat-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: quote-rail
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+  - elementId: quote-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: takeaway-rule
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 300
+  - elementId: takeaway-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: footer-rule
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 200
+  - elementId: footer-left
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: footer-right
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250

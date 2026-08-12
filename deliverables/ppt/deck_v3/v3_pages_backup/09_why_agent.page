@@ -1,0 +1,277 @@
+pageType: content
+notes: |
+  为什么是 Agent：固定计算器缺编排，通用 LLM 缺事实，Agent 补两者的缺口。
+background:
+  type: solid
+  color: "$paper"
+elements:
+  - elementId: corner
+    elementType: text
+    bounds: [792, 12, 104, 58]
+    content:
+      style: "$cornerNum"
+      align: [right, top]
+      text: "09"
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 44, 22, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [96, 36, 600, 16]
+    content:
+      style: "$eyebrow"
+      text: WHY AGENT · 08
+  - elementId: title
+    elementType: text
+    bounds: [64, 56, 832, 40]
+    content:
+      style: "$display"
+      fontSize: 26
+      text: 固定计算器缺编排，通用 LLM 缺事实，Agent 补两者的缺口
+  - elementId: standfirst
+    elementType: text
+    bounds: [64, 100, 832, 18]
+    content:
+      style: "$standfirst"
+      text: LLM 只做理解、编排与解释；所有金融数字、门控与动作许可由确定性工具完成
+  - elementId: header-rule
+    elementType: line
+    bounds: [64, 124, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: c1-head
+    elementType: text
+    bounds: [64, 140, 256, 20]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 14
+      bold: true
+      color: "$sub"
+      text: 固定计算器
+  - elementId: c1-body
+    elementType: text
+    bounds: [64, 166, 256, 220]
+    content:
+      style: "$cap"
+      text: |
+        <p><strong style="color:$ink;">能</strong>：输入完整后稳定计算</p>
+        <p style="margin-top:6px"><strong style="color:$down;">不能</strong>：</p>
+        <p>· 补全缺失任务与必要追问</p>
+        <p>· 按标的/市场/策略选数据与模型</p>
+        <p>· 失败时降级 Replay / DRAFT_ONLY</p>
+        <p>· 解释 NO_TRADE / BLOCK</p>
+  - elementId: vrule1
+    elementType: line
+    bounds: [336, 140, 1, 248]
+    viewBox: [1, 248]
+    points: "0,0 0,248"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: c2-head
+    elementType: text
+    bounds: [352, 140, 256, 20]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 14
+      bold: true
+      color: "$sub"
+      text: 通用 LLM
+  - elementId: c2-body
+    elementType: text
+    bounds: [352, 166, 256, 220]
+    content:
+      style: "$cap"
+      text: |
+        <p><strong style="color:$ink;">能</strong>：理解与表达自然语言</p>
+        <p style="margin-top:6px"><strong style="color:$down;">不能</strong>：</p>
+        <p>· 保证数字真实与口径正确</p>
+        <p>· 承担账户风控与权限判断</p>
+        <p>· 复算与追溯每个结论</p>
+  - elementId: vrule2
+    elementType: line
+    bounds: [624, 140, 1, 248]
+    viewBox: [1, 248]
+    points: "0,0 0,248"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: c3-top-rule
+    elementType: shape
+    bounds: [640, 140, 256, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: c3-head
+    elementType: text
+    bounds: [640, 152, 256, 20]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 14
+      bold: true
+      color: "$primary"
+      text: GOAI Agent
+  - elementId: c3-body
+    elementType: text
+    bounds: [640, 178, 256, 210]
+    content:
+      style: "$cap"
+      text: |
+        <p><strong style="color:$ink;">分工</strong>：LLM 解析场景、</p>
+        <p>编排工具、解释结果</p>
+        <p style="margin-top:6px"><strong style="color:$ink;">确定性引擎</strong>：定价、IV、</p>
+        <p>Greeks、成本、门控、审计</p>
+        <p style="margin-top:6px"><span style="color:$up;">异常处理</span>：Live 不可用 →</p>
+        <p>Replay / DRAFT_ONLY，不静默切换</p>
+  - elementId: agent-increments
+    elementType: text
+    bounds: [64, 390, 832, 34]
+    content:
+      style: "$cap"
+      text: Agent 增量：自然语言补全任务 → 动态选数据与模型 → 失败降级 → 只重算受影响部分 → 解释拒绝而非只给数字
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 434, 3, 46]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-text
+    elementType: text
+    bounds: [80, 450, 800, 26]
+    content:
+      style: "$quote"
+      text: '<p><span style="font-size:20px; color:$primary;">“</span>LLM 说人话，引擎说真话。</p>'
+  - elementId: takeaway-rule
+    elementType: line
+    bounds: [64, 490, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [64, 493, 832, 24]
+    content:
+      style: "$small"
+      fontSize: 10.5
+      color: "$sub"
+      text: Agent 的价值不是会聊天，而是把「会理解」与「会算数」接成一条可降级、可解释、可审计的任务闭环。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [64, 524, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 521, 650, 19]
+    content:
+      style: "$cap"
+      text: 来源：docs/PRD.md §1.3 为什么是 Agent
+  - elementId: footer-right
+    elementType: text
+    bounds: [704, 521, 192, 19]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 09 / 16
+animations:
+  - elementId: corner
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 400
+  - elementId: tick
+    effect: wipe-in
+    trigger: withPrevious
+    direction: right
+    durationMs: 250
+  - elementId: kicker
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: title
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 450
+    easing: ease-out
+    delayMs: 80
+  - elementId: standfirst
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: header-rule
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+  - elementId: c1-head
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 60
+  - elementId: c1-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: vrule1
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: down
+    durationMs: 300
+  - elementId: c2-head
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 60
+  - elementId: c2-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: vrule2
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: down
+    durationMs: 300
+  - elementId: c3-top-rule
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 300
+  - elementId: c3-head
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: c3-body
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: agent-increments
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+    delayMs: 60
+  - elementId: quote-rail
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+  - elementId: quote-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: takeaway-rule
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 300
+  - elementId: takeaway-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: footer-rule
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 200
+  - elementId: footer-left
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: footer-right
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250

@@ -1,0 +1,363 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+elements:
+  # ---------- 标题栏 ----------
+  - elementId: tick-title
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 320, 14]
+    content:
+      text: "12 · COMPETITORS"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      align: [left, middle]
+      wrap: false
+  - elementId: title
+    elementType: text
+    bounds: [78, 44, 818, 26]
+    content:
+      text: "同类工具各占一隅，GOAI 把决策变成可核验的证据链"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 26
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+  - elementId: subtitle
+    elementType: text
+    bounds: [78, 72, 818, 16]
+    content:
+      text: "四类主流做法 × 五个维度，标出 GOAI 的增量"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      align: [left, middle]
+      wrap: false
+  - elementId: statusbar
+    elementType: text
+    bounds: [678, 22, 218, 12]
+    content:
+      text: "GOAI · TERMINAL — 初赛评审   12/16"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      align: [right, middle]
+      wrap: false
+  - elementId: header-hairline
+    elementType: line
+    bounds: [64, 92, 832, 2]
+    viewBox: [1, 1]
+    points: "0,0.5 1,0.5"
+    curve: round
+    border: {style: solid, width: 1, color: "$border"}
+
+  # ---------- 对比矩阵：表头 ----------
+  - elementId: header-table
+    elementType: table
+    bounds: [64, 104, 832, 26]
+    columnWidths: [0.202, 0.160, 0.160, 0.160, 0.160, 0.158]
+    rowHeights: [1]
+    style:
+      cellStyle:
+        color: "$text"
+        fontSize: 11
+        bold: true
+        fill: {type: solid, color: "#10161F"}
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$accent"}, null]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    rows:
+      - - text: "竞品"
+        - text: "数字可信度"
+        - text: "港股规则适配"
+        - text: "可审计性"
+        - text: "自然语言交互"
+        - text: "执行边界"
+
+  # ---------- 对比行 1：Futu 手工流程 ----------
+  - elementId: row-futu
+    elementType: table
+    bounds: [64, 130, 832, 40]
+    columnWidths: [0.202, 0.160, 0.160, 0.160, 0.160, 0.158]
+    rowHeights: [1]
+    style:
+      cellStyle:
+        color: "$text"
+        fontSize: 11
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$border"}, null]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    rows:
+      - - text: "Futu 手工流程"
+          bold: true
+        - text: '<span style="color:$success">✓</span> 信息强'
+        - text: "规则分散多页"
+        - text: "无自动留痕"
+        - text: "手工拼接"
+        - text: '<span style="color:$success">✓</span> 券商下单'
+
+  # ---------- 对比行 2：通用 LLM ----------
+  - elementId: row-llm
+    elementType: table
+    bounds: [64, 170, 832, 40]
+    columnWidths: [0.202, 0.160, 0.160, 0.160, 0.160, 0.158]
+    rowHeights: [1]
+    style:
+      cellStyle:
+        color: "$text"
+        fontSize: 11
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$border"}, null]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    rows:
+      - - text: "通用 LLM"
+          bold: true
+        - text: "会编造数字"
+          color: "$danger"
+        - text: "—"
+          color: "$textSub"
+        - text: "—"
+          color: "$textSub"
+        - text: '<span style="color:$success">✓</span> 表达好'
+        - text: "不可承担风控"
+          color: "$danger"
+
+  # ---------- 对比行 3：固定计算脚本 ----------
+  - elementId: row-script
+    elementType: table
+    bounds: [64, 210, 832, 40]
+    columnWidths: [0.202, 0.160, 0.160, 0.160, 0.160, 0.158]
+    rowHeights: [1]
+    style:
+      cellStyle:
+        color: "$text"
+        fontSize: 11
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$border"}, null]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    rows:
+      - - text: "固定计算脚本"
+          bold: true
+        - text: '<span style="color:$success">✓</span> 计算稳定'
+        - text: "参数需自给"
+        - text: '<span style="color:$success">✓</span> 可复现'
+        - text: "不补全任务"
+        - text: "无门控降级"
+
+  # ---------- 对比行 4：moomoo Engine · moontower.ai（传统策略推荐类） ----------
+  - elementId: row-moomoo
+    elementType: table
+    bounds: [64, 250, 832, 40]
+    columnWidths: [0.202, 0.160, 0.160, 0.160, 0.160, 0.158]
+    rowHeights: [1]
+    style:
+      cellStyle:
+        color: "$text"
+        fontSize: 11
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$border"}, null]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    rows:
+      - - text: '<p><strong>moomoo Engine · moontower.ai</strong></p><p><span style="font-size:10px; color:$textSub">（传统策略推荐类）</span></p>'
+          lineHeight: 1.5
+        - text: "可交易≠值得"
+          color: "$warn"
+        - text: "—"
+          color: "$textSub"
+        - text: "—"
+          color: "$textSub"
+        - text: "—"
+          color: "$textSub"
+        - text: "无 NO_TRADE"
+
+  # ---------- 焦点行：GOAI 增量 ----------
+  - elementId: row-goal
+    elementType: table
+    bounds: [64, 290, 832, 44]
+    columnWidths: [0.202, 0.160, 0.160, 0.160, 0.160, 0.158]
+    rowHeights: [1]
+    style:
+      cellStyle:
+        color: "$accent"
+        fontSize: 11
+        bold: true
+        align: [left, middle]
+        border: [null, null, {style: solid, width: 1, color: "$border"}, null]
+        fontFamily: {latin: Arial, ea: Microsoft YaHei}
+    rows:
+      - - text: "GOAI"
+          fill: {type: solid, color: "#22D3EE14"}
+        - text: '<span style="color:$success">✓</span> 工具供数'
+          fill: {type: solid, color: "#22D3EE14"}
+        - text: '<span style="color:$success">✓</span> 规格先解析'
+          fill: {type: solid, color: "#22D3EE14"}
+        - text: '✓ 哈希链 <span style="font-family:Consolas">7</span> 条'
+          fill: {type: solid, color: "#22D3EE14"}
+        - text: '<span style="color:$success">✓</span> 端到端决策'
+          fill: {type: solid, color: "#22D3EE14"}
+        - text: '<span style="color:$success">✓</span> 仅模拟+确认'
+          fill: {type: solid, color: "#22D3EE33"}
+
+  # ---------- 焦点标注 ----------
+  - elementId: caption-tick
+    elementType: shape
+    bounds: [64, 342, 3, 12]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: caption
+    elementType: text
+    bounds: [78, 338, 818, 18]
+    content:
+      text: "GOAI 增量 = 确定性数字 + 港股规格 + 哈希链审计；NO_TRADE 是成功结果"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+      align: [left, middle]
+      wrap: false
+
+  # ---------- 金句条 ----------
+  - elementId: quote-bg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-track
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-mark
+    elementType: text
+    bounds: [76, 386, 16, 36]
+    content:
+      text: "&gt;"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [center, middle]
+      wrap: false
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 386, 792, 36]
+    content:
+      text: "价值不是替用户猜涨跌，而是收拢研究、规则与约束为一张可核验决策卡"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 14
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+
+  # ---------- 总结条 ----------
+  - elementId: summary-bg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 46, 48]
+    content:
+      text: "结论"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      align: [left, middle]
+      wrap: false
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 758, 48]
+    content:
+      text: "竞品强在信息、计算或表达，GOAI 的增量是确定性数字与审计链的端到端组合"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+
+  # ---------- 页脚 ----------
+  - elementId: footer-hairline
+    elementType: line
+    bounds: [64, 512, 832, 2]
+    viewBox: [1, 1]
+    points: "0,0.5 1,0.5"
+    curve: round
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 518, 640, 12]
+    content:
+      text: "来源: docs/PRD.md §1.2–§1.4 · facts.md §1/§6–§9 · 2026-08-12"
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [left, middle]
+      wrap: false
+  - elementId: footer-right
+    elementType: text
+    bounds: [806, 518, 90, 12]
+    content:
+      text: "12 / 16"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, middle]
+      wrap: false
+
+animations:
+  # G1（auto）：标题栏 + 矩阵框架（表头）
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: subtitle
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-table
+    effect: fade-in
+    trigger: withPrevious
+  # G2（click）：对比行 1→4 依次 wipe-in(left)
+  - elementId: row-futu
+    effect: wipe-in
+    direction: left
+    trigger: onClick
+  - elementId: row-llm
+    effect: wipe-in
+    direction: left
+    trigger: afterPrevious
+  - elementId: row-script
+    effect: wipe-in
+    direction: left
+    trigger: afterPrevious
+  - elementId: row-moomoo
+    effect: wipe-in
+    direction: left
+    trigger: afterPrevious
+  # G3（click）：焦点行 GOAI zoom-in + 标注 fade-in
+  - elementId: row-goal
+    effect: zoom-in
+    trigger: onClick
+  - elementId: caption-tick
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: caption
+    effect: fade-in
+    trigger: withPrevious

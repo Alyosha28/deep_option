@@ -1,0 +1,177 @@
+pageType: content
+notes: |
+  可信与审计页：数据来源分层、可复算、哈希链与脱敏；对应赛道「数据来源与隐私保护」。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "11"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: TRUST & AUDIT · 10
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 数据分层可信，结论哈希可复核
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 对应赛道评审口径：数据来源 · 隐私保护 · 审计与可复算
+  - elementId: source-table
+    elementType: table
+    bounds: [60, 120, 560, 252]
+    style: "$default"
+    columnWidths: [0.32, 0.34, 0.34]
+    rowHeights: [0.1, 0.18, 0.18, 0.18, 0.18, 0.18]
+    rows:
+      - - text: 数字类型
+        - text: 产出者
+        - text: 证据
+      - - text: 行情 / 盘口 / IV / OI
+        - text: Futu OpenAPI / 冻结快照
+        - text: 快照 SHA-256 + 时间
+      - - text: 理论价值 / IV / Greeks
+        - text: 自研 BS + 二叉树 + bump-and-reprice
+        - text: 引擎版本 + 输入参数
+      - - text: 可成交成本
+        - text: 引擎（bid/ask + 费用 + 滑点 + tick）
+        - text: 成本口径注明
+      - - text: 门控判定
+        - text: 确定性 Edge / Risk / Action
+        - text: 决策卡 + 审计记录
+      - - text: 自然语言理解 / 解释
+        - text: LLM
+        - text: 不进入金融数字
+  - elementId: chain-label
+    elementType: text
+    bounds: [640, 122, 260, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 审计哈希链（Hero 7 条记录）
+  - elementId: chain-text
+    elementType: text
+    bounds: [640, 144, 260, 96]
+    content:
+      style: "$cap"
+      text: |
+        <p>scenario_parsed → data_loaded →</p>
+        <p>engine_computed → edge_gate →</p>
+        <p>risk_gate → action_gate →</p>
+        <p>decision_card</p>
+        <p><span style="color:$sub;">每条链接前一条，哈希仅展示前缀</span></p>
+  - elementId: rule1-tick
+    elementType: shape
+    bounds: [640, 258, 12, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: rule1
+    elementType: text
+    bounds: [662, 246, 238, 40]
+    content:
+      style: "$small"
+      text: |
+        <p>任何数字带来源、</p>
+        <p>时间与口径</p>
+  - elementId: rule2-tick
+    elementType: shape
+    bounds: [640, 310, 12, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: rule2
+    elementType: text
+    bounds: [662, 298, 238, 40]
+    content:
+      style: "$small"
+      text: |
+        <p>LLM 估算的金融</p>
+        <p>数字视为缺陷</p>
+  - elementId: rule3-tick
+    elementType: shape
+    bounds: [640, 362, 12, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: rule3
+    elementType: text
+    bounds: [662, 350, 238, 40]
+    content:
+      style: "$small"
+      text: |
+        <p>授权行情与原始快照</p>
+        <p>不重新分发</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: 可复算，是金融数字的最低要求。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: 口径分离：理论价值 ≠ mid ≠ 买入成本 ≠ 平仓价值，四者并列展示、绝不混用；审计日志 JSONL + SHA-256 防误改。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 数据：research/audit/audit_log.jsonl · data/snapshots（本地保存，不重新分发）
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 11 / 16

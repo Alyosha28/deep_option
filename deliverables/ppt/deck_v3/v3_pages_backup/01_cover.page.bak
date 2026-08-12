@@ -1,0 +1,258 @@
+pageType: cover
+notes: |
+  封面 v4：数据新闻刊头。kicker + 双规则线 + 54px 衬线大标题 + 副题；
+  通栏 4 统计格（发丝线分栏）；底部墨色通栏收束使命句与 meta。
+background:
+  type: solid
+  color: "$paper"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [48, 32, 520, 14]
+    content:
+      style: "$kicker"
+      text: GOAI · BOUNDLESS AGENTS · FINANCE
+  - elementId: meta
+    elementType: text
+    bounds: [612, 32, 300, 14]
+    content:
+      style: "$source"
+      align: [right, top]
+      text: 初赛方案 · 2026-08
+  - elementId: rule-thick
+    elementType: shape
+    bounds: [48, 56, 864, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: rule-thin
+    elementType: shape
+    bounds: [48, 62, 864, 0.75]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: title
+    elementType: text
+    bounds: [48, 92, 864, 64]
+    content:
+      style: "$display"
+      fontSize: 52
+      text: |
+        <p><span style="color:$primary;">GOAI</span> 港美股期权智能终端</p>
+  - elementId: subtitle
+    elementType: text
+    bounds: [48, 168, 864, 26]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 19
+      color: "$sub"
+      text: 把观点变成一张可核验的决策卡
+  - elementId: stat-rule
+    elementType: line
+    bounds: [48, 226, 864, 1]
+    viewBox: [864, 1]
+    points: "0,0 864,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s1-num
+    elementType: text
+    bounds: [48, 252, 204, 46]
+    content:
+      style: "$hero"
+      fontSize: 36
+      text: "4"
+  - elementId: s1-label
+    elementType: text
+    bounds: [48, 302, 204, 16]
+    content:
+      style: "$small"
+      color: "$sub"
+      text: 种合法输出状态
+  - elementId: s1-sep
+    elementType: line
+    bounds: [262, 254, 1, 62]
+    viewBox: [1, 62]
+    points: "0,0 0,62"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s2-num
+    elementType: text
+    bounds: [268, 252, 204, 46]
+    content:
+      style: "$hero"
+      fontSize: 36
+      text: 100%
+  - elementId: s2-label
+    elementType: text
+    bounds: [268, 302, 204, 16]
+    content:
+      style: "$small"
+      color: "$sub"
+      text: 关键数字溯源
+  - elementId: s2-sep
+    elementType: line
+    bounds: [482, 254, 1, 62]
+    viewBox: [1, 62]
+    points: "0,0 0,62"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s3-num
+    elementType: text
+    bounds: [488, 252, 204, 46]
+    content:
+      style: "$hero"
+      fontSize: 36
+      text: "0"
+  - elementId: s3-label
+    elementType: text
+    bounds: [488, 302, 204, 16]
+    content:
+      style: "$small"
+      color: "$sub"
+      text: 实盘入口
+  - elementId: s3-sep
+    elementType: line
+    bounds: [702, 254, 1, 62]
+    viewBox: [1, 62]
+    points: "0,0 0,62"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: s4-num
+    elementType: text
+    bounds: [708, 252, 204, 46]
+    content:
+      style: "$hero"
+      fontSize: 36
+      color: "$primary"
+      text: P0a
+  - elementId: s4-label
+    elementType: text
+    bounds: [708, 302, 204, 16]
+    content:
+      style: "$small"
+      color: "$sub"
+      text: 端到端已验证
+  - elementId: keys-head
+    elementType: text
+    bounds: [48, 348, 300, 14]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$sub"
+      text: 四个关键设计
+  - elementId: keys-line
+    elementType: text
+    bounds: [48, 368, 864, 40]
+    content:
+      style: "$small"
+      color: "$ink"
+      lineHeight: 1.6
+      text: |
+        <p><strong>01</strong>　金融数字不由 LLM 产出　　<strong>02</strong>　Edge / Risk / Action 硬门一票否决　　<strong>03</strong>　每条证据可溯源　　<strong>04</strong>　比赛版本无实盘入口</p>
+  - elementId: band
+    elementType: shape
+    bounds: [0, 452, 960, 88]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: band-quote
+    elementType: text
+    bounds: [48, 468, 864, 26]
+    content:
+      style: "$quote"
+      color: "$paper"
+      align: [center, middle]
+      text: 不猜涨跌，把每一次期权决策变得可核验、可复核、敢拒绝。
+  - elementId: band-meta
+    elementType: text
+    bounds: [48, 502, 864, 14]
+    content:
+      style: "$source"
+      align: [center, middle]
+      text: GOAI 港美股期权智能终端 · 初赛方案 · 2026-08
+animations:
+  - elementId: kicker
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+  - elementId: meta
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: rule-thick
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 400
+  - elementId: rule-thin
+    effect: wipe-in
+    trigger: withPrevious
+    direction: right
+    durationMs: 400
+  - elementId: title
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 500
+    easing: ease-out
+    delayMs: 100
+  - elementId: subtitle
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: stat-rule
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+  - elementId: s1-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+    delayMs: 60
+  - elementId: s1-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: s2-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 50
+  - elementId: s2-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: s3-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 50
+  - elementId: s3-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: s4-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 50
+  - elementId: s4-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: keys-head
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+  - elementId: keys-line
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: band
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: up
+    durationMs: 450
+    easing: ease-out
+  - elementId: band-quote
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: band-meta
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+    delayMs: 150

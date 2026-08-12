@@ -1,0 +1,402 @@
+pageType: content
+notes: |
+  执行摘要 v4：左栏 5 条编号主张（发丝线分隔），右侧墨面板给出当前 Hero 裁决 NO_TRADE。
+  数字全部可溯源；拒绝本身就是系统能力的证明。
+background:
+  type: solid
+  color: "$paper"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [48, 28, 500, 14]
+    content:
+      style: "$kicker"
+      text: EXECUTIVE SUMMARY · 01
+  - elementId: folio
+    elementType: text
+    bounds: [812, 28, 100, 14]
+    content:
+      style: "$folio"
+      align: [right, top]
+      text: 02 / 16
+  - elementId: title
+    elementType: text
+    bounds: [48, 48, 864, 38]
+    content:
+      style: "$display"
+      text: 结论先行：数字可信、结论可拒绝的期权研究 Agent
+  - elementId: standfirst
+    elementType: text
+    bounds: [48, 90, 864, 18]
+    content:
+      style: "$standfirst"
+      text: 腾讯业绩跨式（HK.00700）已端到端跑通，输出 NO_TRADE——拒绝本身就是系统能力
+  - elementId: rule-thick
+    elementType: shape
+    bounds: [48, 118, 864, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: rule-thin
+    elementType: shape
+    bounds: [48, 124.5, 864, 0.75]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: j1-num
+    elementType: text
+    bounds: [48, 146, 36, 24]
+    content:
+      fontFamily: Georgia
+      fontSize: 16
+      bold: true
+      color: "$primary"
+      text: "01"
+  - elementId: j1-claim
+    elementType: text
+    bounds: [92, 146, 456, 20]
+    content:
+      style: "$small"
+      bold: true
+      fontSize: 12
+      text: 场景解析只补必要字段，未知不编造
+  - elementId: j1-proof
+    elementType: text
+    bounds: [92, 168, 456, 16]
+    content:
+      style: "$cap"
+      color: "$sub"
+      text: 一句自然语言补全标的、期限、账户与风险预算，缺失字段明确保留
+  - elementId: j1-rule
+    elementType: line
+    bounds: [48, 196, 500, 1]
+    viewBox: [500, 1]
+    points: "0,0 500,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: j2-num
+    elementType: text
+    bounds: [48, 210, 36, 24]
+    content:
+      fontFamily: Georgia
+      fontSize: 16
+      bold: true
+      color: "$primary"
+      text: "02"
+  - elementId: j2-claim
+    elementType: text
+    bounds: [92, 210, 456, 20]
+    content:
+      style: "$small"
+      bold: true
+      fontSize: 12
+      text: 金融数字不由 LLM 产出
+  - elementId: j2-proof
+    elementType: text
+    bounds: [92, 232, 456, 16]
+    content:
+      style: "$cap"
+      color: "$sub"
+      text: 行情、定价、Greeks、成本与门控来自 Futu / 冻结快照 / 自研引擎
+  - elementId: j2-rule
+    elementType: line
+    bounds: [48, 260, 500, 1]
+    viewBox: [500, 1]
+    points: "0,0 500,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: j3-num
+    elementType: text
+    bounds: [48, 274, 36, 24]
+    content:
+      fontFamily: Georgia
+      fontSize: 16
+      bold: true
+      color: "$primary"
+      text: "03"
+  - elementId: j3-claim
+    elementType: text
+    bounds: [92, 274, 456, 20]
+    content:
+      style: "$small"
+      bold: true
+      fontSize: 12
+      text: 三道硬门一票否决，允许 NO_TRADE
+  - elementId: j3-proof
+    elementType: text
+    bounds: [92, 296, 456, 16]
+    content:
+      style: "$cap"
+      color: "$sub"
+      text: Edge / Risk / Action 任一不通过即拒绝，不为展示下单调低门槛
+  - elementId: j3-rule
+    elementType: line
+    bounds: [48, 324, 500, 1]
+    viewBox: [500, 1]
+    points: "0,0 500,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: j4-num
+    elementType: text
+    bounds: [48, 338, 36, 24]
+    content:
+      fontFamily: Georgia
+      fontSize: 16
+      bold: true
+      color: "$primary"
+      text: "04"
+  - elementId: j4-claim
+    elementType: text
+    bounds: [92, 338, 456, 20]
+    content:
+      style: "$small"
+      bold: true
+      fontSize: 12
+      text: 证据可复核：来源 + 时间 + 审计哈希链
+  - elementId: j4-proof
+    elementType: text
+    bounds: [92, 360, 456, 16]
+    content:
+      style: "$cap"
+      color: "$sub"
+      text: 决策卡逐条列出 claim、数据模式、快照 SHA-256 与审计链记录
+  - elementId: j4-rule
+    elementType: line
+    bounds: [48, 388, 500, 1]
+    viewBox: [500, 1]
+    points: "0,0 500,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: j5-num
+    elementType: text
+    bounds: [48, 402, 36, 24]
+    content:
+      fontFamily: Georgia
+      fontSize: 16
+      bold: true
+      color: "$primary"
+      text: "05"
+  - elementId: j5-claim
+    elementType: text
+    bounds: [92, 402, 456, 20]
+    content:
+      style: "$small"
+      bold: true
+      fontSize: 12
+      text: 动作边界最小化
+  - elementId: j5-proof
+    elementType: text
+    bounds: [92, 424, 456, 16]
+    content:
+      style: "$cap"
+      color: "$sub"
+      text: 比赛版本无实盘入口；模拟动作必须由用户独立确认
+  - elementId: verdict-panel
+    elementType: shape
+    bounds: [572, 146, 340, 294]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: verdict-label
+    elementType: text
+    bounds: [592, 164, 300, 14]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9.5
+      bold: true
+      color: "$faint"
+      letterSpacing: 2
+      text: 当前 HERO 结论
+  - elementId: verdict-num
+    elementType: text
+    bounds: [592, 184, 300, 52]
+    content:
+      fontFamily: Georgia
+      fontSize: 40
+      bold: true
+      color: "$paper"
+      text: NO_TRADE
+  - elementId: verdict-rule
+    elementType: line
+    bounds: [592, 248, 300, 1]
+    viewBox: [300, 1]
+    points: "0,0 300,0"
+    border: {style: solid, width: 1, color: "#FFFFFF33"}
+  - elementId: verdict-evidence
+    elementType: text
+    bounds: [592, 262, 300, 100]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10.5
+      color: "#E6E9EE"
+      lineHeight: 1.5
+      text: |
+        <p>· 预期波动 3.92% &lt; 盈亏平衡 4.41%</p>
+        <p>· 历史回测负期望，IV crush 情景转负</p>
+        <p style="margin-top:8px"><span style="color:#86EFAC;">P0a Replay 已端到端跑通</span></p>
+  - elementId: verdict-source
+    elementType: text
+    bounds: [592, 400, 300, 26]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$faint"
+      lineHeight: 1.4
+      text: |
+        <p>decision_card_2026-08-12.json</p>
+        <p>audit_log.jsonl · 7 条哈希链</p>
+  - elementId: conclusion
+    elementType: text
+    bounds: [48, 470, 864, 18]
+    content:
+      style: "$small"
+      color: "$sub"
+      text: 四种输出状态都是合法结论；系统不为展示下单而调低门槛，每次运行产出结论、依据、成本、数据模式与唯一可用下一步。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [48, 506, 864, 1]
+    viewBox: [864, 1]
+    points: "0,0 864,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [48, 512, 700, 14]
+    content:
+      style: "$source"
+      text: 数据：data/decision_card_2026-08-12.json · audit_log.jsonl（7 条哈希链）
+  - elementId: footer-right
+    elementType: text
+    bounds: [612, 512, 300, 14]
+    content:
+      style: "$source"
+      align: [right, top]
+      text: GOAI 港美股期权智能终端
+animations:
+  - elementId: kicker
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+  - elementId: folio
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: title
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 450
+    easing: ease-out
+    delayMs: 60
+  - elementId: standfirst
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: rule-thick
+    effect: wipe-in
+    trigger: afterPrevious
+    direction: right
+    durationMs: 350
+  - elementId: rule-thin
+    effect: wipe-in
+    trigger: withPrevious
+    direction: right
+    durationMs: 350
+  - elementId: j1-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 250
+    delayMs: 60
+  - elementId: j1-claim
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j1-proof
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j2-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 200
+    delayMs: 40
+  - elementId: j2-claim
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j2-proof
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j3-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 200
+    delayMs: 40
+  - elementId: j3-claim
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j3-proof
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j4-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 200
+    delayMs: 40
+  - elementId: j4-claim
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j4-proof
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j5-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 200
+    delayMs: 40
+  - elementId: j5-claim
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: j5-proof
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-panel
+    effect: zoom-in
+    trigger: afterPrevious
+    durationMs: 450
+    easing: ease-out
+    delayMs: 100
+  - elementId: verdict-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-num
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: verdict-rule
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-evidence
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: verdict-source
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: conclusion
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+  - elementId: footer-rule
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 200
+  - elementId: footer-left
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: footer-right
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250

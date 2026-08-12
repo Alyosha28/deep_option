@@ -1,0 +1,65 @@
+{
+  "providers": [
+    "codecogs",
+    "quicklatex",
+    "mathpad",
+    "wikimedia"
+  ],
+  "note": "GOAI 初赛评审 PPT 公式（深色主题：前景 #E6EDF3，透明背景）。若全部渲染失败，降级方案：PPT 内用等宽字体（Consolas/mono）排印同内容文本，见 media/manifest.md。",
+  "items": [
+    {
+      "id": "formula_black_scholes",
+      "latex": "C = S\\,N(d_1) - K e^{-rT} N(d_2),\\qquad d_{1,2} = \\dfrac{\\ln(S/K) + (r \\pm \\sigma^{2}/2)\\,T}{\\sigma\\sqrt{T}}",
+      "dpi": 300,
+      "color": "#E6EDF3",
+      "transparent": true,
+      "display": "block",
+      "filename": "formula_black_scholes.png",
+      "file": "images/formula_black_scholes.png",
+      "providers": [
+        "codecogs",
+        "quicklatex",
+        "mathpad",
+        "wikimedia"
+      ],
+      "transparent_tolerance": 12,
+      "provider": "codecogs",
+      "pixel_width": 1364,
+      "pixel_height": 121,
+      "ratio": 11.2727,
+      "status": "Rendered"
+    },
+    {
+      "id": "formula_straddle_breakeven",
+      "latex": "S_{BE} = K \\pm (c_{mid} + p_{mid}) = 480 \\pm 21.095 \\;\\Longrightarrow\\; 458.905 \\;/\\; 501.095",
+      "dpi": 300,
+      "color": "#E6EDF3",
+      "transparent": true,
+      "display": "block",
+      "filename": "formula_straddle_breakeven.png",
+      "file": "images/formula_straddle_breakeven.png",
+      "providers": [
+        "codecogs",
+        "quicklatex",
+        "mathpad",
+        "wikimedia"
+      ],
+      "transparent_tolerance": 12,
+      "provider": "codecogs",
+      "pixel_width": 1367,
+      "pixel_height": 50,
+      "ratio": 27.34,
+      "status": "Rendered"
+    }
+  ],
+  "renderer": {
+    "providers": [
+      "codecogs",
+      "quicklatex",
+      "mathpad",
+      "wikimedia"
+    ],
+    "default_dpi": 300,
+    "output_dir": "images"
+  }
+}

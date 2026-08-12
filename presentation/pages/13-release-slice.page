@@ -1,0 +1,337 @@
+pageType: content
+notes: |
+  发布切片与完成度。左侧范围环：3 个切片中 1 个已毕业（P0a）；右侧三张切片卡：P0a 焦点卡（已有资产/尚缺两栏）、P0b / P0c 未毕业卡。口径：对外只宣传最高已验证切片 P0a Replay；旧模拟单如实标 LEGACY_PROTOTYPE。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  # ============ 页头（标题栏） ============
+  - elementId: header-tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: header-eyebrow
+    elementType: text
+    bounds: [78, 26, 400, 14]
+    content:
+      style: "$eyebrow"
+      wrap: false
+      text: "13 · RELEASE SLICE"
+  - elementId: header-title
+    elementType: text
+    bounds: [78, 44, 818, 28]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p>已交付的只有 <span style="font-family:Consolas">P0a</span> Replay：<span style="font-family:Consolas">P0b</span> / <span style="font-family:Consolas">P0c</span> 未毕业，如实标注</p>
+  - elementId: header-sub
+    elementType: text
+    bounds: [78, 72, 818, 16]
+    content:
+      style: "$subtitle"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p>三档切片逐项列示已有资产与尚缺；旧模拟单如实标 <span style="font-family:Consolas">LEGACY_PROTOTYPE</span></p>
+  - elementId: header-line
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: header-status
+    elementType: text
+    bounds: [640, 22, 256, 14]
+    content:
+      fontSize: 8
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      letterSpacing: 2
+      color: "$textSub"
+      align: [right, top]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审   13/16"
+
+  # ============ 左侧：范围环（3 切片 · 1 已毕业） ============
+  - elementId: scope-ring
+    elementType: chart
+    bounds: [64, 102, 196, 196]
+    data:
+      cols: [slice, weight]
+      rows:
+        - [P0a, "1"]
+        - [P0b, "1"]
+        - [P0c, "1"]
+    series:
+      - type: pie
+        encode: {category: slice, value: weight}
+        innerRadius: 0.55
+        fill: ["$success", "$warn", "$textSub"]
+        border: {style: solid, width: 2, color: "$bg"}
+    legend: false
+  - elementId: ring-kpi
+    elementType: text
+    bounds: [64, 180, 196, 44]
+    content:
+      style: "$kpi"
+      align: [center, middle]
+      wrap: false
+      text: '1/3'
+  - elementId: ring-cap
+    elementType: text
+    bounds: [64, 226, 196, 16]
+    content:
+      style: "$annotation"
+      align: [center, top]
+      wrap: false
+      text: "3 切片 · 1 已毕业"
+  - elementId: legend-p0a-dot
+    elementType: shape
+    bounds: [64, 310, 8, 8]
+    shapeName: ellipse
+    fill: {type: solid, color: "$success"}
+  - elementId: legend-p0a
+    elementType: text
+    bounds: [80, 306, 184, 16]
+    content:
+      style: "$annotation"
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-family:Consolas">P0a Replay Decision</span><span style="color:$success"> · 已毕业</span></p>
+  - elementId: legend-p0b-dot
+    elementType: shape
+    bounds: [64, 332, 8, 8]
+    shapeName: ellipse
+    fill: {type: solid, color: "$warn"}
+  - elementId: legend-p0b
+    elementType: text
+    bounds: [80, 328, 184, 16]
+    content:
+      style: "$annotation"
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-family:Consolas">P0b Live 只读</span><span style="color:$warn"> · 未毕业</span></p>
+  - elementId: legend-p0c-dot
+    elementType: shape
+    bounds: [64, 354, 8, 8]
+    shapeName: ellipse
+    fill: {type: solid, color: "$textSub"}
+  - elementId: legend-p0c
+    elementType: text
+    bounds: [80, 350, 184, 16]
+    content:
+      style: "$annotation"
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-family:Consolas">P0c 模拟提交</span><span style="color:$textSub"> · 未毕业</span></p>
+
+  # ============ 右侧：P0a 焦点卡（已有资产 vs 尚缺 两栏） ============
+  - elementId: p0a-card
+    elementType: shape
+    bounds: [296, 104, 600, 112]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+    border: {style: solid, width: 1, color: "$accent"}
+  - elementId: p0a-header
+    elementType: text
+    bounds: [308, 112, 420, 20]
+    content:
+      style: "$cardTitle"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-family:Consolas">P0a Replay Decision</span>　<span style="font-size:9px; color:$success">● 已毕业</span></p>
+  - elementId: p0a-have
+    elementType: text
+    bounds: [308, 150, 284, 54]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><strong>已有资产</strong></p>
+        <p style="margin-top:4px">端到端 Replay 跑通（<span style="font-family:Consolas">2026-08-12</span>）：<span style="font-family:Consolas">NO_TRADE</span> 决策卡 + 审计链 <span style="font-family:Consolas">7</span> 条</p>
+  - elementId: p0a-miss
+    elementType: text
+    bounds: [604, 150, 280, 54]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><span style="color:$textSub"><strong>尚缺</strong></span></p>
+        <p style="margin-top:4px">无 —— 本切片已毕业</p>
+
+  # ============ 右侧：P0b / P0c 未毕业卡 ============
+  - elementId: p0b-card
+    elementType: shape
+    bounds: [296, 218, 294, 154]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: p0b-content
+    elementType: text
+    bounds: [308, 224, 270, 136]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px"><strong><span style="font-family:Consolas">P0b Live 只读</span></strong></span>　<span style="font-size:9px; color:$warn">● 未毕业</span></p>
+        <p style="margin-top:4px"><strong>已有资产</strong>　<span style="font-family:Consolas">OpenD health</span> 已验证（<span style="font-family:Consolas">2026-08-12 02:36</span>）：<span style="font-family:Consolas">ready=true</span>，<span style="font-family:Consolas">qot/trd</span> 已登录</p>
+        <p style="margin-top:4px"><span style="color:$textSub"><strong>尚缺</strong></span>　完整 Live 决策链路 + 新鲜度验收</p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub">health 复验未查询账户、订阅或交易</span></p>
+  - elementId: p0c-card
+    elementType: shape
+    bounds: [602, 218, 294, 154]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: p0c-content
+    elementType: text
+    bounds: [604, 224, 270, 136]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px"><strong><span style="font-family:Consolas">P0c 模拟提交</span></strong></span>　<span style="font-size:9px; color:$textSub">● 未毕业</span></p>
+        <p style="margin-top:4px"><strong>已有资产</strong>　无发布级资产；旧模拟单 = <span style="font-family:Consolas; color:$warn">LEGACY_PROTOTYPE</span>（非发布证据）</p>
+        <p style="margin-top:4px"><span style="color:$textSub"><strong>尚缺</strong></span>　独立确认、幂等、异常接管与新模拟证据均未验证；不宣称已稳定提交模拟盘</p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub">旧单 <span style="font-family:Consolas">2026-08-08</span> 状态 <span style="font-family:Consolas">SUBMITTED</span>；<span style="font-family:Consolas">2026-08-12</span> 起不再跟单</span></p>
+
+  # ============ 金句条 ============
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-prompt
+    elementType: text
+    bounds: [76, 384, 16, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [left, middle]
+      wrap: false
+      text: '&gt;'
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 800, 40]
+    content:
+      style: "$quote"
+      align: [left, middle]
+      lineHeight: 1.2
+      wrap: false
+      text: "切片只认验证状态：跑通多少，就声称多少。"
+
+  # ============ 总结条 ============
+  - elementId: summary-bar
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 44, 48]
+    content:
+      style: "$eyebrow"
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 766, 48]
+    content:
+      style: "$body"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p>对外只宣传最高已验证切片 <span style="font-family:Consolas">P0a</span> Replay；<span style="font-family:Consolas">P0b</span> / <span style="font-family:Consolas">P0c</span> 未毕业，如实标注。</p>
+
+  # ============ 页脚 ============
+  - elementId: footer-line
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0 832,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 518, 640, 12]
+    content:
+      style: "$footnote"
+      align: [left, top]
+      wrap: false
+      text: "来源: <span style=\"font-family:Consolas\">facts.md §8 · docs/PRD.md §2.2 · PROJECT_STATE.md §5.5 · 2026-08-12</span>"
+  - elementId: footer-right
+    elementType: text
+    bounds: [740, 518, 156, 12]
+    content:
+      style: "$footnote"
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      align: [right, top]
+      wrap: false
+      text: '13 / 16'
+
+animations:
+  # G1（auto）：标题栏 + 范围环 fade-in
+  - elementId: header-title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: header-sub
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: scope-ring
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: ring-kpi
+    effect: fade-in
+    trigger: withPrevious
+  # G2（click）：MVP 扇区（P0a 焦点卡）zoom-in
+  - elementId: p0a-card
+    effect: zoom-in
+    trigger: onClick
+  - elementId: p0a-header
+    effect: zoom-in
+    trigger: withPrevious
+  - elementId: p0a-have
+    effect: zoom-in
+    trigger: withPrevious
+  - elementId: p0a-miss
+    effect: zoom-in
+    trigger: withPrevious
+  # G3（click）：后续切片（P0b / P0c）wipe-in(up)
+  - elementId: p0b-card
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: p0b-content
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: p0c-card
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: p0c-content
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious

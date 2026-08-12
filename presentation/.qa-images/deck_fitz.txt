@@ -1,0 +1,572 @@
+G O A I · T E R M I N A L — 初赛评审 0 1 / 1 6
+G O A I · O P T I O N D E C I S I O N A G E N T
+GOAI · 期权决策智能体
+GOAI 港美股期权智能终端
+不替你猜涨跌——把自然语言观点收拢为可核验决策卡
+GOAI 世界人工智能开源大赛 · Boundless Agents · 金融服务赛道
+初赛提交 2026-08-16
+团队 · 3 人
+A 多 Agent 工程与量化研究 · B 港美股期权策略 · C 网络安全与合规
+01 / 16
+
+0 2 · P O S I T I O N I N G
+G O A I · T E R M I N A L — 初赛评审   0 2 / 1 6
+不猜方向，只交付可核验决策卡
+一句话定位与两个支撑论点：可核验决策卡、敢说不交易。
+不替你猜涨跌
+把自然语言观点收拢为可核验决策卡；每个数字可溯源，每条结论带
+依据。
+输入示例 · PRD §3.2
+「腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5% ，帮我看看跨
+式。」
+输出：决策卡结论 NO_TRADE ，成功结果而非失败
+把观点收拢为可核验决策卡
+90s 　首次用户即获 Replay 决策价值
+60s 　应用就绪后形成 Live 决策卡
+所有模拟动作仍须用户独立确认
+NO_TRADE 是成功结果，敢说「不交易」
+不会为了展示下单而调低门槛；定位为决策支持——不做执行、不做荐股。
+NO_TRADE = 当前成本和证据不支持交易
+不猜涨跌，但每个结论都可核验。
+结论
+把观点收拢为可核验决策卡；NO_TRADE 是成功结果；不做执行、不做荐股。
+来源: docs/PRD.md / README.md · 2026-08-12
+02 / 16
+
+0 3 · P A I N P O I N T S
+G O A I · T E R M I N A L — 初赛评审   0 3 / 1 6
+四个痛点，指向同一个缺口：数据可溯源、成本可成交
+定义问题域：为什么需要一个期权决策中间层——本页给出四个断点。
+01
+信息分散：行情 / 规则 / 社区各在一处
+拼一张完整的决策图，需要手动跑遍行情、交易规则、社区观点多个渠道，再逐一对齐口径。
+02
+理论价 ≠ 可成交价：exec 口径
+mid 只是观察值；买入成本必须按 ask × 乘数 + 费用 
++ 滑点，exec 口径才算真成本。
+03
+港股规则差异：美式实物 vs 欧式现金
+个股期权美式、实物交割；指数期权欧式、现金结算——混淆行权与交割方式，盈亏与风险都会算
+错。
+04
+LLM 编造金融数字
+金融数字编造为 0 是硬指标；每个数字必须能回答「来
+源文件 + 字段路径」。
+看得见行情，算不清成本，信不过结论。
+结论
+四个断点落在数据、定价、规则与信任上；后面的方案必须逐一打通，缺一不可。
+来源: docs/PRD.md / README.md · 痛点归纳 2026-08-12
+03 / 16
+
+G O A I · T E R M I N A L — 初赛评审  0 4 / 1 6
+0 4 · H E R O S C E N A R I O
+Hero 场景：业绩前方向不明，480 ATM 长跨式进入量化评估
+唯一完整 P0 场景：把模糊诉求转成账户、风险硬顶与候选策略三组可复算参数。
+场景快照 · SCENARIO
+方向不确定
+478.8
+现价 HKD
+prev_close 479.2
+标的
+事件
+行权价
+待评估
+HK.00700 · 腾讯控股
+2026-08-12 业绩公布 · 2026Q2
+480.0 （ATM ）
+长跨式（straddle ）是否值得交易
+参数
+数值
+账户现金
+100,000 HKD
+单笔风险预算
+5% （上限 5,000 HKD ）
+合约乘数
+100 股/ 张
+候选策略
+480 ATM 长跨式 × 2 张
+主到期
+2026-08-14 （dte 6 ）
+推论
+单笔亏损硬顶 = 100,000 × 5% = 5,000 HKD —— 任何候选策略不得超过
+候选 = 480 ATM 长跨式 × 2 张 · 主到期 2026-08-14 —— 是否值得买，由引擎与回测裁决
+&gt;先算成本与硬顶，再谈方向与收益。
+结论
+场景已冻结：10 万港币、单笔 ≤ 5% ，候选 480 ATM 长跨式进入量化评估。
+来源: facts.md §11 + data/decision_card_2026-08-12.json + hero_inputs.json · 快照 2026-08-08
+04 / 16
+
+0 5 · W H Y A G E N T
+可信来自分工：LLM 管理解与编排，数字全由工具产出
+三种解法对比：固定计算器只会算、通用 LLM 会编数字、GOAI Agent 让数字全部出自工具。
+G O A I · T E R M I N A L — 初赛评审   0 5 / 1 6
+维度
+固定计算器
+ 
+通用LLM
+GOAI Agent
+场景理解
+读不懂「业绩前方向不确定」
+听得懂场景，还能追问补全
+解析场景、编排工具、写结论
+数字从哪来
+公式写死在代码里
+概率生成，会编数字
+确定性工具产出
+ 
+可复算/ 可核验
+能复算，但只会预设项
+同问不同答，无法核验
+SHA-256 审计，数字可溯源
+出错的表现
+ → 
+报错
+改代码重跑
+错了不自知，还很笃定
+ 
+证据不足就NO_TRADE
+判决
+会算，但只会算
+会编，但数字不可信
+ 
+理解归LLM ，数字归工具
+&gt;数字的每一次出现，都要答得上「谁算的、依据什么、何时」。
+结论
+分工让「会编」退场：理解与表达归 LLM ，数字与溯源归工具；数字编造目标为 0 。
+来源: docs/PRD.md §7 溯源要求 · §9.1 验收指标 · facts.md （2026-08-12 ）
+05 / 16
+
+0 6 · D E C I S I O N P I P E L I N E
+七步管线全程留痕：Edge 未过即停，NO_TRADE 是结论
+P0a Replay 端到端已跑通：NO_TRADE 决策卡与 7 条审计记录随管线一次生成
+G O A I · T E R M I N A L — 初赛评审   0 6 / 1 6
+01
+场景解析
+parse_scenario
+未知字段不补造
+02
+冻结快照
+load_frozen_snapshot
+FROZEN 数据加载
+03
+定价·IV·Greeks· 成
+本
+compute_engine
+BS · 二叉树 · IV 二分
+04
+Edge 门 · Risk 门
+● Edge 门 — FAIL
+● Risk 门 — PASS
+05
+决策卡
+build_decision_card
+NO_TRADE
+审计链 · A U D I T T R A I L — J S O N L + S H A - 2 5 6 · 7 条记录，每条链上前一条
+● scenario_parsed
+● data_loaded
+● engine_computed
+● edge_gate
+● risk_gate
+● action_gate
+● decision_card
+a3a5f68b…
+afc8b13e…
+11e7e30b…
+9bd1fb80…
+83f636a3…
+1b30c27c…
+11f311a3…
+● 已通过　　● 被阻断　　● 当前 / 终点
+NO_TRADE 是成功结果——不会为了展示下单而调低门槛。
+结论
+Edge 未过即停，记录不断：决策卡与 7 条审计记录全量落盘。
+来源: facts.md §1 · §3 · src/decision_pipeline.py · 决策卡 2026-08-12
+06 / 16
+
+0 7 · H E R O A D E M O — H O N E S T N O _ T R A D E
+NO_TRADE 是成功结果：证据不足，系统敢说不交易
+Hero A 腾讯业绩跨式全程回放 —— Edge 门 3 项检查全 FAIL ，诚实输出 NO_TRADE
+G O A I · T E R M I N A L — 初赛评审 0 7 / 1 6
+goai-decision · HK.00700 · replay
+$ goai run hero --underlying HK.00700 --mode replay
+[scenario] 2026-08-12 业绩 · 方向 uncertain · 预算 5%
+[data] FROZEN 2026-08-08T11:56:30+08:00 · expected_move 3.916%
+[engine] BS/ 二叉树 + IV 二分 + bump-and-reprice
+[cost] 8/14 到期 480 ATM 跨式 × 2 张 · ask 2207.0/ 张
+[be] 盈亏平衡 458.905 / 501.095 · 最大亏损 4414.0 HKD
+[edge] chk1 预期波动 3.92% < 盈亏平衡所需 4.41% → FAIL
+[edge] chk2 回测 d+2 ROI -7.8% · 胜率 36.4% → FAIL
+[edge] chk3 IV crush -20% 最差 -711 HKD → FAIL
+[edge] verdict = LOW_EDGE → NO_TRADE
+[risk] PASS · 最大亏损 4414.0 ≤ 5000 HKD · 3 WARN
+[action] action = NO_TRADE · 无需进入下单步骤
+[next] 可调整期限 / 行权价后重新评估
+[audit] 7 条 SHA-256 哈希链完整 · snapshot cf567c5985…
+概念示意
+来源: data/backtest_tencent_straddle.json · 口径: src/backtest_tencent_straddle.py
+>>> verdict = NO_TRADE
+Edge 3 项检查全 FAIL · Risk PASS + 3 WARN
+不下单 · 不下调门槛 · 审计链 7 条完整
+&gt;系统敢说「不交易」——不会为了展示下单而调低门槛。
+结论
+NO_TRADE 是成功结果：Edge 门 3 项全 FAIL ，Risk 门 PASS + 3 WARN ，审计链 7 条完整。
+来源: data/decision_card_2026-08-12.json · data/hero_inputs.json · 2026-08-12
+07 / 16
+
+01  当前结论与用户含义
+NO_TRADE  成本和证据不支持交易
+BLOCK  数据/ 规格/ 账户或风险硬门未过
+DRAFT_ONLY  可研究出草稿，不能提交
+READY_FOR_CONFIRMATION  客观门过· 用户确认模拟
+02  三条关键依据
+① 预期波动 3.92% < 盈亏平衡 4.41%
+② 回测 d+2 平均 ROI -7.8% · 胜率 36.4%
+ IV 
+③
+-20% 最差情景 -711 HKD
+03  可成交成本与最大亏损
+2,207 × 2 HKD/ 张 · ask 口径
+= 4,414 最大亏损 ≤ 预算 5,000 HKD
+预算 = 现金 100,000 × 5% （风险预算）
+04  数据模式与时间
+REPLAY · FROZEN
+2026-08-08T11:56:30+08:00
+来源 futuapi/OpenD 127.0.0.1:11111
+快照 SHA-256 cf567c59… · 审计链 7 条
+05  什么会改变结论
+· 业绩日实际波动 > 盈亏平衡 4.41%
+· 换 8/28 到期或更低成本结构
+· Live 行情 + 费用/ 滑点政策后成本变化
+· 回测样本更新改变 Edge 结论
+06  唯一可用的下一步
+NO_TRADE → 无需进入下单步骤
+Edge 门未过：预期波动不足以覆盖成本
+可调整期限/ 行权价后重新评估
+0 8 · D E C I S I O N C A R D
+一张决策卡六件事：本轮 NO_TRADE ，不为展示降门槛
+四种结论枚举 · 首屏六件事 · 逐条溯源；焦点卡 = 本轮裁决
+G O A I · T E R M I N A L — 初赛评审   0 8 / 1 6
+NO_TRADE 是成功结果。不会为了展示下单而调低门槛。
+结论
+金融数字只来自 Futu 、冻结快照或确定性引擎，LLM 不估算，逐条可溯源。
+来源: data/decision_card_2026-08-12.json · 2026-08-12
+08 / 16
+
+0 9 · D A T A L A Y E R
+只读边界、20s 可终止 worker 、回放兜底：现场稳定不靠
+运气
+数据层组件清单与分层架构：Live 与 Replay 一份合同，边界外没有任何交易方法
+G O A I · T E R M I N A L — 初赛评审   0 9 / 1 6
+01 DataEnvelope · 数据信封
+统一 LIVE/REPLAY ：来源时间、freshness 、typed error
+与 SHA-256 快照身份
+02 双 Gateway · 同合同
+FutuLiveGateway 惰性导入 SDK 、只读 Context ；
+ReplayGateway 确定性回放、不导入 SDK
+03 SnapshotRecorder
+线程安全 JSONL 录制 data/snapshots/ ；原始授权行情
+只存本地，不重新分发
+04 只读边界 · 20s worker
+无下单/ 改单/ 撤单/ 解锁；20s 硬截止可终止读账户，
+超时 ACCOUNT_UNAVAILABLE
+L1 数据接入 · 双 Gateway 同合同
+FUTU LIVE 惰性导入 SDK · 只读 Context 
+ REPLAY 
+⇄
+确定性回放 · 60s 一致性窗口
+L2 数据封装 · 身份与来源可追溯
+DataEnvelope: freshness · typed error · SHA-256 ｜ SnapshotRecorder: JSONL 本地录制
+L3 只读边界 · 交易方法零暴露
+无下单/ 改单/ 撤单/ 解锁 · OpenD 127.0.0.1:11111 · 20s 可终止 worker · 超时 
+ACCOUNT_UNAVAILABLE
+L4 兜底 · Replay 保证现场稳定
+Live 失败 → 明确回放（用户确认），不静默切换 · yfinance 429 （2026-08-08 实测）→ 快照回放
+概念示意
+&gt;现场稳定不是赌出来的：快照回放，不靠免费行情的脸色。
+结论
+同合同 + 只读边界 + 20s 可终止 worker ：断网即明确回放，绝不静默降级。
+来源: README.md · PROJECT_STATE.md §5 §9 · 口径: facts.md §5
+09 / 16
+
+G O A I · T E R M I N A L — 初赛评审  1 0 / 1 6
+1 0 · P R I C I N G E N G I N E
+自研引擎不发明 BS ：只做确定性复算与可成交成本口径
+BS + 美式二叉树 + IV 二分 + bump-and-reprice Greeks ；港股规格路由与 mid/ask 成本分栏
+自研确定性引擎
+src/pricing_engine.py
+01 BS closed-form —— 欧式解析解
+02 美式二叉树 —— 提前行权 · 离散股息
+03 IV 二分 —— 盘口价反解 σ
+04 bump-and-reprice —— Greeks 差分
+不发明 BS / 二叉树—— 自研只做确定性实现：先解析规格，再定价
+参数
+数值
+参数
+数值
+口径
+Delta
+-0.6887
+Gamma
+3.026
+Vega
+48.998
+1
+Theta
+-183.3953
+Rho
+0.1047
+OpenD 口径对齐
+港股规格：个股 = 美式· 实物（提前行权/ 公司行动）｜指数 = 欧式
+mid 观察 2,109.5×2=4,219.0 ｜ ask 可成交 2,207.0×2=4,414.0 · 最大亏损
+来源: data/decision_card_2026-08-12.json · 到期内在价值合成 P&L · 双口径成本
+引擎的诚实 &gt; 引擎的聪明：mid 是观察，ask 才是成本。
+结论
+只复算不发明 BS ：成本按 mid/ask 分栏，最大亏损 4,414.0 HKD
+来源: data/decision_card_2026-08-12.json · data/hero_inputs.json · 2026-08-08 快照
+10 / 16
+
+1 1 · R I S K G A T E S
+风险硬门一票否决，模拟动作止于用户独立确认
+Edge / Risk / Action 三道门独立裁决 · 审计链 JSONL + SHA-256 · 防注入与 PASS 语义固化
+G O A I · T E R M I N A L — 初赛评审  1 1 / 1 6
+01  LOW_EDGE
+Edge 门 · 值不值得做
+3 
+ 
+项检查全FAIL
+ 
+预期波动3.92% < 
+ 
+所需4.41%
+d+2 ROI -7.8% · IV crush -711
+02  PASS
+Risk 门 · 一票否决
+3 WARN 不阻断，PASS 生效
+ 
+最大亏损4,414 ≤ 
+ 
+预算5,000 HKD
+WARN ：LOP · 
+ 
+费用· 美式交割
+03  NO_TRADE
+Action 门 · 动作裁决
+blocked ：Edge 门未过
+无需进入下单；可调整期限/ 行权价重
+估
+04  CHAINED
+审计链 · 全程留痕
+JSONL + SHA-256 哈希链
+7 条记录，每条链上前一条
+防注入 · 敏感字段拒绝
+敏感字段直接拒绝：password / secret / 
+token / api_key / account_id / order_id
+遍历上限 10,000 项；外部文本不得改写数值与
+风控
+LLM 不接触 SDK 、账户密钥与订单工具
+动作边界 · 模拟盘 + 独立确认
+比赛版本仅支持 Futu 模拟盘，动作须用户独立
+确认
+确认只授权当前订单摘要，参数变化须重新确认
+重复点击不产生重复订单，不自动重试 / 补腿 / 
+撤腿
+PASS 的固定含义
+PASS = 「当前数据、规则和风险门通过」
+不表示盈利、成交或投资建议
+Edge 可明确 NO_TRADE ，Risk 独立一票否决
+&gt;「NO_TRADE 是成功结果——不会为了展示下单而调低门槛」
+结论
+Edge / Risk / Action 独立裁决，7 条审计链式留痕，风险不过即无确认入口。
+来源: docs/PRD.md §5.3 / §7 · data/decision_card_2026-08-12.json · 2026-08-12
+11 / 16
+
+1 2 · C O M P E T I T O R S
+同类工具各占一隅，GOAI 把决策变成可核验的证据链
+四类主流做法 × 五个维度，标出 GOAI 的增量
+G O A I · T E R M I N A L — 初赛评审   1 2 / 1 6
+竞品
+数字可信度
+港股规则适配
+可审计性
+自然语言交互
+执行边界
+Futu 手工流程
+ 信息强
+✓
+规则分散多页
+无自动留痕
+手工拼接
+ 券商下单
+✓
+通用 LLM
+会编造数字
+—
+—
+ 表达好
+✓
+不可承担风控
+固定计算脚本
+ 计算稳定
+✓
+参数需自给
+ 可复现
+✓
+不补全任务
+无门控降级
+moomoo Engine · 
+moontower.ai
+（传统策略推荐类）
+可交易≠值得
+—
+—
+—
+无 NO_TRADE
+GOAI
+ 工具供数
+✓
+ 规格先解析
+✓
+ 哈希链 
+✓
+7 条
+ 端到端决策
+✓
+ 仅模拟
+✓
++ 确认
+GOAI 增量 = 确定性数字 + 港股规格 + 哈希链审计；NO_TRADE 是成功结果
+&gt;价值不是替用户猜涨跌，而是收拢研究、规则与约束为一张可核验决策卡
+结论
+竞品强在信息、计算或表达，GOAI 的增量是确定性数字与审计链的端到端组合
+来源: docs/PRD.md §1.2–§1.4 · facts.md §1/§6–§9 · 2026-08-12
+12 / 16
+
+1 3 · R E L E A S E S L I C E
+已交付的只有 P0a Replay ：P0b / P0c 未毕业，如实标注
+三档切片逐项列示已有资产与尚缺；旧模拟单如实标 LEGACY_PROTOTYPE
+G O A I · T E R M I N A L — 初赛评审   1 3 / 1 6
+1/3
+3 切片 · 1 已毕业
+P0a Replay Decision · 已毕业
+P0b Live 只读 · 未毕业
+P0c 模拟提交 · 未毕业
+P0a Replay Decision 　● 已毕业
+已有资产
+端到端 Replay 跑通（2026-08-12 ）：NO_TRADE 决策
+卡 + 审计链 7 条
+尚缺
+无 —— 本切片已毕业
+P0b Live 只读　● 未毕业
+已有资产　OpenD health 已验证（2026-08-12 
+02:36 ）：ready=true ，qot/trd 已登录
+尚缺　完整 Live 决策链路 + 新鲜度验收
+health 复验未查询账户、订阅或交易
+P0c 模拟提交　● 未毕业
+已有资产　无发布级资产；旧模拟单 = 
+LEGACY_PROTOTYPE （非发布证据）
+尚缺　独立确认、幂等、异常接管与新模拟证据均未验
+证；不宣称已稳定提交模拟盘
+旧单 2026-08-08 状态 SUBMITTED ；2026-08-12 起不再
+跟单
+&gt;切片只认验证状态：跑通多少，就声称多少。
+结论
+对外只宣传最高已验证切片 P0a Replay ；P0b / P0c 未毕业，如实标注。
+来源: facts.md §8 · docs/PRD.md §2.2 · PROJECT_STATE.md §5.5 · 2026-08-12
+13 / 16
+
+1 4 · B A C K T E S T E V I D E N C E
+回测负期望成立：口径可解释、证据可溯源
+口径 A/B d+2 平均 ROI 对比 · PRD §9 验收指标 · 4 条回测 caveats
+G O A I · T E R M I N A L — 初赛评审  1 4 / 1 6
+d+2 平均 ROI · 口径 A （engine ）vs 口径 B （proxy ）
+口径 A d+2 平均 -7.8% （n=11 ）· 口径 B d+2 平均 -47.5% （n=19 ）
+来源: data/backtest_tencent_straddle.json · 口径: src/backtest_tencent_straddle.py
+PRD §9 验收指标（目标值）
+验收指标
+目标值
+切片
+关键数字与事实溯源率
+100%
+P0a+
+Replay 稳定性
+连续 10 次一致
+P0a+
+风控/ 动作泄漏
+0 次
+全部
+场景字段解析准确率
+≥ 95%
+P0a+
+能力声明真实性
+不超最高切片
+全部
+回测 caveats （4 条）
+01 历史期权链 bid/ask 不可得，成本按 IV 定价 + 5% 滑点近似
+02 平仓按到期内在价值，忽略剩余时间价值（偏保守或偏乐观）
+03 样本仅单标的 11~19 个财报期，t 统计量仅供量级参考
+04 当前 2026/Q2 为在途模拟订单，属于样本外前瞻验证
+证据的价值不在结论好坏，而在别人能否重新算出同一个数。
+结论
+P0a 已跑通：两口径 d+2 一致为负，关键数字溯源率 100% ，审计链完整。
+来源: data/backtest_tencent_straddle.json · docs/PRD.md §9 · 2026-08-12
+14 / 16
+
+1 5 · T E A M & a m p ; T I M E L I N E
+3 人分工守住工程· 策略· 合规三线，按节点推进至杭州决赛
+团队构成与 2026 赛事时间线：分工、里程碑与交付口径（北京时间）
+G O A I · T E R M I N A L — 初赛评审   1 5 / 1 6
+2026
+08.16
+08.24
+09.10
+09.22
+初赛提交截止
+简介约 500 字 + 方案 PPT/PDF
+复赛名单公布
+Top 30
+决赛名单公布
+Top 15
+杭州线下决赛答辩
+9.23 GOAI DAY 颁奖
+A
+多 Agent 工程与量化研究
+数据层 / Agent 架构 / Demo / PPT
+沉淀: futu-options-agent Skill 、自研定价引擎
+与回测流水线
+B
+港美股期权策略 · 方向发起人
+策略规则 / Greeks·IV / 场景与市场知识
+沉淀: 跨式 Hero 用例规则集、港美股差异清单
+C
+网络安全与合规
+合规审计 / 数据授权 / 防注入· 密钥· 审计链
+沉淀: 审计日志与脱敏规范、SFC/HKEX 边界清单
+三人三道闸门：A 出引擎，B 定策略，C 守合规，每个数字可溯源。
+结论
+3 人覆盖工程 / 策略 / 合规，8.16 提交后按 8.24 复赛与 9.22 决赛推进。
+来源: PROJECT_STATE.md §1/§6 · facts.md §10 · 2026-08-12
+15 / 16
+
+1 6 · C L O S I N G
+NO_TRADE 是成功结果
+决策支持，不做执行、不做荐股；不会为了展示下单而调低门槛。
+确定性数字 — 可复算 · 可溯源
+7
+100%
+0
+90s
+Hero 审计链 SHA-256 记录
+关键数字与事实溯源率（目标）
+风控 / 动作泄漏（目标）
+首次 Replay 价值时间中位数（目标）
+诚实完成度 — 对外只宣传最高已验证切片（当前 P0a Replay ）
+P0a · Replay Decision — 端到端已跑通（2026-08-12 ）
+P0b · Connected Read-only — OpenD health 已验证；完整 Live 决策链路未毕业
+P0c · Connected Simulation — 未毕业，不对外宣称
+谢谢评审
+GOAI Team · 3 人 — 多 Agent 工程与量化研究 / 港美股期权策略 / 网络安全与合规 · 2026-08 初赛评审
+风险提示
+本项目仅用于研究、教育与比赛演示用途，不构成投资建议，亦不构成任何收益承诺。
+研究/ 教育/ 比赛演示用途，非投资建议，不构成收益承诺
+决策支持/ 研究用途，非投资建议，不构成任何交易要约；比赛版本仅支持 Futu 模拟盘且必须由用户独立确认。
+16 / 16

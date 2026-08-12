@@ -1,0 +1,262 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: 一句话定位页：左栏大字陈述（观点收拢 + Hero 输入输出对照），右栏两个支撑卡（90s/60s 价值主张、NO_TRADE 成功结果）；卡框常驻，内容分两段 wipe-in(right)。
+
+elements:
+  # ---------- 页头（G1 动画对象） ----------
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 220, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      letterSpacing: 3
+      color: "$accent"
+      align: [left, top]
+      wrap: false
+      text: "02 · POSITIONING"
+
+  - elementId: statusbar
+    elementType: text
+    bounds: [640, 20, 256, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      letterSpacing: 2
+      color: "$textSub"
+      align: [right, top]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审   02/16"
+
+  - elementId: title
+    elementType: text
+    bounds: [78, 44, 818, 32]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 26
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: "不猜方向，只交付可核验决策卡"
+
+  - elementId: subtitle
+    elementType: text
+    bounds: [78, 74, 818, 16]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      align: [left, top]
+      wrap: false
+      text: "一句话定位与两个支撑论点：可核验决策卡、敢说不交易。"
+
+  - elementId: hairline-header
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  # ---------- 大字陈述（G2 动画对象） ----------
+  - elementId: pos-statement
+    elementType: text
+    bounds: [64, 104, 368, 268]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><span style="font-size:26px; color:$text;"><strong>不替你<span style="color:$accent;">猜涨跌</span></strong></span></p>
+        <p style="margin-top:10px"><span style="font-size:12px; color:$textSub;">把自然语言观点收拢为可核验决策卡；每个数字可溯源，每条结论带依据。</span></p>
+        <p style="margin-top:18px"><span style="font-size:10px; color:$textSub;">输入示例 · PRD §3.2</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">「腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。」</span></p>
+        <p style="margin-top:16px"><span style="font-size:11px; color:$text;">输出：决策卡结论</span> <span style="font-size:11px; color:$accent; font-family:Consolas;"><strong>NO_TRADE</strong></span><span style="font-size:11px; color:$text;">，成功结果而非失败</span></p>
+
+  # ---------- 支撑卡 1：可核验决策卡（G3 动画对象） ----------
+  - elementId: card1-box
+    elementType: shape
+    bounds: [448, 104, 448, 140]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card2-box
+    elementType: shape
+    bounds: [448, 260, 448, 112]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card1-text
+    elementType: text
+    bounds: [460, 116, 424, 116]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$textSub"
+      lineHeight: 1.2
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$text;"><strong>把观点收拢为可核验决策卡</strong></span></p>
+        <p style="margin-top:6px"><span style="font-size:30px; color:$accent; font-family:Consolas;"><strong>90s</strong></span>　<span style="font-size:10px; color:$textSub;">首次用户即获 Replay 决策价值</span></p>
+        <p style="margin-top:4px"><span style="font-size:30px; color:$accent; font-family:Consolas;"><strong>60s</strong></span>　<span style="font-size:10px; color:$textSub;">应用就绪后形成 Live 决策卡</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">所有模拟动作仍须用户独立确认</span></p>
+
+  - elementId: card2-text
+    elementType: text
+    bounds: [460, 272, 424, 88]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$text;"><strong>NO_TRADE 是成功结果，敢说「不交易」</strong></span></p>
+        <p style="margin-top:6px">不会为了展示下单而调低门槛；定位为决策支持——不做执行、不做荐股。</p>
+        <p style="margin-top:6px"><span style="font-size:11px; color:$accent; font-family:Consolas;"><strong>NO_TRADE</strong></span> <span style="font-size:11px; color:$textSub;">= 当前成本和证据不支持交易</span></p>
+
+  # ---------- 金句条 ----------
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+
+  - elementId: quote-mark
+    elementType: text
+    bounds: [76, 386, 20, 36]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [center, middle]
+      wrap: false
+      text: ">"
+
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 800, 40]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 14
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: "不猜涨跌，但每个结论都可核验。"
+
+  # ---------- 总结条 ----------
+  - elementId: summary-bar
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 42, 48]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      letterSpacing: 3
+      color: "$accent"
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 760, 48]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p>把观点收拢为可核验决策卡；<span style="color:$accent; font-family:Consolas;"><strong>NO_TRADE</strong></span> 是成功结果；不做执行、不做荐股。</p>
+
+  # ---------- 页脚 ----------
+  - elementId: hairline-footer
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 518, 500, 12]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [left, top]
+      wrap: false
+      text: "来源: docs/PRD.md / README.md · 2026-08-12"
+
+  - elementId: footer-right
+    elementType: text
+    bounds: [830, 518, 66, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, top]
+      wrap: false
+      text: "02 / 16"
+
+animations:
+  # G1 自动组：标题栏 fade-in（页进入即播，4 个动画同时）
+  - elementId: tick
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: subtitle
+    effect: fade-in
+    trigger: withPrevious
+  # G2 点击组：大字陈述 wipe-in(right)
+  - elementId: pos-statement
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  # G3 点击组：支撑卡 1 → 2 内容 wipe-in(right) 依次
+  - elementId: card1-text
+    effect: wipe-in
+    direction: right
+    trigger: onClick
+  - elementId: card2-text
+    effect: wipe-in
+    direction: right
+    trigger: afterPrevious

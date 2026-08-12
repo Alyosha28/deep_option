@@ -1,0 +1,338 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: 四个痛点各配一句后果，按不对称双列（520/296）错位排布；卡框与编号常驻，卡内容分两组 wipe-in 入场。
+
+elements:
+  # ---------- 页头（G1 动画对象） ----------
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 220, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      letterSpacing: 3
+      color: "$accent"
+      align: [left, top]
+      wrap: false
+      text: "03 · PAINPOINTS"
+
+  - elementId: statusbar
+    elementType: text
+    bounds: [640, 20, 256, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      letterSpacing: 2
+      color: "$textSub"
+      align: [right, top]
+      wrap: false
+      text: "GOAI · TERMINAL — 初赛评审   03/16"
+
+  - elementId: title
+    elementType: text
+    bounds: [78, 44, 818, 32]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 26
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: "四个痛点，指向同一个缺口：数据可溯源、成本可成交"
+
+  - elementId: subtitle
+    elementType: text
+    bounds: [78, 74, 818, 16]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "$textSub"
+      align: [left, top]
+      wrap: false
+      text: "定义问题域：为什么需要一个期权决策中间层——本页给出四个断点。"
+
+  - elementId: hairline-header
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  # ---------- 痛点卡 1（左宽列） ----------
+  - elementId: card1-box
+    elementType: shape
+    bounds: [64, 104, 520, 120]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card1-num
+    elementType: text
+    bounds: [76, 114, 28, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      wrap: false
+      text: "01"
+
+  - elementId: card1-text
+    elementType: text
+    bounds: [76, 132, 496, 80]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$text"><strong>信息分散：行情 / 规则 / 社区各在一处</strong></span></p>
+        <p style="margin-top:10px">拼一张完整的决策图，需要手动跑遍行情、交易规则、社区观点多个渠道，再逐一对齐口径。</p>
+
+  # ---------- 痛点卡 2（右窄列，高错位） ----------
+  - elementId: card2-box
+    elementType: shape
+    bounds: [600, 104, 296, 128]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card2-num
+    elementType: text
+    bounds: [612, 114, 28, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      wrap: false
+      text: "02"
+
+  - elementId: card2-text
+    elementType: text
+    bounds: [612, 132, 272, 88]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$text"><strong>理论价 ≠ 可成交价：exec 口径</strong></span></p>
+        <p style="margin-top:10px">mid 只是观察值；买入成本必须按 ask × 乘数 + 费用 + 滑点，exec 口径才算真成本。</p>
+
+  # ---------- 痛点卡 3（左宽列，行错位） ----------
+  - elementId: card3-box
+    elementType: shape
+    bounds: [64, 236, 520, 128]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card3-num
+    elementType: text
+    bounds: [76, 246, 28, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      wrap: false
+      text: "03"
+
+  - elementId: card3-text
+    elementType: text
+    bounds: [76, 264, 496, 88]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$text"><strong>港股规则差异：美式实物 vs 欧式现金</strong></span></p>
+        <p style="margin-top:10px">个股期权美式、实物交割；指数期权欧式、现金结算——混淆行权与交割方式，盈亏与风险都会算错。</p>
+
+  # ---------- 痛点卡 4（右窄列，低错位） ----------
+  - elementId: card4-box
+    elementType: shape
+    bounds: [600, 244, 296, 120]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card4-num
+    elementType: text
+    bounds: [612, 254, 28, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      align: [left, top]
+      wrap: false
+      text: "04"
+
+  - elementId: card4-text
+    elementType: text
+    bounds: [612, 272, 272, 80]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$text"><strong>LLM 编造金融数字</strong></span></p>
+        <p style="margin-top:10px">金融数字编造为 0 是硬指标；每个数字必须能回答「来源文件 + 字段路径」。</p>
+
+  # ---------- 金句条 ----------
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+
+  - elementId: quote-mark
+    elementType: text
+    bounds: [76, 386, 20, 36]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      align: [center, middle]
+      wrap: false
+      text: ">"
+
+  - elementId: quote-text
+    elementType: text
+    bounds: [96, 384, 800, 40]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 14
+      bold: true
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: "看得见行情，算不清成本，信不过结论。"
+
+  # ---------- 总结条 ----------
+  - elementId: summary-bar
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: summary-cap
+    elementType: text
+    bounds: [78, 436, 42, 48]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      letterSpacing: 3
+      color: "$accent"
+      align: [left, middle]
+      wrap: false
+      text: "结论"
+
+  - elementId: summary-text
+    elementType: text
+    bounds: [130, 436, 760, 48]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      align: [left, middle]
+      wrap: false
+      text: "四个断点落在数据、定价、规则与信任上；后面的方案必须逐一打通，缺一不可。"
+
+  # ---------- 页脚 ----------
+  - elementId: hairline-footer
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: footer-left
+    elementType: text
+    bounds: [64, 518, 500, 12]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [left, top]
+      wrap: false
+      text: "来源: docs/PRD.md / README.md · 痛点归纳 2026-08-12"
+
+  - elementId: footer-right
+    elementType: text
+    bounds: [830, 518, 66, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      align: [right, top]
+      wrap: false
+      text: "03 / 16"
+
+animations:
+  # G1 自动组：标题栏 fade-in（页进入即播，4 个动画同时）
+  - elementId: tick
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: title
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: subtitle
+    effect: fade-in
+    trigger: withPrevious
+  # G2 点击组：痛点卡 1 内容 wipe-in(up)
+  - elementId: card1-text
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  # G3 点击组：痛点卡 2–4 内容 wipe-in(up) 同时
+  - elementId: card2-text
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: card3-text
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious
+  - elementId: card4-text
+    effect: wipe-in
+    direction: up
+    trigger: withPrevious

@@ -1,0 +1,325 @@
+pageType: content
+background:
+  type: solid
+  color: "$bg"
+notes: |
+  自研定价引擎页（10/16）。核心口径：不发明 BS/二叉树，只做确定性实现与可复算口径；港股规格路由（个股 = 美式·实物，指数 = 欧式·现金）；executable-cost 分栏（mid 观察 4,219.0 vs ask 可成交 4,414.0 = 最大亏损）；bump-and-reprice Greeks 与 OpenD 期权报价口径对齐。数字来源：data/decision_card_2026-08-12.json、data/hero_inputs.json（2026-08-08 快照）。
+elements:
+  - elementId: tick
+    elementType: shape
+    bounds: [64, 28, 3, 22]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: statusBar
+    elementType: text
+    bounds: [690, 22, 206, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 8
+      color: "$textSub"
+      letterSpacing: 2
+      wrap: false
+      align: [right, top]
+      text: "GOAI · TERMINAL — 初赛评审  10/16"
+  - elementId: hairlineHeader
+    elementType: line
+    bounds: [64, 92, 832, 1]
+    viewBox: [1, 1]
+    points: "0,0 1,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: eyebrow
+    elementType: text
+    bounds: [78, 26, 400, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      wrap: false
+      align: [left, top]
+      text: "10 · PRICING ENGINE"
+  - elementId: titleBox
+    elementType: text
+    bounds: [78, 44, 800, 44]
+    content:
+      style: "$title"
+      align: [left, top]
+      text: |
+        <p style="line-height:1.1">自研引擎不发明 BS：只做确定性复算与可成交成本口径</p>
+        <p style="margin-top:2px"><span style="font-size:12px; color:$textSub;">BS + 美式二叉树 + IV 二分 + bump-and-reprice Greeks；港股规格路由与 mid/ask 成本分栏</span></p>
+  - elementId: enginePanel
+    elementType: shape
+    bounds: [480, 104, 416, 150]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: enginePanelTitle
+    elementType: text
+    bounds: [492, 114, 200, 15]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 13
+      bold: true
+      color: "$text"
+      wrap: false
+      align: [left, middle]
+      text: "自研确定性引擎"
+  - elementId: enginePanelCode
+    elementType: text
+    bounds: [700, 115, 184, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "$accent"
+      wrap: false
+      align: [right, middle]
+      text: "src/pricing_engine.py"
+  - elementId: engineModules
+    elementType: text
+    bounds: [492, 131, 392, 52]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      lineHeight: 1.2
+      align: [left, top]
+      text: |
+        <p><span style="font-family:Consolas; color:$accent;"><strong>01</strong></span> <strong>BS closed-form</strong> <span style="color:$textSub;">—— 欧式解析解</span></p>
+        <p><span style="font-family:Consolas; color:$accent;"><strong>02</strong></span> <strong>美式二叉树</strong> <span style="color:$textSub;">—— 提前行权 · 离散股息</span></p>
+        <p><span style="font-family:Consolas; color:$accent;"><strong>03</strong></span> <strong>IV 二分</strong> <span style="color:$textSub;">—— 盘口价反解 σ</span></p>
+        <p><span style="font-family:Consolas; color:$accent;"><strong>04</strong></span> <strong>bump-and-reprice</strong> <span style="color:$textSub;">—— Greeks 差分</span></p>
+  - elementId: bsFormula
+    elementType: image
+    bounds: [496, 187, 384, 34]
+    src: media/formulas/formula_black_scholes.png
+    fit: {mode: contain}
+  - elementId: claimNoInvention
+    elementType: text
+    bounds: [492, 225, 392, 14]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      bold: true
+      wrap: false
+      align: [left, middle]
+      text: |-
+        <span style="color:$accent;">不发明 BS / 二叉树</span><span style="color:$textSub;">—— 自研只做确定性实现：先解析规格，再定价</span>
+  - elementId: greeksTable
+    elementType: table
+    bounds: [480, 258, 416, 75]
+    columnWidths: [0.13, 0.24, 0.13, 0.24, 0.13, 0.13]
+    rowHeights: [0.33, 0.33, 0.34]
+    style: "$default"
+    rows:
+      - - text: "参数"
+          align: [left, middle]
+        - text: "数值"
+          align: [left, middle]
+        - text: "参数"
+          align: [left, middle]
+        - text: "数值"
+          align: [left, middle]
+        - text: "口径"
+          colSpan: 2
+          align: [left, middle]
+      - - text: "Delta"
+          bold: true
+          align: [left, middle]
+        - text: "-0.6887"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+        - text: "Gamma"
+          bold: true
+          align: [left, middle]
+        - text: "3.026"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+        - text: "Vega"
+          bold: true
+          align: [left, middle]
+        - text: "48.9981"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+      - - text: "Theta"
+          bold: true
+          align: [left, middle]
+        - text: "-183.3953"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+        - text: "Rho"
+          bold: true
+          align: [left, middle]
+        - text: "0.1047"
+          fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+          align: [right, middle]
+        - text: "OpenD 口径对齐"
+          colSpan: 2
+          fontSize: 10
+          color: "$textSub"
+          align: [left, middle]
+  - elementId: hkSpecStrip
+    elementType: text
+    bounds: [480, 337, 416, 20]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      wrap: false
+      align: [left, middle]
+      text: |-
+        <span style="font-size:11px; color:$accent;"><strong>港股规格</strong></span><span style="font-size:10px; color:$textSub;">：个股 = 美式·实物（提前行权/公司行动）｜指数 = 欧式·现金</span>
+  - elementId: pnlChart
+    elementType: image
+    bounds: [64, 104, 416, 234]
+    src: media/straddle_pnl.png
+    fit: {mode: contain}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: costStripBg
+    elementType: shape
+    bounds: [64, 340, 416, 22]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: costStripText
+    elementType: text
+    bounds: [68, 340, 410, 22]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      wrap: false
+      align: [left, middle]
+      text: |-
+        <span style="color:$textSub;">mid 观察 </span><span style="font-family:Consolas; color:$text;">2,109.5×2=4,219.0</span><span style="color:$textSub;"> ｜ ask 可成交 </span><span style="font-family:Consolas; color:$accent;"><strong>2,207.0×2=4,414.0</strong></span><span style="color:$textSub;"> · 最大亏损</span>
+  - elementId: chartSource
+    elementType: text
+    bounds: [64, 362, 416, 10]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      wrap: false
+      align: [left, top]
+      text: "来源: data/decision_card_2026-08-12.json · 到期内在价值合成 P&L · 双口径成本"
+  - elementId: quoteBg
+    elementType: shape
+    bounds: [64, 384, 832, 40]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "#22D3EE14"}
+  - elementId: quoteTick
+    elementType: shape
+    bounds: [64, 384, 3, 40]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quoteMark
+    elementType: text
+    bounds: [76, 384, 20, 40]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "$accent"
+      wrap: false
+      align: [left, middle]
+      text: ">"
+  - elementId: quoteText
+    elementType: text
+    bounds: [96, 384, 792, 40]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 14
+      bold: true
+      color: "$text"
+      lineHeight: 1.2
+      wrap: false
+      align: [left, middle]
+      text: "引擎的诚实 &gt; 引擎的聪明：mid 是观察，ask 才是成本。"
+  - elementId: sumBg
+    elementType: shape
+    bounds: [64, 436, 832, 48]
+    shapeName: roundRect
+    adjustments: [5000]
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: sumCap
+    elementType: text
+    bounds: [78, 436, 46, 48]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "$accent"
+      letterSpacing: 3
+      wrap: false
+      align: [left, middle]
+      text: "结论"
+  - elementId: sumText
+    elementType: text
+    bounds: [130, 436, 754, 48]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "$text"
+      wrap: false
+      align: [left, middle]
+      text: |-
+        <span>只复算不发明 BS：成本按 mid/ask 分栏，最大亏损 </span><span style="font-family:Consolas; color:$accent;"><strong>4,414.0</strong></span><span> HKD</span>
+  - elementId: hairlineFooter
+    elementType: line
+    bounds: [64, 512, 832, 1]
+    viewBox: [1, 1]
+    points: "0,0 1,0"
+    border: {style: solid, width: 1, color: "$border"}
+  - elementId: footerSrc
+    elementType: text
+    bounds: [64, 518, 620, 12]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      wrap: false
+      align: [left, top]
+      text: "来源: data/decision_card_2026-08-12.json · data/hero_inputs.json · 2026-08-08 快照"
+  - elementId: footerPage
+    elementType: text
+    bounds: [820, 518, 76, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "$textSub"
+      wrap: false
+      align: [right, top]
+      text: "10 / 16"
+animations:
+  - elementId: eyebrow
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: titleBox
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: enginePanel
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: engineModules
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: greeksTable
+    effect: wipe-in
+    direction: up
+    trigger: onClick
+  - elementId: hkSpecStrip
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: pnlChart
+    effect: zoom-in
+    trigger: onClick
+  - elementId: costStripBg
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: costStripText
+    effect: fade-in
+    trigger: withPrevious
+  - elementId: chartSource
+    effect: fade-in
+    trigger: withPrevious

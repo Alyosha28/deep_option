@@ -1,0 +1,330 @@
+pageType: content
+notes: |
+  Hero 页：腾讯业绩跨式在冻结快照下的真实结论是 NO_TRADE。
+  讲读顺序：成本与盈亏平衡 → 预期波动不足 → Edge 未过 → 什么条件会改变结论。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "06"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: HERO CASE · 05
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 腾讯业绩跨式：Edge 未过，系统诚实给出 NO_TRADE
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 冻结快照 2026-08-08 11:56（HK CLOSED）· REPLAY / FUTU / FROZEN · 决策卡 2026-08-12
+  - elementId: v1-num
+    elementType: text
+    bounds: [60, 128, 220, 30]
+    content:
+      style: "$kpi"
+      fontSize: 24
+      text: "478.8"
+  - elementId: v1-label
+    elementType: text
+    bounds: [60, 160, 220, 16]
+    content:
+      style: "$cap"
+      text: 现货 HKD
+  - elementId: v2-num
+    elementType: text
+    bounds: [300, 128, 220, 30]
+    content:
+      style: "$kpi"
+      fontSize: 24
+      text: "480"
+  - elementId: v2-label
+    elementType: text
+    bounds: [300, 160, 220, 16]
+    content:
+      style: "$cap"
+      text: ATM 行权价 · 8/14 到期 · 2 张
+  - elementId: v3-num
+    elementType: text
+    bounds: [60, 196, 220, 30]
+    content:
+      style: "$kpi"
+      fontSize: 24
+      color: "$warn"
+      text: "4,414"
+  - elementId: v3-label
+    elementType: text
+    bounds: [60, 228, 220, 16]
+    content:
+      style: "$cap"
+      text: 买入成本 HKD（ask 口径）
+  - elementId: v4-num
+    elementType: text
+    bounds: [300, 196, 220, 30]
+    content:
+      style: "$kpi"
+      fontSize: 24
+      text: 458.9 / 501.1
+  - elementId: v4-label
+    elementType: text
+    bounds: [300, 228, 220, 16]
+    content:
+      style: "$cap"
+      text: 盈亏平衡区间 · 需变动 ±4.41%
+  - elementId: v5-num
+    elementType: text
+    bounds: [60, 264, 220, 30]
+    content:
+      style: "$kpi"
+      fontSize: 24
+      color: "$down"
+      text: 3.92%
+  - elementId: v5-label
+    elementType: text
+    bounds: [60, 296, 220, 16]
+    content:
+      style: "$cap"
+      text: 市场预期业绩波动
+  - elementId: v6-num
+    elementType: text
+    bounds: [300, 264, 220, 30]
+    content:
+      style: "$kpi"
+      fontSize: 24
+      text: "5,000"
+  - elementId: v6-label
+    elementType: text
+    bounds: [300, 296, 220, 16]
+    content:
+      style: "$cap"
+      text: 风险预算（5% × 100,000 HKD）
+  - elementId: v7-num
+    elementType: text
+    bounds: [60, 332, 460, 24]
+    content:
+      style: "$small"
+      bold: true
+      fontSize: 13
+      text: IV 37.4% · IV Rank 72.9 · IV Pct 85.3
+  - elementId: v7-label
+    elementType: text
+    bounds: [60, 358, 460, 16]
+    content:
+      style: "$cap"
+      color: "$warn"
+      text: 隐含波动处于历史高位，IV crush 风险显著
+  - elementId: verdict-plate
+    elementType: shape
+    bounds: [560, 126, 340, 258]
+    shapeName: rect
+    fill: {type: solid, color: "$panel"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: verdict-rail
+    elementType: shape
+    bounds: [560, 126, 4, 258]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: verdict-label
+    elementType: text
+    bounds: [584, 140, 292, 16]
+    content:
+      style: "$cap"
+      bold: true
+      text: 决策卡结论
+  - elementId: verdict-num
+    elementType: text
+    bounds: [584, 160, 292, 44]
+    content:
+      style: "$kpi"
+      fontSize: 34
+      color: "$primary"
+      text: NO_TRADE
+  - elementId: verdict-rule
+    elementType: line
+    bounds: [584, 212, 292, 1]
+    viewBox: [292, 1]
+    points: "0,0 292,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: verdict-reason
+    elementType: text
+    bounds: [584, 222, 292, 78]
+    content:
+      style: "$small"
+      text: |
+        <p>· 预期波动 &lt; 盈亏平衡所需幅度</p>
+        <p>· 历史回测负期望（d+2 口径 A -7.8%）</p>
+        <p>· IV crush -20% 情景转负（-711 HKD）</p>
+  - elementId: verdict-next
+    elementType: text
+    bounds: [584, 306, 292, 60]
+    content:
+      style: "$cap"
+      text: |
+        <p>下一步：无需进入下单步骤。</p>
+        <p>可调整期限 / 行权价后重新评估。</p>
+  - elementId: change-head
+    elementType: text
+    bounds: [60, 388, 400, 18]
+    content:
+      style: "$sub"
+      bold: true
+      text: 什么会改变结论
+  - elementId: change-text
+    elementType: text
+    bounds: [60, 410, 840, 36]
+    content:
+      style: "$cap"
+      text: |
+        <p>· 正股业绩日实际波动超过盈亏平衡幅度　· 切换 8/28 到期或价差结构使成本显著下降</p>
+        <p>· Live 行情 + 已验证费用/滑点 policy 后成本口径更新　· 历史回测样本更新后 Edge 结论变化</p>
+  - elementId: quote-line
+    elementType: text
+    bounds: [60, 458, 840, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      color: "$primary"
+      text: 赔率不支持时，最好的仓位是 NO_TRADE。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 数据：decision_card_2026-08-12.json · 审计链 7 条记录
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 06 / 16
+animations:
+  - elementId: v1-num
+    effect: rise-in
+    trigger: onClick
+    durationMs: 400
+  - elementId: v1-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: v2-num
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 400
+    delayMs: 90
+  - elementId: v2-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: v3-num
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 400
+    delayMs: 90
+  - elementId: v3-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: v4-num
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 400
+    delayMs: 90
+  - elementId: v4-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: v5-num
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 400
+    delayMs: 90
+  - elementId: v5-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: v6-num
+    effect: rise-in
+    trigger: afterPrevious
+    durationMs: 400
+    delayMs: 90
+  - elementId: v6-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: v7-num
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 300
+    delayMs: 90
+  - elementId: v7-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-plate
+    effect: zoom-in
+    trigger: onClick
+    durationMs: 500
+    easing: ease-out
+  - elementId: verdict-rail
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-label
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-num
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 350
+  - elementId: verdict-rule
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 250
+  - elementId: verdict-reason
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: verdict-next
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: change-head
+    effect: fade-in
+    trigger: onClick
+    durationMs: 300
+  - elementId: change-text
+    effect: fade-in
+    trigger: withPrevious
+    durationMs: 300
+  - elementId: quote-line
+    effect: fade-in
+    trigger: afterPrevious
+    durationMs: 350
+    delayMs: 100

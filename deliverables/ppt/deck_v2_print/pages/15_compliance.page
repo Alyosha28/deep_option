@@ -1,0 +1,114 @@
+pageType: content
+notes: |
+  合规页：研究、教育、决策支持工具；不荐股、不代下单、不承诺收益。每条边界对应产品铁律。
+background:
+  type: solid
+  color: "$bg"
+elements:
+  - elementId: watermark
+    elementType: text
+    bounds: [770, 24, 130, 104]
+    content:
+      style: "$watermark"
+      align: [right, top]
+      text: "15"
+  - elementId: kicker-tick
+    elementType: shape
+    bounds: [60, 17, 14, 2]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: kicker
+    elementType: text
+    bounds: [82, 10, 460, 16]
+    content:
+      style: "$eyebrow"
+      text: COMPLIANCE · 14
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 840, 48]
+    content:
+      style: "$title"
+      text: 研究 / 教育 / 决策支持工具：不荐股、不代下单、不承诺收益
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 86, 840, 18]
+    content:
+      style: "$sub"
+      text: 合规边界与产品铁律一一对应（SFC Type 1/4/9 牌照边界内）
+  - elementId: comp-table
+    elementType: table
+    bounds: [60, 120, 840, 264]
+    style: "$default"
+    columnWidths: [0.3, 0.7]
+    rowHeights: [0.08, 0.184, 0.184, 0.184, 0.184, 0.184]
+    rows:
+      - - text: 边界
+        - text: 对应铁律
+      - - text: 投资建议边界
+        - text: 页面与材料声明非投资建议，无荐股表达、无收益承诺
+      - - text: 实盘风险
+        - text: 比赛版本无实盘入口，不注册真实交易权限
+      - - text: 模拟误操作
+        - text: 独立确认 + 提交前复核 + 幂等；禁止自动重提、补腿、追价
+      - - text: 数据授权
+        - text: 授权行情与原始快照不重新分发；公开材料脱敏
+      - - text: LLM 幻觉
+        - text: 数值引擎 + 审计链兜底；LLM 只做解析、编排与解释
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [60, 396, 840, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primaryA"}
+  - elementId: quote-rail
+    elementType: shape
+    bounds: [60, 396, 4, 34]
+    shapeName: rect
+    fill: {type: solid, color: "$primary"}
+  - elementId: quote-label
+    elementType: text
+    bounds: [74, 402, 40, 12]
+    content:
+      style: "$cap"
+      bold: true
+      color: "$primary"
+      text: 金句
+  - elementId: quote-text
+    elementType: text
+    bounds: [118, 401, 770, 22]
+    content:
+      style: "$small"
+      fontSize: 12
+      bold: true
+      text: 合规不是免责声明，是产品边界。
+  - elementId: takeaway
+    elementType: shape
+    bounds: [60, 438, 840, 54]
+    shapeName: rect
+    fill: {type: solid, color: "$deep"}
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: takeaway-text
+    elementType: text
+    bounds: [78, 452, 804, 28]
+    content:
+      style: "$small"
+      fontSize: 11
+      text: PASS 的含义是「当前数据、规则与风险门通过」，不代表盈利、成交或投资建议。
+  - elementId: footer-rule
+    elementType: line
+    bounds: [60, 518, 840, 1]
+    viewBox: [840, 1]
+    points: "0,0 840,0"
+    border: {style: solid, width: 1, color: "$hairline"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [60, 520, 600, 14]
+    content:
+      style: "$cap"
+      text: 来源：research/03-boundaries-risks.md · docs/PRD.md §2.3 非目标
+  - elementId: footer-right
+    elementType: text
+    bounds: [700, 520, 200, 14]
+    content:
+      style: "$cap"
+      align: [right, top]
+      text: 15 / 16
