@@ -27,6 +27,7 @@ P0 聚焦一个可验证场景：
 - Futu Live 只读行情/账户 Gateway，以及同合同的确定性 Replay Gateway；
 - 线程安全 Snapshot Recorder、严格 JSONL 校验和 legacy 快照迁移读取；
 - Agent 侧唯一粗粒度只读入口 `refresh_decision_inputs`；
+- 端到端决策管线 `src/decision_pipeline.py`：场景解析 → 冻结快照 → 自研引擎 → Edge/Risk/Action 门控 → 可溯源决策卡 + 审计留痕；
 - Black–Scholes、通用美式二叉树、IV 求解和 bump-and-reprice Greeks；
 - 腾讯跨式分析与历史回测原型；
 - JSONL + SHA-256 审计工具；
@@ -68,6 +69,14 @@ python -m venv .venv
 ```
 
 当前公开快速开始仅覆盖知识库检索，因为完整 Agent/UI 尚未形成可验证入口。需要 Live 或 Replay Hero 数据时，请在本地按项目 schema 提供有授权的数据，不要把 Futu 账户行情重新分发到公开仓库。
+
+端到端决策管线（无需 OpenD，使用冻结快照）：
+
+```powershell
+python -m src.decision_pipeline
+```
+
+输出 `data/decision_card_*.json` 与 `research/audit/audit_log.jsonl` 哈希链记录。
 
 ## Futu Gateway 边界
 
