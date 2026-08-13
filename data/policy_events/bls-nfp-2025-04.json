@@ -1,0 +1,122 @@
+{
+  "id": "bls-nfp-2025-04",
+  "name": "美国 2025 年 4 月非农就业报告",
+  "date": "2025-05-02",
+  "type": "macro-data",
+  "status": "ACTIVE",
+  "updated_at": "2026-08-13T00:00:00+08:00",
+  "description": "BLS 于 2025 年 5 月 2 日发布 4 月就业报告：非农新增就业约 17.7 万，失业率约 4.2%；报告发布前后，市场围绕关税与美联储路径反复定价。",
+  "facts": [
+    {
+      "id": "f1",
+      "date": "2025-05-02",
+      "fact": "4 月非农新增就业约 17.7 万人，失业率约 4.2%（公开报道口径，需以 BLS 原文复核）。",
+      "source": "BLS Employment Situation 新闻稿（2025-05-02）",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_05022025.htm",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f2",
+      "date": "2025-05-02",
+      "fact": "就业数据成为市场判断美联储是否在关税冲击下提前降息的关键输入。",
+      "source": "公开报道梳理（2025-05）",
+      "source_url": "",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ],
+  "stakeholders": [
+    {
+      "actor": "美联储",
+      "interest": "用就业数据校准利率路径",
+      "leverage": "利率决策",
+      "exposure": "误判就业拐点"
+    },
+    {
+      "actor": "利率市场",
+      "interest": "降息时点与幅度",
+      "leverage": "利率期货/期权定价",
+      "exposure": "数据与预期差引发的波动"
+    },
+    {
+      "actor": "企业与家庭",
+      "interest": "就业与收入稳定",
+      "leverage": "消费与用工行为",
+      "exposure": "裁员与收入下滑"
+    }
+  ],
+  "tensions": [
+    {
+      "id": "t1",
+      "left": "就业韧性（数据尚稳）",
+      "right": "关税与政策不确定性（前瞻风险）",
+      "nature": "非对抗性（滞后指标与前瞻风险的张力）",
+      "principal": true,
+      "note": "主要矛盾：就业数据是滞后指标，市场更关注前瞻恶化风险。"
+    },
+    {
+      "id": "t2",
+      "left": "单月数据噪音",
+      "right": "趋势判断",
+      "nature": "非对抗性",
+      "principal": false,
+      "note": "单月波动会被放大成方向性交易。"
+    }
+  ],
+  "game_rounds": [],
+  "verdict_reads": [
+    {
+      "scope": "就业市场断崖式恶化",
+      "verdict": "UNLIKELY",
+      "reason": "4 月新增就业仍为正增长，未见断崖信号",
+      "evidence_fact_ids": ["f1"]
+    },
+    {
+      "scope": "前瞻恶化风险计价",
+      "verdict": "CREDIBLE",
+      "reason": "关税冲击下市场持续为衰退/降息路径定价",
+      "evidence_fact_ids": ["f2"]
+    }
+  ],
+  "political_economy": [
+    {
+      "check": "谁获利",
+      "result": "就业稳定时劳动者与消费链受益；对就业敏感的交易者获得定价依据",
+      "detail": "滞后数据不能证明前瞻趋势"
+    },
+    {
+      "check": "谁吃亏",
+      "result": "若前瞻风险兑现，出口/制造业相关就业先承压",
+      "detail": "数据发布到政策见效存在滞后"
+    },
+    {
+      "check": "吃亏方是否允许",
+      "result": "不允许长期承受：就业恶化会通过选举与政治压力传导至政策",
+      "detail": "就业是美联储双重使命之一，也是政治敏感指标"
+    }
+  ],
+  "falsification": [
+    {
+      "scope": "就业韧性判断",
+      "condition": "若后续月度新增就业连续转负或失业率快速上行，则断崖情景成立"
+    },
+    {
+      "scope": "前瞻风险",
+      "condition": "若关税缓和且领先指标回升，则衰退计价过度"
+    }
+  ],
+  "monitor": [
+    "t1：前瞻指标（初请、PMI）是否领先恶化",
+    "t2：单月数据是否被趋势修正（BLS 修订）"
+  ],
+  "sources": [
+    {
+      "id": "bls-empsit-2025-04",
+      "label": "BLS Employment Situation 新闻稿归档页（2025-05-02）",
+      "url": "https://www.bls.gov/news.release/archives/empsit_05022025.htm",
+      "status": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ]
+}

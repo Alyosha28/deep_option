@@ -100,11 +100,11 @@ elements:
     rows:
       - - text: "Futu 手工流程"
           bold: true
-        - text: '<span style="color:$success">✓</span> 信息强'
+        - text: '<span style="color:#34D399">✓</span> 信息强'
         - text: "规则分散多页"
         - text: "无自动留痕"
         - text: "手工拼接"
-        - text: '<span style="color:$success">✓</span> 券商下单'
+        - text: '<span style="color:#34D399">✓</span> 券商下单'
 
   # ---------- 对比行 2：通用 LLM ----------
   - elementId: row-llm
@@ -128,7 +128,7 @@ elements:
           color: "$textSub"
         - text: "—"
           color: "$textSub"
-        - text: '<span style="color:$success">✓</span> 表达好'
+        - text: '<span style="color:#34D399">✓</span> 表达好'
         - text: "不可承担风控"
           color: "$danger"
 
@@ -148,13 +148,13 @@ elements:
     rows:
       - - text: "固定计算脚本"
           bold: true
-        - text: '<span style="color:$success">✓</span> 计算稳定'
+        - text: '<span style="color:#34D399">✓</span> 计算稳定'
         - text: "参数需自给"
-        - text: '<span style="color:$success">✓</span> 可复现'
+        - text: '<span style="color:#34D399">✓</span> 可复现'
         - text: "不补全任务"
         - text: "无门控降级"
 
-  # ---------- 对比行 4：moomoo Engine · moontower.ai（传统策略推荐类） ----------
+  # ---------- 对比行 4：moomoo Engine（传统策略推荐类） ----------
   - elementId: row-moomoo
     elementType: table
     bounds: [64, 250, 832, 40]
@@ -168,8 +168,8 @@ elements:
         border: [null, null, {style: solid, width: 1, color: "$border"}, null]
         fontFamily: {latin: Arial, ea: Microsoft YaHei}
     rows:
-      - - text: '<p><strong>moomoo Engine · moontower.ai</strong></p><p><span style="font-size:10px; color:$textSub">（传统策略推荐类）</span></p>'
-          lineHeight: 1.5
+      - - text: '<p><strong>moomoo Engine</strong></p><p><span style="font-size:10px; color:#8B949E">（传统策略推荐类）</span></p>'
+          lineHeight: 1.2
         - text: "可交易≠值得"
           color: "$warn"
         - text: "—"
@@ -197,15 +197,15 @@ elements:
     rows:
       - - text: "GOAI"
           fill: {type: solid, color: "#22D3EE14"}
-        - text: '<span style="color:$success">✓</span> 工具供数'
+        - text: '<span style="color:#34D399">✓</span> 工具供数'
           fill: {type: solid, color: "#22D3EE14"}
-        - text: '<span style="color:$success">✓</span> 规格先解析'
+        - text: '<span style="color:#34D399">✓</span> 规格先解析'
           fill: {type: solid, color: "#22D3EE14"}
         - text: '✓ 哈希链 <span style="font-family:Consolas">7</span> 条'
           fill: {type: solid, color: "#22D3EE14"}
-        - text: '<span style="color:$success">✓</span> 端到端决策'
+        - text: '<span style="color:#34D399">✓</span> 端到端决策'
           fill: {type: solid, color: "#22D3EE14"}
-        - text: '<span style="color:$success">✓</span> 仅模拟+确认'
+        - text: '<span style="color:#34D399">✓</span> 仅模拟+确认'
           fill: {type: solid, color: "#22D3EE33"}
 
   # ---------- 焦点标注 ----------
@@ -241,7 +241,7 @@ elements:
     elementType: text
     bounds: [76, 386, 16, 36]
     content:
-      text: "&gt;"
+      text: ">"
       fontFamily: {latin: Consolas, ea: Microsoft YaHei}
       fontSize: 12
       bold: true

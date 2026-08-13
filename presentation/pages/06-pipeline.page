@@ -30,7 +30,7 @@ elements:
       style: "$title"
       align: [left, top]
       wrap: false
-      text: "七步管线全程留痕：Edge 未过即停，NO_TRADE 是结论"
+      text: "端到端管线全程留痕：Edge 未过即停，NO_TRADE 是结论"
   - elementId: head-subtitle
     elementType: text
     bounds: [78, 72, 700, 14]
@@ -99,10 +99,10 @@ elements:
           fill: {type: solid, color: "$panel"}
           fontFamily: {latin: Arial, ea: Microsoft YaHei}
           text: |
-            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$success;">01</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">场景解析</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">parse_scenario</span></p>
-            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$textSub;">未知字段不补造</span></p>
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:#34D399;">01</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:#E6EDF3;">场景解析</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:#8B949E;">parse_scenario</span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:#8B949E;">未知字段不补造</span></p>
   - elementId: card-2
     elementType: table
     bounds: [234, 108, 152, 96]
@@ -115,10 +115,10 @@ elements:
           fill: {type: solid, color: "$panel"}
           fontFamily: {latin: Arial, ea: Microsoft YaHei}
           text: |
-            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$success;">02</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">冻结快照</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">load_frozen_snapshot</span></p>
-            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$textSub;">FROZEN 数据加载</span></p>
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:#34D399;">02</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:#E6EDF3;">冻结快照</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:#8B949E;">load_frozen_snapshot</span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:#8B949E;">FROZEN 数据加载</span></p>
   - elementId: card-3
     elementType: table
     bounds: [404, 108, 152, 96]
@@ -131,10 +131,10 @@ elements:
           fill: {type: solid, color: "$panel"}
           fontFamily: {latin: Arial, ea: Microsoft YaHei}
           text: |
-            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$success;">03</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">定价·IV·Greeks·成本</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">compute_engine</span></p>
-            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$textSub;">BS · 二叉树 · IV 二分</span></p>
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:#34D399;">03</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:#E6EDF3;">定价·IV·Greeks</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:#8B949E;">compute_engine</span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:#8B949E;">BS · 二叉树 · IV 二分</span></p>
   - elementId: card-4
     elementType: table
     bounds: [574, 108, 152, 96]
@@ -147,10 +147,10 @@ elements:
           fill: {type: solid, color: "$panel"}
           fontFamily: {latin: Arial, ea: Microsoft YaHei}
           text: |
-            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$danger;">04</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">Edge 门 · Risk 门</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; color:$danger;">●</span><span style="font-size:10px; color:$text;"> Edge 门</span><span style="font-size:10px; color:$textSub;"> — </span><span style="font-size:10px; font-family:Consolas; color:$danger;"><strong>FAIL</strong></span></p>
-            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:$success;">●</span><span style="font-size:10px; color:$text;"> Risk 门</span><span style="font-size:10px; color:$textSub;"> — </span><span style="font-size:10px; font-family:Consolas; color:$success;"><strong>PASS</strong></span></p>
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:#F87171;">04</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:#E6EDF3;">Edge 门 · Risk 门</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; color:#F87171;">●</span><span style="font-size:10px; color:#E6EDF3;"> Edge 门</span><span style="font-size:10px; color:#8B949E;"> — </span><span style="font-size:10px; font-family:Consolas; color:#F87171;"><strong>FAIL</strong></span></p>
+            <p style="margin-left:12px; margin-top:1px; line-height:14px"><span style="font-size:10px; color:#34D399;">●</span><span style="font-size:10px; color:#E6EDF3;"> Risk 门</span><span style="font-size:10px; color:#8B949E;"> — </span><span style="font-size:10px; font-family:Consolas; color:#34D399;"><strong>PASS</strong></span></p>
   - elementId: card-5
     elementType: table
     bounds: [744, 108, 152, 96]
@@ -163,10 +163,10 @@ elements:
           fill: {type: solid, color: "$panel"}
           fontFamily: {latin: Arial, ea: Microsoft YaHei}
           text: |
-            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:$accent;">05</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:$text;">决策卡</span></strong></p>
-            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:$textSub;">build_decision_card</span></p>
-            <p style="margin-left:12px; margin-top:4px; line-height:16px"><span style="font-size:10px; font-family:Consolas; background-color:#22D3EE33; color:$accent;"><strong>NO_TRADE</strong></span></p>
+            <p style="margin-left:12px; margin-top:7px; line-height:24px"><strong><span style="font-size:20px; font-family:Consolas; color:#22D3EE;">05</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:18px"><strong><span style="font-size:13px; color:#E6EDF3;">决策卡</span></strong></p>
+            <p style="margin-left:12px; margin-top:2px; line-height:14px"><span style="font-size:10px; font-family:Consolas; color:#8B949E;">build_decision_card</span></p>
+            <p style="margin-left:12px; margin-top:4px; line-height:16px"><span style="font-size:10px; font-family:Consolas; background-color:#22D3EE33; color:#22D3EE;"><strong>NO_TRADE</strong></span></p>
 
   # ============ 决策卡 → 审计链 连接线 ============
   - elementId: flow-link
@@ -200,37 +200,37 @@ elements:
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
       - - text: |
-            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> scenario_parsed</span></p>
+            <p style="margin-left:4px"><span style="color:#34D399;">●</span><span style="color:#E6EDF3;"> scenario_parsed</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
         - text: |
-            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> data_loaded</span></p>
+            <p style="margin-left:4px"><span style="color:#34D399;">●</span><span style="color:#E6EDF3;"> data_loaded</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
         - text: |
-            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> engine_computed</span></p>
+            <p style="margin-left:4px"><span style="color:#34D399;">●</span><span style="color:#E6EDF3;"> engine_computed</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
         - text: |
-            <p style="margin-left:4px"><span style="color:$danger;">●</span><span style="color:$text;"> edge_gate</span></p>
+            <p style="margin-left:4px"><span style="color:#F87171;">●</span><span style="color:#E6EDF3;"> edge_gate</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
         - text: |
-            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> risk_gate</span></p>
+            <p style="margin-left:4px"><span style="color:#34D399;">●</span><span style="color:#E6EDF3;"> risk_gate</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
         - text: |
-            <p style="margin-left:4px"><span style="color:$success;">●</span><span style="color:$text;"> action_gate</span></p>
+            <p style="margin-left:4px"><span style="color:#34D399;">●</span><span style="color:#E6EDF3;"> action_gate</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
         - text: |
-            <p style="margin-left:4px"><span style="color:$accent;">●</span><span style="color:$text;"> decision_card</span></p>
+            <p style="margin-left:4px"><span style="color:#22D3EE;">●</span><span style="color:#E6EDF3;"> decision_card</span></p>
           fontSize: 10
           fontFamily: {latin: Consolas, ea: Microsoft YaHei}
           align: [left, middle]
@@ -281,7 +281,7 @@ elements:
       align: [left, top]
       wrap: false
       text: |
-        <p><span style="color:$success;">●</span> 已通过　　<span style="color:$danger;">●</span> 被阻断　　<span style="color:$accent;">●</span> 当前 / 终点</p>
+        <p><span style="color:#34D399;">●</span> 已通过　　<span style="color:#F87171;">●</span> 被阻断　　<span style="color:#22D3EE;">●</span> 当前 / 终点</p>
 
   # ============ 金句条 ============
   - elementId: quote-bg
@@ -343,7 +343,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p>Edge 未过即停，记录不断：决策卡与 <span style="font-family:Consolas; color:$accent;"><strong>7</strong></span> 条审计记录全量落盘。</p>
+        <p>Edge 未过即停，记录不断：决策卡与 <span style="font-family:Consolas; color:#22D3EE;"><strong>7</strong></span> 条审计记录全量落盘。</p>
 
   # ============ 页脚 ============
   - elementId: footer-hairline

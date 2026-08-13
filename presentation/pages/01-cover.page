@@ -12,7 +12,7 @@ elements:
     bounds: [0, 0, 960, 540]
     shapeName: custom
     viewBox: [960, 540]
-    path: "M700,46 L940,46 M700,86 L940,86 M700,126 L940,126 M700,46 L700,150 M740,46 L740,150 M780,46 L780,150 M820,46 L820,150 M500,430 L896,430 M500,470 L896,470 M500,510 L896,510"
+    path: "M700,46 L940,46 M700,86 L940,86 M700,126 L940,126 M700,46 L700,150 M740,46 L740,150 M780,46 L780,150 M820,46 L820,150 M700,150 L940,150 M500,430 L896,430 M500,470 L896,470 M500,510 L896,510"
     border: {style: solid, width: 1, color: "$border"}
     opacity: 0.5
 
@@ -72,11 +72,11 @@ elements:
       align: [left, top]
       text: |
         <p>GOAI 港美股期权智能终端</p>
-        <p style="margin-top:16px"><span style="font-size:14px; color:$text;"><strong>不替你猜涨跌——把自然语言观点收拢为</strong></span><span style="font-size:14px; color:$accent;"><strong>可核验决策卡</strong></span></p>
+        <p style="margin-top:16px"><span style="font-size:14px; color:#E6EDF3;"><strong>不替你猜涨跌——把自然语言观点收拢为</strong></span><span style="font-size:14px; color:#22D3EE;"><strong>可核验决策卡</strong></span></p>
         <p style="margin-top:28px">GOAI 世界人工智能开源大赛 · Boundless Agents · 金融服务赛道</p>
         <p style="margin-top:12px">初赛提交 <span style="font-family:Consolas;">2026-08-16</span></p>
-        <p style="margin-top:26px"><span style="font-size:13px; color:$text;"><strong>团队 · <span style="font-family:Consolas;">3</span> 人</strong></span></p>
-        <p style="margin-top:6px"><span style="font-family:Consolas; color:$accent;">A</span> 多 Agent 工程与量化研究 · <span style="font-family:Consolas; color:$accent;">B</span> 港美股期权策略 · <span style="font-family:Consolas; color:$accent;">C</span> 网络安全与合规</p>
+        <p style="margin-top:26px"><span style="font-size:13px; color:#E6EDF3;"><strong>团队 · <span style="font-family:Consolas;">3</span> 人</strong></span></p>
+        <p style="margin-top:6px"><span style="font-family:Consolas; color:#22D3EE;">A</span> 多 Agent 工程与量化研究 · <span style="font-family:Consolas; color:#22D3EE;">B</span> 港美股期权策略 · <span style="font-family:Consolas; color:#22D3EE;">C</span> 网络安全与合规</p>
 
   - elementId: page-number
     elementType: text

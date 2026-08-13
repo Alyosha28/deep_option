@@ -36,8 +36,8 @@ elements:
       style: "$title"
       align: [center, middle]
       text: |
-        <p><span style="font-family:Consolas; color:$accent;">NO_TRADE</span> 是成功结果</p>
-        <p style="margin-top:8px"><span style="font-size:12px; color:$textSub;">决策支持，不做执行、不做荐股；不会为了展示下单而调低门槛。</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE;">NO_TRADE</span> 是成功结果</p>
+        <p style="margin-top:8px"><span style="font-size:12px; color:#8B949E;">决策支持，不做执行、不做荐股；不会为了展示下单而调低门槛。</span></p>
   - elementId: kpi-table
     elementType: table
     bounds: [64, 164, 832, 84]
@@ -88,10 +88,10 @@ elements:
       align: [center, top]
       text: |
         <p>诚实完成度 — 对外只宣传最高已验证切片（当前 P0a Replay）</p>
-        <p style="margin-top:10px"><span style="font-family:Consolas; color:$success;">P0a</span> · Replay Decision — 端到端已跑通（2026-08-12）</p>
-        <p><span style="font-family:Consolas; color:$warn;">P0b</span> · Connected Read-only — OpenD health 已验证；完整 Live 决策链路未毕业</p>
-        <p><span style="font-family:Consolas; color:$textSub;">P0c</span> · Connected Simulation — 未毕业，不对外宣称</p>
-        <p style="margin-top:14px"><strong><span style="font-size:14px; color:$text;">谢谢评审</span></strong></p>
+        <p style="margin-top:10px"><span style="font-family:Consolas; color:#34D399;">P0a</span> · Replay Decision — 端到端已跑通（2026-08-12）</p>
+        <p><span style="font-family:Consolas; color:#F59E0B;">P0b</span> · Connected Read-only — OpenD health 已验证；完整 Live 决策链路未毕业</p>
+        <p><span style="font-family:Consolas; color:#8B949E;">P0c</span> · Connected Simulation — 未毕业，不对外宣称</p>
+        <p style="margin-top:14px"><strong><span style="font-size:14px; color:#E6EDF3;">谢谢评审</span></strong></p>
         <p>GOAI Team · 3 人 — 多 Agent 工程与量化研究 / 港美股期权策略 / 网络安全与合规 · 2026-08 初赛评审</p>
   - elementId: disclaimer-base
     elementType: shape
@@ -124,8 +124,8 @@ elements:
       align: [left, top]
       text: |
         <p><strong>本项目仅用于研究、教育与比赛演示用途，不构成投资建议，亦不构成任何收益承诺。</strong></p>
-        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">研究/教育/比赛演示用途，非投资建议，不构成收益承诺</span></p>
-        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">决策支持/研究用途，非投资建议，不构成任何交易要约；比赛版本仅支持 Futu 模拟盘且必须由用户独立确认。</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:#8B949E;">研究/教育/比赛演示用途，非投资建议，不构成收益承诺</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:#8B949E;">决策支持/研究用途，非投资建议，不构成任何交易要约；比赛版本仅支持 Futu 模拟盘且必须由用户独立确认。</span></p>
   - elementId: page-number
     elementType: text
     bounds: [846, 514, 50, 14]

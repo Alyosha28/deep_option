@@ -28,8 +28,8 @@ elements:
       lineHeight: 1
       align: [left, top]
       text: |
-        <p>只读边界、<span style="font-family:Consolas">20s</span> 可终止 worker、回放兜底：现场稳定不靠运气</p>
-        <p style="margin-top:2px"><span style="font-size:12px; color:$textSub">数据层组件清单与分层架构：Live 与 Replay 一份合同，边界外没有任何交易方法</span></p>
+        <p>只读边界、<span style="font-family:Consolas">20s</span> worker、回放兜底：现场稳定不靠运气</p>
+        <p style="margin-top:2px"><span style="font-size:12px; color:#8B949E">数据层组件清单与分层架构：Live 与 Replay 一份合同，边界外没有任何交易方法</span></p>
   - elementId: header-hairline
     elementType: line
     bounds: [64, 92, 832, 1]
@@ -64,7 +64,7 @@ elements:
       style: "$cardTitle"
       align: [left, top]
       wrap: false
-      text: '<span style="font-family:Consolas; color:$accent">01</span> DataEnvelope · 数据信封'
+      text: '<span style="font-family:Consolas; color:#22D3EE">01</span> DataEnvelope · 数据信封'
   - elementId: card-1-body
     elementType: text
     bounds: [76, 131, 296, 28]
@@ -89,7 +89,7 @@ elements:
       style: "$cardTitle"
       align: [left, top]
       wrap: false
-      text: '<span style="font-family:Consolas; color:$accent">02</span> 双 Gateway · 同合同'
+      text: '<span style="font-family:Consolas; color:#22D3EE">02</span> 双 Gateway · 同合同'
   - elementId: card-2-body
     elementType: text
     bounds: [76, 199, 296, 28]
@@ -114,7 +114,7 @@ elements:
       style: "$cardTitle"
       align: [left, top]
       wrap: false
-      text: '<span style="font-family:Consolas; color:$accent">03</span> SnapshotRecorder'
+      text: '<span style="font-family:Consolas; color:#22D3EE">03</span> SnapshotRecorder'
   - elementId: card-3-body
     elementType: text
     bounds: [76, 267, 296, 28]
@@ -139,7 +139,7 @@ elements:
       style: "$cardTitle"
       align: [left, top]
       wrap: false
-      text: '<span style="font-family:Consolas; color:$accent">04</span> 只读边界 · <span style="font-family:Consolas">20s</span> worker'
+      text: '<span style="font-family:Consolas; color:#22D3EE">04</span> 只读边界 · <span style="font-family:Consolas">20s</span> worker'
   - elementId: card-4-body
     elementType: text
     bounds: [76, 335, 296, 28]
@@ -167,8 +167,8 @@ elements:
       lineHeight: 1
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; color:$accent">L1</span> 数据接入 · 双 Gateway 同合同</p>
-        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">FUTU LIVE 惰性导入 SDK · 只读 Context ⇄ REPLAY 确定性回放 · <span style="font-family:Consolas">60s</span> 一致性窗口</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE">L1</span> 数据接入 · 双 Gateway 同合同</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:#8B949E">FUTU LIVE 惰性导入 SDK · 只读 Context ⇄ REPLAY 确定性回放 · <span style="font-family:Consolas">60s</span> 一致性窗口</span></p>
   - elementId: layer-2
     elementType: shape
     bounds: [400, 168, 496, 56]
@@ -184,8 +184,8 @@ elements:
       lineHeight: 1
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; color:$accent">L2</span> 数据封装 · 身份与来源可追溯</p>
-        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">DataEnvelope: freshness · typed error · <span style="font-family:Consolas">SHA-256</span> ｜ SnapshotRecorder: <span style="font-family:Consolas">JSONL</span> 本地录制</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE">L2</span> 数据封装 · 身份与来源可追溯</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:#8B949E">DataEnvelope: freshness · typed error · <span style="font-family:Consolas">SHA-256</span> ｜ SnapshotRecorder: <span style="font-family:Consolas">JSONL</span> 本地录制</span></p>
   - elementId: layer-3
     elementType: shape
     bounds: [400, 232, 496, 56]
@@ -201,8 +201,8 @@ elements:
       lineHeight: 1
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; color:$accent">L3</span> 只读边界 · 交易方法零暴露</p>
-        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">无下单/改单/撤单/解锁 · OpenD <span style="font-family:Consolas">127.0.0.1:11111</span> · <span style="font-family:Consolas">20s</span> 可终止 worker · 超时 <span style="font-family:Consolas">ACCOUNT_UNAVAILABLE</span></span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE">L3</span> 只读边界 · 交易方法零暴露</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:#8B949E">无下单/改单/撤单/解锁 · OpenD <span style="font-family:Consolas">127.0.0.1:11111</span> · <span style="font-family:Consolas">20s</span> 可终止 worker · 超时 <span style="font-family:Consolas">ACCOUNT_UNAVAILABLE</span></span></p>
   - elementId: layer-4
     elementType: shape
     bounds: [400, 296, 496, 56]
@@ -218,8 +218,8 @@ elements:
       lineHeight: 1
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; color:$accent">L4</span> 兜底 · Replay 保证现场稳定</p>
-        <p style="margin-top:5px"><span style="font-size:10px; color:$textSub">Live 失败 → 明确回放（用户确认），不静默切换 · yfinance 429（2026-08-08 实测）→ 快照回放</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE">L4</span> 兜底 · Replay 保证现场稳定</p>
+        <p style="margin-top:5px"><span style="font-size:10px; color:#8B949E">Live 失败 → 明确回放（用户确认），不静默切换 · yfinance 429（2026-08-08 实测）→ 快照回放</span></p>
   - elementId: concept-tag
     elementType: shape
     bounds: [784, 354, 112, 18]
@@ -259,7 +259,7 @@ elements:
       fontFamily: {latin: Consolas, ea: Microsoft YaHei}
       align: [left, middle]
       wrap: false
-      text: "&gt;"
+      text: ">"
   - elementId: quote-text
     elementType: text
     bounds: [96, 384, 780, 40]
@@ -292,7 +292,7 @@ elements:
       style: "$body"
       align: [left, middle]
       text: |
-        <p>同合同 + 只读边界 + <span style="font-family:Consolas; color:$accent">20s</span> 可终止 worker：断网即明确回放，绝不静默降级。</p>
+        <p>同合同 + 只读边界 + <span style="font-family:Consolas; color:#22D3EE">20s</span> 可终止 worker：断网即明确回放，绝不静默降级。</p>
 
   # ===== 页脚 =====
   - elementId: footer-line

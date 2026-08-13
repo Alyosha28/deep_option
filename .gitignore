@@ -1,5 +1,10 @@
 .venv/
-data/
+data/*
+!data/policy_events/
+!data/policy_events/*.json
+data/policy_events/auto-*.json
+!data/sources_config.json
+!data/research_items_hero.json
 research/audit/
 PROJECT_STATE.md
 比赛/
@@ -18,3 +23,9 @@ __pycache__/
 
 # Office lock/temp files
 ~$*
+
+# QA scratch outputs
+presentation/.qa-images/_recheck_*
+
+# Third-party competition manual (not redistributed)
+rule/

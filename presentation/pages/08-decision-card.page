@@ -34,11 +34,11 @@ elements:
       lineHeight: 1.2
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">01</span><span style="font-size:13px; font-weight:bold; color:$text;">  当前结论与用户含义</span></p>
-        <p style="margin-top:2px;"><span style="font-family:Consolas; font-size:18px; font-weight:bold; color:$accent;">NO_TRADE</span><span style="font-size:10px; color:$textSub;">  成本和证据不支持交易</span></p>
-        <p style="margin-top:2px;"><span style="font-family:Consolas; font-size:9px; color:$textSub;">BLOCK</span><span style="font-size:9px; color:$textSub;">  数据/规格/账户或风险硬门未过</span></p>
-        <p><span style="font-family:Consolas; font-size:9px; color:$textSub;">DRAFT_ONLY</span><span style="font-size:9px; color:$textSub;">  可研究出草稿，不能提交</span></p>
-        <p><span style="font-family:Consolas; font-size:9px; color:$textSub;">READY_FOR_CONFIRMATION</span><span style="font-size:9px; color:$textSub;">  客观门过·用户确认模拟</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:#22D3EE;">01</span><span style="font-size:13px; font-weight:bold; color:#E6EDF3;">  当前结论与用户含义</span></p>
+        <p style="margin-top:2px;"><span style="font-family:Consolas; font-size:18px; font-weight:bold; color:#22D3EE;">NO_TRADE</span><span style="font-size:10px; color:#8B949E;">  成本和证据不支持交易</span></p>
+        <p style="margin-top:2px;"><span style="font-family:Consolas; font-size:9px; color:#8B949E;">BLOCK</span><span style="font-size:9px; color:#8B949E;">  数据/规格/账户或风险硬门未过</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; color:#8B949E;">DRAFT_ONLY</span><span style="font-size:9px; color:#8B949E;">  可研究出草稿，不能提交</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; color:#8B949E;">READY_FOR_CONFIRMATION</span><span style="font-size:9px; color:#8B949E;">  客观门过·用户确认模拟</span></p>
 
   # ---- 卡 02：最关键的三条依据 ----
   - elementId: card2
@@ -49,10 +49,10 @@ elements:
       lineHeight: 1.4
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">02</span><span style="font-size:13px; font-weight:bold; color:$text;">  三条关键依据</span></p>
-        <p style="margin-top:4px;"><span style="font-size:11px; color:$text;">① 预期波动 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">3.92%</span><span style="font-size:11px; color:$text;"> &lt; 盈亏平衡 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">4.41%</span></p>
-        <p><span style="font-size:11px; color:$text;">② 回测 d+2 平均 ROI </span><span style="font-family:Consolas; font-size:11px; color:$accent;">-7.8%</span><span style="font-size:11px; color:$text;"> · 胜率 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">36.4%</span></p>
-        <p><span style="font-size:11px; color:$text;">③ IV </span><span style="font-family:Consolas; font-size:11px; color:$accent;">-20%</span><span style="font-size:11px; color:$text;"> 最差情景 </span><span style="font-family:Consolas; font-size:11px; color:$accent;">-711</span><span style="font-size:11px; color:$text;"> HKD</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:#22D3EE;">02</span><span style="font-size:13px; font-weight:bold; color:#E6EDF3;">  三条关键依据</span></p>
+        <p style="margin-top:4px;"><span style="font-size:11px; color:#E6EDF3;">① 预期波动 </span><span style="font-family:Consolas; font-size:11px; color:#22D3EE;">3.92%</span><span style="font-size:11px; color:#E6EDF3;"> &lt; 盈亏平衡所需 </span><span style="font-family:Consolas; font-size:11px; color:#22D3EE;">4.41%</span></p>
+        <p><span style="font-size:11px; color:#E6EDF3;">② 回测 d+2 平均 ROI </span><span style="font-family:Consolas; font-size:11px; color:#22D3EE;">-7.8%</span><span style="font-size:11px; color:#E6EDF3;"> · 胜率 </span><span style="font-family:Consolas; font-size:11px; color:#22D3EE;">36.4%</span></p>
+        <p><span style="font-size:11px; color:#E6EDF3;">③ IV crush </span><span style="font-family:Consolas; font-size:11px; color:#22D3EE;">-20%</span><span style="font-size:11px; color:#E6EDF3;"> 最差情景 </span><span style="font-family:Consolas; font-size:11px; color:#22D3EE;">-711</span><span style="font-size:11px; color:#E6EDF3;"> HKD</span></p>
 
   # ---- 卡 03：可成交成本与最大亏损 ----
   - elementId: card3
@@ -63,10 +63,10 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">03</span><span style="font-size:13px; font-weight:bold; color:$text;">  可成交成本与最大亏损</span></p>
-        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:16px; font-weight:bold; color:$accent;">2,207 × 2</span><span style="font-size:10px; color:$textSub;"> HKD/张 · ask 口径</span></p>
-        <p><span style="font-family:Consolas; font-size:16px; font-weight:bold; color:$text;">= 4,414</span><span style="font-size:10px; color:$textSub;"> 最大亏损 ≤ 预算 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">5,000</span><span style="font-size:10px; color:$textSub;"> HKD</span></p>
-        <p><span style="font-size:10px; color:$textSub;">预算 = 现金 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">100,000 × 5%</span><span style="font-size:10px; color:$textSub;">（风险预算）</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:#22D3EE;">03</span><span style="font-size:13px; font-weight:bold; color:#E6EDF3;">  可成交成本与最大亏损</span></p>
+        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:16px; font-weight:bold; color:#22D3EE;">2,207 × 2</span><span style="font-size:10px; color:#8B949E;"> HKD/张 · ask 口径</span></p>
+        <p><span style="font-family:Consolas; font-size:16px; font-weight:bold; color:#E6EDF3;">= 4,414</span><span style="font-size:10px; color:#8B949E;"> 最大亏损 ≤ 预算 </span><span style="font-family:Consolas; font-size:10px; color:#8B949E;">5,000</span><span style="font-size:10px; color:#8B949E;"> HKD</span></p>
+        <p><span style="font-size:10px; color:#8B949E;">预算 = 现金 </span><span style="font-family:Consolas; font-size:10px; color:#8B949E;">100,000 × 5%</span><span style="font-size:10px; color:#8B949E;">（风险预算）</span></p>
 
   # ---- 卡 04：数据模式与时间（含溯源要素：来源 + 快照 SHA-256 + 审计链） ----
   - elementId: card4
@@ -77,11 +77,11 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">04</span><span style="font-size:13px; font-weight:bold; color:$text;">  数据模式与时间</span></p>
-        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:11px; font-weight:bold; color:$accent;">REPLAY · FROZEN</span></p>
-        <p><span style="font-family:Consolas; font-size:11px; color:$text;">2026-08-08T11:56:30+08:00</span></p>
-        <p><span style="font-size:10px; color:$textSub;">来源 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">futuapi/OpenD 127.0.0.1:11111</span></p>
-        <p><span style="font-size:10px; color:$textSub;">快照 SHA-256 </span><span style="font-family:Consolas; font-size:10px; color:$textSub;">cf567c59…</span><span style="font-size:10px; color:$textSub;"> · 审计链 7 条</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:#22D3EE;">04</span><span style="font-size:13px; font-weight:bold; color:#E6EDF3;">  数据模式与时间</span></p>
+        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:11px; font-weight:bold; color:#22D3EE;">REPLAY · FROZEN</span></p>
+        <p><span style="font-family:Consolas; font-size:11px; color:#E6EDF3;">2026-08-08T11:56:30+08:00</span></p>
+        <p><span style="font-size:10px; color:#8B949E;">来源 </span><span style="font-family:Consolas; font-size:10px; color:#8B949E;">futuapi/OpenD 127.0.0.1:11111</span></p>
+        <p><span style="font-size:10px; color:#8B949E;">快照 SHA-256 </span><span style="font-family:Consolas; font-size:10px; color:#8B949E;">cf567c59…</span><span style="font-size:10px; color:#8B949E;"> · 审计链 7 条</span></p>
 
   # ---- 卡 05：哪些条件会改变结论 ----
   - elementId: card5
@@ -92,11 +92,11 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">05</span><span style="font-size:13px; font-weight:bold; color:$text;">  什么会改变结论</span></p>
-        <p style="margin-top:4px;"><span style="font-size:10px; color:$text;">· 业绩日实际波动 &gt; 盈亏平衡 </span><span style="font-family:Consolas; font-size:10px; color:$text;">4.41%</span></p>
-        <p><span style="font-size:10px; color:$text;">· 换 8/28 到期或更低成本结构</span></p>
-        <p><span style="font-size:10px; color:$text;">· Live 行情 + 费用/滑点政策后成本变化</span></p>
-        <p><span style="font-size:10px; color:$text;">· 回测样本更新改变 Edge 结论</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:#22D3EE;">05</span><span style="font-size:13px; font-weight:bold; color:#E6EDF3;">  什么会改变结论</span></p>
+        <p style="margin-top:4px;"><span style="font-size:10px; color:#E6EDF3;">· 业绩日实际波动 > 盈亏平衡 </span><span style="font-family:Consolas; font-size:10px; color:#E6EDF3;">4.41%</span></p>
+        <p><span style="font-size:10px; color:#E6EDF3;">· 换 8/28 到期或更低成本结构</span></p>
+        <p><span style="font-size:10px; color:#E6EDF3;">· Live 行情 + 费用/滑点政策后成本变化</span></p>
+        <p><span style="font-size:10px; color:#E6EDF3;">· 回测样本更新改变 Edge 结论</span></p>
 
   # ---- 卡 06：当前唯一可用的下一步 ----
   - elementId: card6
@@ -107,10 +107,10 @@ elements:
       lineHeight: 1.4
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:$accent;">06</span><span style="font-size:13px; font-weight:bold; color:$text;">  唯一可用的下一步</span></p>
-        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:11px; font-weight:bold; color:$accent;">NO_TRADE</span><span style="font-size:11px; color:$text;"> → 无需进入下单步骤</span></p>
-        <p><span style="font-size:11px; color:$text;">Edge 门未过：预期波动不足以覆盖成本</span></p>
-        <p><span style="font-size:11px; color:$text;">可调整期限/行权价后重新评估</span></p>
+        <p><span style="font-family:Consolas; font-size:9px; font-weight:bold; color:#22D3EE;">06</span><span style="font-size:13px; font-weight:bold; color:#E6EDF3;">  唯一可用的下一步</span></p>
+        <p style="margin-top:4px;"><span style="font-family:Consolas; font-size:11px; font-weight:bold; color:#22D3EE;">NO_TRADE</span><span style="font-size:11px; color:#E6EDF3;"> → 无需进入下单步骤</span></p>
+        <p><span style="font-size:11px; color:#E6EDF3;">Edge 门未过：预期波动不足以覆盖成本</span></p>
+        <p><span style="font-size:11px; color:#E6EDF3;">可调整期限/行权价后重新评估</span></p>
 
   # ---- 页头（锁文件 §4.1）----
   - elementId: head-tick
@@ -130,14 +130,15 @@ elements:
     elementType: text
     bounds: [78, 44, 818, 48]
     content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
       lineHeight: 1.1
       align: [left, top]
       text: |
-        <p><span style="font-size:26px; font-weight:bold; color:$text;">一张决策卡六件事：本轮 </span><span style="font-family:Consolas; font-size:26px; font-weight:bold; color:$text;">NO_TRADE</span><span style="font-size:26px; font-weight:bold; color:$text;">，不为展示降门槛</span></p>
-        <p style="margin-top:2px;"><span style="font-size:12px; color:$textSub;">四种结论枚举 · 首屏六件事 · 逐条溯源；焦点卡 = 本轮裁决</span></p>
+        <p><span style="font-size:26px; font-weight:bold; color:#E6EDF3;">一张决策卡六件事：本轮 </span><span style="font-family:Consolas; font-size:26px; font-weight:bold; color:#E6EDF3;">NO_TRADE</span><span style="font-size:26px; font-weight:bold; color:#E6EDF3;">，不为展示降门槛</span></p>
+        <p style="margin-top:2px;"><span style="font-size:12px; color:#8B949E;">四种结论枚举 · 首屏六件事 · 逐条溯源；焦点卡 = 本轮裁决</span></p>
   - elementId: head-status
     elementType: text
-    bounds: [586, 22, 200, 14]
+    bounds: [676, 22, 220, 12]
     content:
       fontFamily: {latin: Consolas, ea: Microsoft YaHei}
       fontSize: 8

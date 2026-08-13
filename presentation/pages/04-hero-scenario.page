@@ -202,8 +202,8 @@ elements:
       style: "$body"
       align: [left, middle]
       text: |
-        <p>单笔亏损硬顶 = <span style="font-family:Consolas">100,000</span> × <span style="font-family:Consolas">5%</span> = <strong><span style="font-family:Consolas; color:$accent">5,000</span></strong> HKD —— 任何候选策略不得超过</p>
-        <p>候选 = <strong><span style="font-family:Consolas; color:$accent">480 ATM</span></strong> 长跨式 × <span style="font-family:Consolas">2</span> 张 · 主到期 <span style="font-family:Consolas">2026-08-14</span> —— 是否值得买，由引擎与回测裁决</p>
+        <p>单笔亏损硬顶 = <span style="font-family:Consolas">100,000</span> × <span style="font-family:Consolas">5%</span> = <strong><span style="font-family:Consolas; color:#22D3EE">5,000</span></strong> HKD —— 任何候选策略不得超过</p>
+        <p>候选 = <strong><span style="font-family:Consolas; color:#22D3EE">480 ATM</span></strong> 长跨式 × <span style="font-family:Consolas">2</span> 张 · 主到期 <span style="font-family:Consolas">2026-08-14</span> —— 是否值得买，由引擎与回测裁决</p>
   - elementId: quote-bg
     elementType: shape
     bounds: [64, 384, 832, 40]
@@ -225,7 +225,7 @@ elements:
       color: "$accent"
       align: [left, middle]
       wrap: false
-      text: "&gt;"
+      text: ">"
   - elementId: quote-text
     elementType: text
     bounds: [96, 384, 770, 40]
@@ -256,7 +256,7 @@ elements:
     content:
       style: "$body"
       align: [left, middle]
-      text: '<p>场景已冻结：<span style="font-family:Consolas">10</span> 万港币、单笔 ≤ <span style="font-family:Consolas; color:$accent">5%</span>，候选 <span style="font-family:Consolas">480 ATM</span> 长跨式进入量化评估。</p>'
+      text: '<p>场景已冻结：<span style="font-family:Consolas">10</span> 万港币、单笔 ≤ <span style="font-family:Consolas; color:#22D3EE">5%</span>，候选 <span style="font-family:Consolas">480 ATM</span> 长跨式进入量化评估。</p>'
   - elementId: footer-hairline
     elementType: line
     bounds: [64, 512, 832, 1]

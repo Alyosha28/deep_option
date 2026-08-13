@@ -1,8 +1,18 @@
-# GOAI 港美股期权智能终端
+# GOAI · DeepSeek Harness 金融期权终端
 
 GOAI 世界人工智能开源大赛 · Boundless Agents 金融服务方向项目。
 
 GOAI 面向有基础期权认知的用户，把自然语言观点转成带数据来源、港股产品规则、确定性定价、账户风控和审计记录的决策卡。产品定位是研究与决策支持，不是投资建议，不提供实盘自动交易。
+
+**项目形态：一个运行在 DeepSeek Harness（DSH）上的「大号金融插件」。** Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent 编排、工具注册、人机审批与对话体验。评审也可以完全不装 DSH，用 `python -m src.ui_server` 独立运行——两条入口共享同一引擎契约。架构权威文档见 [docs/DSH_ARCHITECTURE.md](docs/DSH_ARCHITECTURE.md)。
+
+## 架构（一句话）
+
+```text
+DSH 编排层（host 插件 + model tools + skills + preset）
+        → 引擎契约（ui_server JSON API，127.0.0.1:8000）
+        → Python 引擎（数值铁律：gateway / pricing / pipeline / debate / audit）
+```
 
 ## MVP
 
@@ -21,19 +31,30 @@ P0 聚焦一个可验证场景：
 
 ## 当前实现状态
 
-已实现的原型资产：
+已实现并验证的资产：
 
+- DSH 编排层（Phase 0）：`harness/plugins/goai-bridge.host.js` 注册 `goai_state` /
+  `goai_run` / `goai_chat` 三个 model tools，真机跑通「对话 → 五阶段管线 → 十角色辩论 →
+  审计链」闭环；插件生命周期托管引擎进程（可逆效应）；
 - SDK 无关的 typed Gateway 合同、稳定快照哈希和 typed error；
 - Futu Live 只读行情/账户 Gateway，以及同合同的确定性 Replay Gateway；
 - 线程安全 Snapshot Recorder、严格 JSONL 校验和 legacy 快照迁移读取；
 - Agent 侧唯一粗粒度只读入口 `refresh_decision_inputs`；
-- 端到端决策管线 `src/decision_pipeline.py`：场景解析 → 冻结快照 → 自研引擎 → Edge/Risk/Action 门控 → 可溯源决策卡 + 审计留痕；
+- 端到端决策管线 `src/decision_pipeline.py`：场景解析 → 冻结快照 → 自研引擎 →
+  Edge/Risk/Action 门控 → 可溯源决策卡 + 审计留痕；
 - Black–Scholes、通用美式二叉树、IV 求解和 bump-and-reprice Greeks；
 - 腾讯跨式分析与历史回测原型；
 - JSONL + SHA-256 审计工具；
-- 项目级 `futu-options-agent` 工作流。
+- 政策事件库（带来源链接与核验状态）与宏观来源自动监控程序；
+- 四面板终端前端（`ui/` + `src/ui_server.py` 本地只读服务，支持真实重跑管线）；
+- 十角色多 Agent 辩论运行时（LLM 只出文字，数字/verdict 仍由引擎产出，离线回退）；
+- 项目级 `futu-options-agent` 工作流（`goai_*` tools 可用时优先走 DSH 工具）。
 
-仍在建设：可运行的对话 Agent、四面板 UI、港股离散股息与 executable-cost 完整实现、独立 Edge/Risk/Action gates，以及当前版本的模拟提交安全闭环。
+仍在建设：Live 行情接入 UI、DSH 客户端决策卡面板与审批闭环（Phase 1）、
+港股离散股息与 executable-cost 完整实现、独立 Edge/Risk/Action gates，
+以及当前版本的模拟提交安全闭环。
+
+中国官方来源 HTML 解析已接入（央行/统计局实测可达并默认启用；海关总署本机 TLS 证书校验失败，默认停用待复核），Windows 计划任务已注册。
 
 完整产品边界和验收标准见 [精简版 PRD](docs/PRD.md)。
 
@@ -44,14 +65,20 @@ P0 聚焦一个可验证场景：
 3. 理论价值与 bid/ask、费用、滑点后的可成交口径分开。
 4. 风险硬门一票否决；`PASS` 不代表盈利、成交或投资建议。
 5. 比赛版本无实盘入口；模拟动作也必须由用户独立确认。
+6. DSH 编排层不重算任何数字，只透传引擎结果；JS 与 LLM 同等受此约束。
 
 ## 项目结构
 
 ```text
 src/                                数据适配、回放、定价与 Hero 原型
-tests/                              Gateway 合同、安全边界与离线集成测试
+src/agents/                         十角色辩论运行时（llm_client/tools/runtime）
+src/ui_server.py                    引擎契约：四面板终端 + JSON API（127.0.0.1:8000）
+ui/                                 四面板终端前端（独立模式/静态回退）
+harness/plugins/goai-bridge.host.js DSH host 插件（大号金融插件的编排层）
+tests/                              Gateway 合同、安全边界与离线集成测试（340 passed）
 research/                           市场、数据、边界和专家方法研究
 docs/PRD.md                         产品需求与比赛验收
+docs/DSH_ARCHITECTURE.md            DSH 编排层权威架构文档
 .agents/skills/futu-options-agent/  项目特化期权 Agent 工作流
 ```
 
@@ -61,14 +88,7 @@ docs/PRD.md                         产品需求与比赛验收
 
 环境：Windows、Python 3.13；Live 数据能力另需本地 Futu OpenD。
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python -m pip install -r requirements.txt
-.\.venv\Scripts\python research\kb_search.py 流动性
-.\.venv\Scripts\python research\kb_search.py "IV crush" --tag earnings
-```
-
-当前公开快速开始仅覆盖知识库检索，因为完整 Agent/UI 尚未形成可验证入口。需要 Live 或 Replay Hero 数据时，请在本地按项目 schema 提供有授权的数据，不要把 Futu 账户行情重新分发到公开仓库。
+### 独立模式（评审可用，不依赖 DSH）
 
 端到端决策管线（无需 OpenD，使用冻结快照）：
 
@@ -77,6 +97,135 @@ python -m src.decision_pipeline
 ```
 
 输出 `data/decision_card_*.json` 与 `research/audit/audit_log.jsonl` 哈希链记录。
+
+四面板终端（对话 / 期权链流动性 / 策略与账户 / 事件与审计，含十角色辩论 dock）：
+
+```powershell
+python -m src.ui_server --port 8000
+```
+
+访问 `http://127.0.0.1:8000/`。对话面板输入自然语言（`POST /api/chat`）直接驱动
+「场景解析 → 五阶段管线 → 十角色辩论」；无 DeepSeek key 自动离线回退，Demo 不崩。
+
+知识库检索：
+
+```powershell
+python research\kb_search.py 流动性
+python research\kb_search.py "IV crush" --tag earnings
+```
+
+### DSH 模式（对话 Agent 编排，本机）
+
+在 DSH 会话中直接说「用 goai_state 看当前决策卡」或「goai_chat：腾讯业绩前方向不确定，
+账户10万港币，评估跨式」——插件自动拉起引擎并返回带快照哈希与门控的决策卡摘要。
+DSH 重启后插件需要重新注册（Phase 1c 之前），把
+`harness/plugins/goai-bridge.host.js` 内容交给会话助手执行 `cordis_define` + `cordis_run` 即可。
+
+投研证据整理与影响研判（公告/财报/新闻/研报/行业数据 -> 股价与期权影响）：
+
+```powershell
+python -m src.research_evidence
+python -m src.decision_pipeline --research-items data/research_items_hero.json
+```
+
+`data/research_items_hero.json` 是 `synthetic=True` 的示例数据，只用于演示证据链路，不冒充真实市场证据；正式运行应替换为 `futu-news-search` / `futu-stock-digest` / 公告接口输出的带来源与抓取时间的条目。
+
+Futu 新闻/公告/研报适配（把 `futu-news-search` / `futu-stock-digest` 的真实输出转成 canonical 条目）：
+
+```powershell
+python -m src.research_sources --keyword Tencent --api-json <news_search_响应.json> --out data/research_items_futu.json
+python -m src.research_sources --keyword Tencent --markdown <skill输出.txt> --out data/research_items_futu.json
+python -m src.decision_pipeline --research-items data/research_items_futu.json
+```
+
+适配器只做格式转换和来源留痕，不改写标题、时间或链接；缺少发布时间但有原文 URL 的条目会标记 `publish_time_unknown=True`，不会虚构时间。
+
+宏观研判（情绪量化 + IV 情绪晴雨表 + 政策事件库 + 政治经济学 + 求是检验）：
+
+```powershell
+python -m src.macro_assessment --snapshot data/hero_inputs.json --items data/research_items_hero.json --policy data/policy_events
+python -m src.decision_pipeline --research-items data/research_items_hero.json --macro-policy data/policy_events --policy-id fed-fomc-2025-05
+```
+
+`data/policy_events/` 是政策事件库：每个事件带 `status` / `updated_at`、事实来源 URL 与核验状态
+（VERIFIED / PENDING / FAILED）。`--policy` 传目录时加载全部事件，默认取 ACTIVE 中日期最新者作为
+主要分析对象，其余事件与来源健康报告进入决策卡的 `policy_analysis.library`；也可以用
+`--policy-id` 指定主事件。宏观研判只输出定性可能性级别（HIGH/MEDIUM/LOW）与分析依据，
+不产生概率、不构成投资建议。
+
+政策事件库健康检查（核验状态计数、无来源/无 URL/过期标记）：
+
+```powershell
+python -m src.policy_library --library data/policy_events
+```
+
+自动接入重大金融事件 / 重大金融政策 / 宏观数据（通胀、利率、贸易、就业）：
+
+```powershell
+python -m src.macro_source_watcher --dry-run                          # 试跑一轮，不写库
+python -m src.macro_source_watcher --run-once                         # 跑一轮并 DRAFT 入库
+python -m src.macro_source_watcher --daemon --interval-minutes 60     # 后台定时监控
+python -m src.policy_draft_workflow --library data/policy_events      # 复核 DRAFT 摘要与提升就绪度
+python -m src.policy_draft_workflow --library data/policy_events --promote <event_id>  # 条件满足才提升 ACTIVE
+```
+
+来源在 `data/sources_config.json` 配置：美联储 / ECB 官方 RSS、FRED 宏观序列（CPI、PCE、利率、
+贸易余额、就业）、BLS、SEC EDGAR（上市公司 8-K），以及中国官方 HTML 列表页
+`cn_html_list`（中国人民银行新闻发布、国家统计局数据发布、海关总署新闻发布；海关因本机
+TLS 证书校验失败默认停用）。自动抓取的新事件一律以 `DRAFT` 状态入库、核验状态为 `PENDING`
+（FRED/BLS 直接抓取并解析的数值标记 `VERIFIED`），不冒充已验证；
+补全博弈分析后再提升为 `ACTIVE`。单个来源失败只记录 `FAIL`，不伪造数据、不中断整轮。
+2026-08-13 实测：美联储与 ECB RSS 可达；FRED 在本机网络超时、BLS/SEC 返回 403，
+可在配置中将对应来源 `"enabled": false` 停用。Windows 上可用 `--daemon` 常驻，
+或用已提供的计划任务脚本定时执行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install_watcher_task.ps1 -Minutes 60  # 注册
+powershell -ExecutionPolicy Bypass -File scripts\install_watcher_task.ps1 -Remove      # 移除
+```
+
+脚本自动定位本仓库的 `.venv`，每轮输出 UTF-8 日志到 `data\logs\watch_scheduled.log`。
+任务以当前用户的 Interactive 身份运行（登录时才触发），不保存任何凭据；
+开机无人值守运行需要自行配置凭据。
+
+中国官方数值页支持数值富化（`enrich_numeric: true`）：列表页标题保持 `PENDING`，
+正文页用规则提取的「同比上涨/下降 X%」「LPR 为 X%」「进出口总值 X 亿元」等原文数值
+声明标记 `VERIFIED` 并保留原文片段；2026-08-13 实测从统计局正文页提取到 CPI/PPI 同比、
+从央行正文页提取到 LPR。提升 `ACTIVE` 成功时写入 `policy_event_promoted` 审计事件，
+决策卡宏观研判段会展示最近激活事件。
+
+## 十角色辩论运行时（LLM 只出文字，数字仍来自自研引擎）
+
+`POST /api/chat`（或 DSH 的 `goai_chat` 工具）在五阶段确定性管线之上附加一层「十角色多
+Agent 辩论」（`src/agents/`，参考 TradingAgents 的多角色质证思路）：
+
+1. 首轮：九个分析角色（数据官 / 新闻公告 / 研报对比 / 宏观政策 / 情绪舆情 / 技术资金流 /
+   期权策略 / 风险管理 / 审计官）并行给出文字结论与证据引用，主席（orchestrator）选出
+   最多 3 个真正影响决策的分歧点；
+2. 次轮：只调用分歧相关的角色回辩，主席汇总 `research_consensus`（summary / stance /
+   confidence / evidence_refs / open_questions）。
+
+铁律（运行时强制）：LLM 输出只解析为文本 + 枚举（stance/confidence）+ 证据引用，引用按
+白名单过滤（编造的 evidence id 记入 `dropped_refs`）；所有数字、verdict 与门控仍由冻结
+快照与自研引擎产出，辩论不改变确定性结论。单角色失败绝不拖垮整场；无 key / 网络失败 /
+超时自动回退确定性管线，Demo 不崩。每个角色的结论与最终共识经 SHA-256 哈希链写入
+`research/audit/audit_log.jsonl`（`agent_output:<role>` / `debate_consensus` 事件，密钥片段脱敏）。
+
+默认使用 DeepSeek 的 OpenAI 兼容接口（`https://api.deepseek.com/v1`），零新增依赖
+（stdlib urllib）。配置方式：复制 `.env.example` 为 `.env` 并填写密钥（`.env` 已
+gitignore，密钥不入库；真实环境变量优先于 `.env`）：
+
+```powershell
+Copy-Item .env.example .env   # 然后编辑填入 DEEPSEEK_API_KEY
+python -m src.ui_server --port 8000
+```
+
+可调参数：`GOAI_CHAT_MODEL` / `GOAI_REASONER_MODEL`（默认 deepseek-chat / deepseek-reasoner，
+主席与宏观/风险/审计用 reasoner）、`GOAI_CHAT_TIMEOUT_S`（默认 30）、`GOAI_REASONER_TIMEOUT_S`
+（默认 90）、`GOAI_LLM_RETRIES`（默认 2，5xx/429/瞬时网络错误重试，401/403 不重试）。
+未配置密钥时终端顶栏显示「LLM · offline 确定性回退」，页面底部第五面板（十角色辩论 dock）
+展示每轮每个角色的结论、回辩、证据引用、分歧点与研究共识，全部动态文本用 `textContent`
+渲染防注入。真实调用前请先在 DeepSeek 控制台充值/确认额度，端点缺 key 返回 401 属正常。
 
 ## Futu Gateway 边界
 
@@ -94,6 +243,8 @@ Decision Agent / UI
 - P0b 才装配 `FutuLiveGateway`，仅注册读取能力并使用服务端账户别名；
 - P0c 模拟执行是独立边界，当前 Gateway 不包含下单、改单、撤单或解锁方法；
 - 当前没有 Futu MCP。单一 Python 宿主直接扩展 typed Boundary 已覆盖当前需求，也避免再增加一层协议和工具发现攻击面；只有出现多宿主或跨语言复用需求后，才在同一 Boundary 外增加本地只读 MCP facade。
+- DSH 编排层（`goai-*` tools）只通过 `ui_server` 的 JSON API 触达引擎，不越过
+  `DecisionInputService` 边界直接调用 SDK。
 
 Replay 默认只读取带完整 schema、内容哈希和业务语义校验的 canonical JSONL。`as_of_utc` 在 Gateway 构造时固定；每次查询只选择该时点之前、默认 60 秒一致性窗口内的同请求快照，不会按调用顺序拼接不同批次。旧 OpenD 日志包裹的 `.json` 只用于显式迁移：必须设置 `allow_legacy=True`，结果标记为 `PARTIAL/unverified`，不能作为正式发布证据。
 

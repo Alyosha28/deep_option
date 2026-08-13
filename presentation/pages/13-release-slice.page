@@ -101,7 +101,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p><span style="font-family:Consolas">P0a Replay Decision</span><span style="color:$success"> · 已毕业</span></p>
+        <p><span style="font-family:Consolas">P0a Replay Decision</span><span style="color:#34D399"> · 已毕业</span></p>
   - elementId: legend-p0b-dot
     elementType: shape
     bounds: [64, 332, 8, 8]
@@ -116,7 +116,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p><span style="font-family:Consolas">P0b Live 只读</span><span style="color:$warn"> · 未毕业</span></p>
+        <p><span style="font-family:Consolas">P0b Live 只读</span><span style="color:#F59E0B"> · 未毕业</span></p>
   - elementId: legend-p0c-dot
     elementType: shape
     bounds: [64, 354, 8, 8]
@@ -131,7 +131,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p><span style="font-family:Consolas">P0c 模拟提交</span><span style="color:$textSub"> · 未毕业</span></p>
+        <p><span style="font-family:Consolas">P0c 模拟提交</span><span style="color:#8B949E"> · 未毕业</span></p>
 
   # ============ 右侧：P0a 焦点卡（已有资产 vs 尚缺 两栏） ============
   - elementId: p0a-card
@@ -149,7 +149,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p><span style="font-family:Consolas">P0a Replay Decision</span>　<span style="font-size:9px; color:$success">● 已毕业</span></p>
+        <p><span style="font-family:Consolas">P0a Replay Decision</span>　<span style="font-size:9px; color:#34D399">● 已毕业</span></p>
   - elementId: p0a-have
     elementType: text
     bounds: [308, 150, 284, 54]
@@ -166,46 +166,48 @@ elements:
       style: "$body"
       align: [left, top]
       text: |
-        <p><span style="color:$textSub"><strong>尚缺</strong></span></p>
+        <p><span style="color:#8B949E"><strong>尚缺</strong></span></p>
         <p style="margin-top:4px">无 —— 本切片已毕业</p>
 
   # ============ 右侧：P0b / P0c 未毕业卡 ============
   - elementId: p0b-card
     elementType: shape
-    bounds: [296, 218, 294, 154]
+    bounds: [296, 224, 294, 154]
     shapeName: roundRect
     adjustments: [5000]
     fill: {type: solid, color: "$panel"}
     border: {style: solid, width: 1, color: "$border"}
   - elementId: p0b-content
     elementType: text
-    bounds: [308, 224, 270, 136]
+    bounds: [308, 230, 270, 136]
     content:
       style: "$body"
       align: [left, top]
       text: |
-        <p><span style="font-size:13px"><strong><span style="font-family:Consolas">P0b Live 只读</span></strong></span>　<span style="font-size:9px; color:$warn">● 未毕业</span></p>
+        <p><span style="font-size:13px"><strong><span style="font-family:Consolas">P0b Live 只读</span></strong></span>　<span style="font-size:9px; color:#F59E0B">● 未毕业</span></p>
         <p style="margin-top:4px"><strong>已有资产</strong>　<span style="font-family:Consolas">OpenD health</span> 已验证（<span style="font-family:Consolas">2026-08-12 02:36</span>）：<span style="font-family:Consolas">ready=true</span>，<span style="font-family:Consolas">qot/trd</span> 已登录</p>
-        <p style="margin-top:4px"><span style="color:$textSub"><strong>尚缺</strong></span>　完整 Live 决策链路 + 新鲜度验收</p>
-        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub">health 复验未查询账户、订阅或交易</span></p>
+        <p style="margin-top:4px"><span style="color:#8B949E"><strong>尚缺</strong></span>　完整 Live 决策链路 + 新鲜度验收</p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:#8B949E">health 复验未查询账户、订阅或交易</span></p>
   - elementId: p0c-card
     elementType: shape
-    bounds: [602, 218, 294, 154]
+    bounds: [602, 224, 294, 154]
     shapeName: roundRect
     adjustments: [5000]
     fill: {type: solid, color: "$panel"}
     border: {style: solid, width: 1, color: "$border"}
   - elementId: p0c-content
     elementType: text
-    bounds: [604, 224, 270, 136]
+    bounds: [604, 230, 270, 136]
     content:
       style: "$body"
+      fontSize: 10.5
+      lineHeight: 1.4
       align: [left, top]
       text: |
-        <p><span style="font-size:13px"><strong><span style="font-family:Consolas">P0c 模拟提交</span></strong></span>　<span style="font-size:9px; color:$textSub">● 未毕业</span></p>
-        <p style="margin-top:4px"><strong>已有资产</strong>　无发布级资产；旧模拟单 = <span style="font-family:Consolas; color:$warn">LEGACY_PROTOTYPE</span>（非发布证据）</p>
-        <p style="margin-top:4px"><span style="color:$textSub"><strong>尚缺</strong></span>　独立确认、幂等、异常接管与新模拟证据均未验证；不宣称已稳定提交模拟盘</p>
-        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub">旧单 <span style="font-family:Consolas">2026-08-08</span> 状态 <span style="font-family:Consolas">SUBMITTED</span>；<span style="font-family:Consolas">2026-08-12</span> 起不再跟单</span></p>
+        <p><span style="font-size:13px"><strong><span style="font-family:Consolas">P0c 模拟提交</span></strong></span>　<span style="font-size:9px; color:#8B949E">● 未毕业</span></p>
+        <p style="margin-top:4px"><strong>已有资产</strong>　无发布级资产；旧模拟单 = <span style="font-family:Consolas; color:#F59E0B">LEGACY_PROTOTYPE</span>（非发布证据）</p>
+        <p style="margin-top:4px"><span style="color:#8B949E"><strong>尚缺</strong></span>　独立确认、幂等、异常接管与新模拟证据均未验证；不宣称已稳定提交模拟盘</p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:#8B949E">旧单 <span style="font-family:Consolas">2026-08-08</span> 状态 <span style="font-family:Consolas">SUBMITTED</span>；<span style="font-family:Consolas">2026-08-12</span> 起不再跟单</span></p>
 
   # ============ 金句条 ============
   - elementId: quote-bar
@@ -229,7 +231,7 @@ elements:
       color: "$accent"
       align: [left, middle]
       wrap: false
-      text: '&gt;'
+      text: '>'
   - elementId: quote-text
     elementType: text
     bounds: [96, 384, 800, 40]

@@ -23,7 +23,7 @@ elements:
       color: "$accent"
       letterSpacing: 3
       align: [left, top]
-      text: "15 · TEAM &amp; TIMELINE"
+      text: "15 · TEAM & TIMELINE"
   - elementId: title
     elementType: text
     bounds: [78, 44, 818, 26]
@@ -142,7 +142,7 @@ elements:
       align: [center, top]
       text: |
         <p style="text-align:center"><strong><span style="font-size:13px">初赛提交截止</span></strong></p>
-        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub">简介约 </span><span style="font-size:10px; color:$textSub; font-family:Consolas">500</span><span style="font-size:10px; color:$textSub"> 字 + 方案 PPT/PDF</span></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:#8B949E">简介约 </span><span style="font-size:10px; color:#8B949E; font-family:Consolas">500</span><span style="font-size:10px; color:#8B949E"> 字 + 方案 PPT/PDF</span></p>
   - elementId: n2-text
     elementType: text
     bounds: [286, 188, 180, 44]
@@ -153,7 +153,7 @@ elements:
       align: [center, top]
       text: |
         <p style="text-align:center"><strong><span style="font-size:13px">复赛名单公布</span></strong></p>
-        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub">Top </span><span style="font-size:10px; color:$textSub; font-family:Consolas">30</span></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:#8B949E">Top </span><span style="font-size:10px; color:#8B949E; font-family:Consolas">30</span></p>
   - elementId: n3-text
     elementType: text
     bounds: [494, 188, 180, 44]
@@ -164,7 +164,7 @@ elements:
       align: [center, top]
       text: |
         <p style="text-align:center"><strong><span style="font-size:13px">决赛名单公布</span></strong></p>
-        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub">Top </span><span style="font-size:10px; color:$textSub; font-family:Consolas">15</span></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:#8B949E">Top </span><span style="font-size:10px; color:#8B949E; font-family:Consolas">15</span></p>
   - elementId: n4-text
     elementType: text
     bounds: [702, 188, 180, 44]
@@ -175,7 +175,7 @@ elements:
       align: [center, top]
       text: |
         <p style="text-align:center"><strong><span style="font-size:13px">杭州线下决赛答辩</span></strong></p>
-        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:$textSub; font-family:Consolas">9.23</span><span style="font-size:10px; color:$textSub"> GOAI DAY 颁奖</span></p>
+        <p style="text-align:center; margin-top:2px"><span style="font-size:10px; color:#8B949E; font-family:Consolas">9.23</span><span style="font-size:10px; color:#8B949E"> GOAI DAY 颁奖</span></p>
 
   # ===== 团队分工（正文区下部，3 卡横排） =====
   - elementId: card-a
@@ -400,7 +400,7 @@ elements:
       color: "$text"
       lineHeight: 1.5
       align: [left, middle]
-      text: '<span style="font-family:Consolas">3</span> 人覆盖工程 / 策略 / 合规，<span style="font-family:Consolas">8.16</span> 提交后按 <span style="font-family:Consolas">8.24</span> 复赛与 <span style="font-family:Consolas; color:$accent">9.22</span> 决赛推进。'
+      text: '<span style="font-family:Consolas">3</span> 人覆盖工程 / 策略 / 合规，<span style="font-family:Consolas">8.16</span> 提交后按 <span style="font-family:Consolas">8.24</span> 复赛与 <span style="font-family:Consolas; color:#22D3EE">9.22</span> 决赛推进。'
 
   # ===== 页脚 =====
   - elementId: footer-line

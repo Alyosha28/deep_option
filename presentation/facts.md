@@ -2,7 +2,8 @@
 
 > 用途：16 个页面代理的唯一数据来源。所有数字一律以 JSON 原文为准，未经四舍五入、未编造。
 > 每条事实均标注来源文件。若页面需要更细数据，请回到本节标注的 JSON 字段路径。
-> 生成日期：2026-08-12。覆盖数据截至 `decision_card_2026-08-12.json`（生成于 2026-08-12T05:47:18+00:00）。
+> 生成日期：2026-08-12；2026-08-13 增补「§0.5 DSH 编排层事实」。
+> 覆盖数据截至 `decision_card_2026-08-13.json`（生成于 2026-08-13T14:11:51+00:00）。
 
 ## 0. 权威性声明与差异点（先读）
 
@@ -23,6 +24,34 @@
 | Risk WARN 条数 | **决策卡 JSON 为 3 条 WARN**（见 §1） | PROJECT_STATE.md 摘要写作"4 项 WARN"。以决策卡 JSON 为准（3 条） |
 
 预期核对结论：任务预判（480 ATM、2 张、盈亏平衡 458.9/501.1）与 JSON 一致；唯一实质差异是盈亏平衡的精度（JSON 为 458.905/501.095）与 WARN 条数（3 条而非 4 条）。
+
+---
+
+## 0.5 DSH 编排层事实（2026-08-13 增补）
+
+来源：`harness/plugins/goai-bridge.host.js`、`docs/DSH_ARCHITECTURE.md`、
+`PROJECT_STATE.md` 第 12 节、`research/audit/audit_log.jsonl`。
+
+- 架构形态：DeepSeek Harness（DSH）上的「大号金融插件」——Python 引擎守护数字与审计，
+  DSH host 插件做编排/工具/审批；评审可独立跑 `python -m src.ui_server`，不依赖 DSH。
+- 插件 `goai-1`（当前版本 pkg-7）注册 3 个 model tools：`goai_state`（读状态）、
+  `goai_run`（重跑管线，默认写审计+决策卡）、`goai_chat`（场景解析→管线→十角色辩论）。
+- 引擎生命周期：插件经 subprocess 拉起 `.venv\Scripts\python.exe -m src.ui_server`
+  （127.0.0.1:8000），插件停用/更新自动回收子进程（可逆效应）；已在运行的引擎复用且不误杀。
+- 真机验证（2026-08-13）：
+  - `goai_run` → 审计链 + `data/decision_card_2026-08-13.json`：verdict `NO_TRADE`，
+    edge `LOW_EDGE`，risk `PASS`（3 WARN），action `NO_TRADE`（blocked：Edge 门未过）；
+    快照 sha256 与 8.12 卡一致（`cf567c5985ea…`，captured 2026-08-08T11:56:30+08:00）。
+  - `goai_chat` → 十角色辩论 `complete`，consensus `stance=oppose / confidence=high`
+    （DeepSeek 真实调用，open_questions 3 条）。
+  - 审计链累计 82 行：35 条 `agent_output:<role>` + 2 条 `debate_consensus`，
+    prev_hash→hash 连续，usage token 脱敏 `[REDACTED]`。
+  - 全量测试 `340 passed`（199.6s）。
+- DSH 机制对应（答辩叙事）：可逆效应=插件生命周期回收引擎进程；不可变版本=插件 pkg
+  版本化 + 事务化 update/rollback；输出提交式审批=计划以 DSH approval 服务接管
+  `READY_FOR_CONFIRMATION`（Phase 1）。
+- 评审口径：项目本身即一个可复用的 Agent 框架插件（呼应「开放/复用贡献」维度）；
+  「LLM 不算数」铁律同时约束 Python 与 JS 两层，数字不经编排层重算。
 
 ---
 

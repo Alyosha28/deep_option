@@ -28,7 +28,7 @@ elements:
       color: "$textSub"
       align: [left, top]
       text: |
-        <p style="line-height:0.92"><span style="font-size:26px; color:$text"><strong>风险硬门一票否决，模拟动作止于用户独立确认</strong></span></p>
+        <p style="line-height:0.92"><span style="font-size:26px; color:#E6EDF3"><strong>风险硬门一票否决，模拟动作止于用户独立确认</strong></span></p>
         <p style="margin-top:4px; line-height:1"><span style="font-family:Consolas">Edge / Risk / Action</span><span> 三道门独立裁决 · 审计链 </span><span style="font-family:Consolas">JSONL + SHA-256</span><span> · 防注入与 </span><span style="font-family:Consolas">PASS</span><span> 语义固化</span></p>
   - elementId: statusbar
     elementType: text
@@ -75,11 +75,11 @@ elements:
     rowHeights: [1]
     rows:
       - - text: |
-            <p style="line-height:1"><span style="font-size:20px; color:$danger; font-family:Consolas"><strong>01</strong></span><span style="font-size:10px; color:$danger; font-family:Consolas">  LOW_EDGE</span></p>
-            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>Edge 门 · 值不值得做</strong></span></p>
-            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">3 项检查全 FAIL</span></p>
-            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">预期波动 3.92% &lt; 所需 4.41%</span></p>
-            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">d+2 ROI -7.8% · IV crush -711</span></p>
+            <p style="line-height:1"><span style="font-size:20px; color:#F87171; font-family:Consolas"><strong>01</strong></span><span style="font-size:10px; color:#F87171; font-family:Consolas">  LOW_EDGE</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:#E6EDF3"><strong>Edge 门 · 值不值得做</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">3 项检查全 FAIL</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">预期波动 3.92% < 所需 4.41%</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">d+2 ROI -7.8% · IV crush -711</span></p>
           fill: {type: solid, color: "$panel"}
           border: {style: solid, width: 1, color: "$danger"}
           align: [left, top]
@@ -91,11 +91,11 @@ elements:
     rowHeights: [1]
     rows:
       - - text: |
-            <p style="line-height:1"><span style="font-size:20px; color:$success; font-family:Consolas"><strong>02</strong></span><span style="font-size:10px; color:$success; font-family:Consolas">  PASS</span></p>
-            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>Risk 门 · 一票否决</strong></span></p>
-            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">3 WARN 不阻断，PASS 生效</span></p>
-            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">最大亏损 4,414 ≤ 预算 5,000 HKD</span></p>
-            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">WARN：LOP · 费用 · 美式交割</span></p>
+            <p style="line-height:1"><span style="font-size:20px; color:#34D399; font-family:Consolas"><strong>02</strong></span><span style="font-size:10px; color:#34D399; font-family:Consolas">  PASS</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:#E6EDF3"><strong>Risk 门 · 一票否决</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">3 WARN 不阻断，PASS 生效</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">最大亏损 4,414 ≤ 预算 5,000 HKD</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">WARN：LOP · 费用 · 美式交割</span></p>
           fill: {type: solid, color: "$panel"}
           border: {style: solid, width: 1, color: "$success"}
           align: [left, top]
@@ -107,12 +107,12 @@ elements:
     rowHeights: [1]
     rows:
       - - text: |
-            <p style="line-height:1"><span style="font-size:20px; color:$textSub; font-family:Consolas"><strong>03</strong></span><span style="font-size:10px; color:$textSub; font-family:Consolas">  NO_TRADE</span></p>
-            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>Action 门 · 动作裁决</strong></span></p>
-            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">blocked：Edge 门未过</span></p>
-            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">无需进入下单；可调整期限/行权价重估</span></p>
+            <p style="line-height:1"><span style="font-size:20px; color:#8B949E; font-family:Consolas"><strong>03</strong></span><span style="font-size:10px; color:#8B949E; font-family:Consolas">  NO_TRADE</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:#E6EDF3"><strong>Action 门 · 动作裁决</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">blocked：Edge 门未过</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">无需进入下单；可调整期限/行权价重估</span></p>
           fill: {type: solid, color: "$panel"}
-          border: {style: solid, width: 1, color: "$border"}
+          border: {style: solid, width: 1, color: "$textSub"}
           align: [left, top]
           fontFamily: {latin: Arial, ea: Microsoft YaHei}
   - elementId: gate4
@@ -122,10 +122,10 @@ elements:
     rowHeights: [1]
     rows:
       - - text: |
-            <p style="line-height:1"><span style="font-size:20px; color:$accent; font-family:Consolas"><strong>04</strong></span><span style="font-size:10px; color:$accent; font-family:Consolas">  CHAINED</span></p>
-            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:$text"><strong>审计链 · 全程留痕</strong></span></p>
-            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">JSONL + SHA-256 哈希链</span></p>
-            <p style="line-height:1.3"><span style="font-size:10px; color:$textSub; font-family:Consolas">7 条记录，每条链上前一条</span></p>
+            <p style="line-height:1"><span style="font-size:20px; color:#22D3EE; font-family:Consolas"><strong>04</strong></span><span style="font-size:10px; color:#22D3EE; font-family:Consolas">  CHAINED</span></p>
+            <p style="margin-top:6px; line-height:1.2"><span style="font-size:13px; color:#E6EDF3"><strong>审计链 · 全程留痕</strong></span></p>
+            <p style="margin-top:6px; line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">JSONL + SHA-256 哈希链</span></p>
+            <p style="line-height:1.3"><span style="font-size:10px; color:#8B949E; font-family:Consolas">7 条记录，每条链上前一条</span></p>
           fill: {type: solid, color: "$panel"}
           border: {style: solid, width: 1, color: "$accent"}
           align: [left, top]
@@ -214,7 +214,7 @@ elements:
       color: "$accent"
       wrap: false
       align: [left, middle]
-      text: "&gt;"
+      text: ">"
   - elementId: quoteText
     elementType: text
     bounds: [96, 384, 784, 40]
@@ -246,7 +246,7 @@ elements:
       color: "$text"
       wrap: false
       align: [left, middle]
-      text: '<span style="font-family:Consolas">Edge / Risk / Action</span> 独立裁决，<span style="color:$accent; font-family:Consolas">7</span> 条审计链式留痕，风险不过即无确认入口。'
+      text: '<span style="font-family:Consolas">Edge / Risk / Action</span> 独立裁决，<span style="color:#22D3EE; font-family:Consolas">7</span> 条审计链式留痕，风险不过即无确认入口。'
   - elementId: footerRule
     elementType: line
     bounds: [64, 512, 832, 1]

@@ -78,16 +78,16 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><span style="font-size:26px; color:$text;"><strong>不替你<span style="color:$accent;">猜涨跌</span></strong></span></p>
-        <p style="margin-top:10px"><span style="font-size:12px; color:$textSub;">把自然语言观点收拢为可核验决策卡；每个数字可溯源，每条结论带依据。</span></p>
-        <p style="margin-top:18px"><span style="font-size:10px; color:$textSub;">输入示例 · PRD §3.2</span></p>
-        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">「腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。」</span></p>
-        <p style="margin-top:16px"><span style="font-size:11px; color:$text;">输出：决策卡结论</span> <span style="font-size:11px; color:$accent; font-family:Consolas;"><strong>NO_TRADE</strong></span><span style="font-size:11px; color:$text;">，成功结果而非失败</span></p>
+        <p><span style="font-size:26px; color:#E6EDF3;"><strong>不替你<span style="color:#22D3EE;">猜涨跌</span></strong></span></p>
+        <p style="margin-top:10px"><span style="font-size:12px; color:#8B949E;">把自然语言观点收拢为可核验决策卡；每个数字可溯源，每条结论带依据。</span></p>
+        <p style="margin-top:18px"><span style="font-size:10px; color:#8B949E;">输入示例 · PRD §3.2</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:#8B949E;">「腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。」</span></p>
+        <p style="margin-top:16px"><span style="font-size:11px; color:#E6EDF3;">输出：决策卡结论</span> <span style="font-size:11px; color:#22D3EE; font-family:Consolas;"><strong>NO_TRADE</strong></span><span style="font-size:11px; color:#E6EDF3;">，成功结果而非失败</span></p>
 
   # ---------- 支撑卡 1：可核验决策卡（G3 动画对象） ----------
   - elementId: card1-box
     elementType: shape
-    bounds: [448, 104, 448, 140]
+    bounds: [448, 104, 448, 148]
     shapeName: roundRect
     adjustments: [5000]
     fill: {type: solid, color: "$panel"}
@@ -103,7 +103,7 @@ elements:
 
   - elementId: card1-text
     elementType: text
-    bounds: [460, 116, 424, 116]
+    bounds: [460, 116, 424, 124]
     content:
       fontFamily: {latin: Arial, ea: Microsoft YaHei}
       fontSize: 10
@@ -111,10 +111,10 @@ elements:
       lineHeight: 1.2
       align: [left, top]
       text: |
-        <p><span style="font-size:13px; color:$text;"><strong>把观点收拢为可核验决策卡</strong></span></p>
-        <p style="margin-top:6px"><span style="font-size:30px; color:$accent; font-family:Consolas;"><strong>90s</strong></span>　<span style="font-size:10px; color:$textSub;">首次用户即获 Replay 决策价值</span></p>
-        <p style="margin-top:4px"><span style="font-size:30px; color:$accent; font-family:Consolas;"><strong>60s</strong></span>　<span style="font-size:10px; color:$textSub;">应用就绪后形成 Live 决策卡</span></p>
-        <p style="margin-top:4px"><span style="font-size:10px; color:$textSub;">所有模拟动作仍须用户独立确认</span></p>
+        <p><span style="font-size:13px; color:#E6EDF3;"><strong>把观点收拢为可核验决策卡</strong></span></p>
+        <p style="margin-top:6px"><span style="font-size:30px; color:#22D3EE; font-family:Consolas;"><strong>90s</strong></span>　<span style="font-size:10px; color:#8B949E;">首次用户即获 Replay 决策价值</span></p>
+        <p style="margin-top:4px"><span style="font-size:30px; color:#22D3EE; font-family:Consolas;"><strong>60s</strong></span>　<span style="font-size:10px; color:#8B949E;">应用就绪后形成 Live 决策卡</span></p>
+        <p style="margin-top:4px"><span style="font-size:10px; color:#8B949E;">所有模拟动作仍须用户独立确认</span></p>
 
   - elementId: card2-text
     elementType: text
@@ -126,9 +126,9 @@ elements:
       lineHeight: 1.5
       align: [left, top]
       text: |
-        <p><span style="font-size:13px; color:$text;"><strong>NO_TRADE 是成功结果，敢说「不交易」</strong></span></p>
+        <p><span style="font-size:13px; color:#E6EDF3;"><strong>NO_TRADE 是成功结果，敢说「不交易」</strong></span></p>
         <p style="margin-top:6px">不会为了展示下单而调低门槛；定位为决策支持——不做执行、不做荐股。</p>
-        <p style="margin-top:6px"><span style="font-size:11px; color:$accent; font-family:Consolas;"><strong>NO_TRADE</strong></span> <span style="font-size:11px; color:$textSub;">= 当前成本和证据不支持交易</span></p>
+        <p style="margin-top:6px"><span style="font-size:11px; color:#22D3EE; font-family:Consolas;"><strong>NO_TRADE</strong></span> <span style="font-size:11px; color:#8B949E;">= 当前成本和证据不支持交易</span></p>
 
   # ---------- 金句条 ----------
   - elementId: quote-bar
@@ -200,7 +200,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p>把观点收拢为可核验决策卡；<span style="color:$accent; font-family:Consolas;"><strong>NO_TRADE</strong></span> 是成功结果；不做执行、不做荐股。</p>
+        <p>把观点收拢为可核验决策卡；<span style="color:#22D3EE; font-family:Consolas;"><strong>NO_TRADE</strong></span> 是成功结果；不做执行、不做荐股。</p>
 
   # ---------- 页脚 ----------
   - elementId: hairline-footer

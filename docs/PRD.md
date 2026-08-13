@@ -7,7 +7,7 @@
 | 赛道 | GOAI · Boundless Agents · 金融服务 |
 | P0 场景 | `HK.00700` 腾讯业绩长跨式 |
 | 产品边界 | 决策支持；默认只读；稳定后仅提交 Futu 模拟盘；禁止实盘 |
-| 当前状态 | 数据、定价、回放与 Hero 原型已存在；完整 Agent、UI 和 v0.5 发布切片尚未验证 |
+| 当前状态 | 数据、定价、回放、Hero、四面板 UI、十角色辩论与 DSH 编排层（Phase 0）已验证；Live 行情与模拟提交闭环待 P0b/P0c |
 
 ## 0. 产品结论
 
@@ -238,6 +238,12 @@ Decision Agent ── 调用 ──> Futu / Replay / 研究来源
 
 P0 不为“多 Agent”而拆角色。一个 Decision Agent 配合受控工具和硬门即可；只有当独立角色能带来清晰权限或质量收益时才拆分。
 
+工程落地：对话 Agent 编排运行在 **DeepSeek Harness**（「大号金融插件」形态：host 插件注册
+`goai_state` / `goai_run` / `goai_chat` 工具，引擎进程由插件生命周期托管）。「多角色」以十角色
+辩论运行时实现（LLM 只出文字，数字与 verdict 仍来自确定性管线），并非把风控拆给 LLM。
+产品主链路保持 `python -m src.ui_server` 独立可跑，不依赖 Harness。架构见
+[DSH_ARCHITECTURE.md](DSH_ARCHITECTURE.md)。
+
 ### 6.2 AnalystCollective 可复用能力
 
 从团队的 AnalystCollective 项目选择性迁入思想和最小模块：
@@ -251,7 +257,7 @@ P0 不为“多 Agent”而拆角色。一个 Decision Agent 配合受控工具�
 
 ### 6.3 Pi、grok-build 等开源 Agent 的借鉴方式
 
-借鉴工具循环、上下文压缩、权限分层、任务中断/恢复和可观测性模式；P0 不直接绑定重型框架。核心金融状态、计算与风控保持项目自有、可测试，避免框架升级影响比赛稳定性。
+借鉴工具循环、上下文压缩、权限分层、任务中断/恢复和可观测性模式；P0 不直接绑定重型框架。核心金融状态、计算与风控保持项目自有、可测试，避免框架升级影响比赛稳定性。编排/演示层采用 DeepSeek Harness（Cordis 组合模型）作为对话入口，但 Harness 只透传引擎结果、不参与任何金融计算，框架升级不影响 `src/` 引擎与独立运行链路。
 
 ## 7. 信任、安全与动作边界
 
@@ -338,14 +344,20 @@ Hero B 使用与 Hero A 隔离、时点有效的数据。合成 PASS fixture 只
 
 | 已有 | 尚缺 |
 |---|---|
-| `FutuAdapter`：期权到期、期权链、代码解析、快照和订阅 | 可运行的对话 Agent 与四面板 UI |
+| `FutuAdapter`：期权到期、期权链、代码解析、快照和订阅 | Live 行情接入与产品级测试 |
+| 可运行的对话 Agent：DSH 编排层 Phase 0（`goai_state` / `goai_run` / `goai_chat`）与四面板 UI（对话面板已接 `/api/chat`） | DSH 客户端决策卡面板、审批闭环（Phase 1） |
 | SnapshotRecorder 与 ReplayAdapter 骨架 | 统一 Replay fixture 迁移和产品入口 |
 | BS、美式二叉树、IV、Greeks 引擎 | 港股规格解析、离散股息与 executable-cost 完整实现 |
 | 腾讯 Hero 输入、原型方案和历史回测 | 独立 Edge/Risk/Action gates 与可信决策卡 |
 | JSONL + SHA-256 审计工具 | 当前版本的确认、幂等、异常接管和新模拟证据 |
+| 投研证据整理与事件影响研判（`src/research_evidence.py`：条目校验/SHA-256、情绪与相关性整理、历史财报日实际波动 vs 隐含事件波动、IV 水位与 crush 研判；`decision_pipeline --research-items` 已接入决策卡；`src/research_sources.py` 已支持 futu-news-search / futu-stock-digest 的 API JSON 与 Markdown 输出适配） | 真实数据源的定时抓取与权限开通、LLM 复核摘要、多文档对比与持续追踪预警 |
+| 宏观研判（`src/macro_assessment.py`：消息面情绪量化指数、IV 情绪晴雨表（水位/IV-HV/Skew/crush）、政策博弈矩阵与政治经济学审视、求是检验（事实/前提/证伪/监控）；`data/policy_events/` 政策事件库：4 个事件带来源 URL 与核验状态（VERIFIED/PENDING/FAILED），`src/policy_library.py` 提供健康报告；`decision_pipeline --macro-policy data/policy_events [--policy-id]` 已接入决策卡） | 多事件联动研判、事件自动提升 ACTIVE 的审批流程 |
+| 宏观来源自动监控（`src/macro_source_watcher.py` + `data/sources_config.json`：官方 RSS/FRED/BLS/SEC + 中国官方 HTML 列表页 `cn_html_list` → 主题过滤去重 → DRAFT 入库 + 抓取/健康报告；FRED/BLS 直接解析的数值标记 VERIFIED，RSS 标记 PENDING 不伪造核验；`src/cn_data_extract.py` 数值富化：正文页规则提取 CPI/PPI 同比、LPR、进出口总值、城镇调查失业率，原文片段留痕标 VERIFIED，实测统计局 CPI/PPI、央行 LPR 已提取；Windows 计划任务脚本 `scripts/install_watcher_task.ps1` 已注册每 60 分钟轮询，日志 UTF-8） | 海关总署真机网络复核、BLS/SEC 网络放行、开机无人值守凭据方案 |
+| DRAFT→ACTIVE 工作流（`src/policy_draft_workflow.py`：`summarize_draft` / `completeness_check` / `promote_draft` + CLI；`src/policy_library.py` 新增 `set_event_status` 写回；前置条件不满足时显式拒绝并列出缺失项；提升成功写 `policy_event_promoted` 审计事件，库健康报告 `recently_promoted` 进决策卡） | DRAFT 自动摘要的 LLM 复核层、长期 DRAFT 到期清理 |
+| 四面板终端前端（`ui/` + `src/ui_server.py`：对话与任务 / 期权链与流动性 / 策略与账户 / 事件与审计；静态回退 + 本地只读 API `/api/state`（决策卡、投研、宏观、事件库健康）、`POST /api/run` 真实重跑管线、`POST /api/chat` 自然语言驱动管线（`src/scenario_parser.py` 确定性解析，缺失字段按快照假定并标注）；前端零计算、动态文本 textContent 防注入、仅绑定 127.0.0.1） | LLM 场景解析、Live 行情接入、模拟确认 UI |
 | Futu skills 与项目特化 skill | 产品级测试、发布证据和脱敏演示包 |
 
-当前 README 的可运行入口只有知识库检索。Agent、UI 或验证命令在真实存在并运行通过前，只能写为计划，不能进入 Quick Start。
+Quick Start 已覆盖管线、四面板 UI、对话链路与 DSH 工具入口（2026-08-13 文档重构时更新）。任何未验证的能力仍只写为计划，不得宣传为可用。
 
 ### 10.2 交付优先级
 
@@ -371,13 +383,14 @@ Hero B 使用与 Hero A 隔离、时点有效的数据。合成 PASS fixture 只
 - Futu OpenAPI 港股期权行情和订单查询权限需在比赛机器复核。
 - 港股费用、滑点、tick、离散股息和调整合约 policy 需由期权负责人冻结。
 - Hero A 需用新版 executable 口径重算；Hero B 需独立合格数据与新模拟证据。
-- UI/Agent 技术栈和 LLM provider 需尽快固定，避免比赛现场漂移。
+- UI/Agent 技术栈与 LLM provider 已固定（2026-08-13）：UI=四面板终端 + `ui_server` 本地服务（独立可跑）；Agent 编排=DeepSeek Harness（不进入金融计算路径）；LLM provider=DeepSeek（OpenAI 兼容接口，无 key 自动离线回退确定性管线）。
 
 ## 11. 技术规格边界
 
 主 PRD 只定义产品承诺。以下内容在实现对应模块时进入专项技术设计，不再堆回 PRD：
 
 - Agent runtime、任务中断/恢复和工具错误处理；
+- DSH 编排层插件合同与阶段路线（见 `docs/DSH_ARCHITECTURE.md`，与 `harness/` 插件源码同源）；
 - 金融引擎输入、模型容差、费用与滑点规则；
 - 研究 Evidence/Claim 数据合同；
 - 模拟提交、幂等、对账和人工接管协议；
@@ -389,6 +402,7 @@ Hero B 使用与 Hero A 隔离、时点有效的数据。合成 PASS fixture 只
 ## 12. 输入依据
 
 - 项目现状：`README.md`、`PROJECT_STATE.md`、`src/`、`data/`。
+- 编排层架构：`docs/DSH_ARCHITECTURE.md`、`harness/plugins/goai-bridge.host.js`。
 - 项目研究：`research/01–06`、`research/sources.json`。
 - 项目工作流：`.agents/skills/futu-options-agent/`。
 - 可复用研究工程：团队的 AnalystCollective 项目。

@@ -1,0 +1,150 @@
+{
+  "id": "us-chip-controls-2025-05",
+  "name": "美国先进计算/AI 芯片出口管制调整（2025 年 5 月）",
+  "date": "2025-05-15",
+  "type": "regulation",
+  "status": "ACTIVE",
+  "updated_at": "2026-08-13T00:00:00+08:00",
+  "description": "2025 年 5 月，美国商务部 BIS 宣布不执行拜登任内 AI Diffusion Rule 并启动废止程序，同时对先进计算 IC 对华出口维持限制；此前英伟达 H20 对华销售受限并计提约 55 亿美元损失。",
+  "facts": [
+    {
+      "id": "f1",
+      "date": "2025-05-15",
+      "fact": "BIS 宣布不执行 AI Diffusion Rule 并启动正式废止程序。",
+      "source": "National Law Review（2025-05-15）",
+      "source_url": "https://natlawreview.com/article/bis-issues-four-key-updates-advanced-computing-and-ai-export-controls",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f2",
+      "date": "2025-05-17",
+      "fact": "英伟达 CEO 表示公司正在评估如何应对对华 H20 芯片销售限制，且不会推出 Hopper 系列的新版本。",
+      "source": "Reuters（2025-05-17）",
+      "source_url": "https://www.reuters.com/world/china/nvidia-ceo-says-next-chip-after-h20-china-wont-be-hopper-series-2025-05-17/",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f3",
+      "date": "2025-05-19",
+      "fact": "BIS 对先进计算 IC 的出口控制动态与合规指引引发行业广泛关注（法律事务所综述）。",
+      "source": "Miller Chevalier 合规综述（2025-05-19）",
+      "source_url": "https://www.millerchevalier.com/publication/trade-compliance-flash-key-takeaways-bis-announcements-and-guidance-related-advanced",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ],
+  "stakeholders": [
+    {
+      "actor": "美国政府/BIS",
+      "interest": "国家安全与先进技术主导权",
+      "leverage": "出口管制清单与许可制度",
+      "exposure": "盟友协调成本与商业反弹"
+    },
+    {
+      "actor": "英伟达等美国芯片企业",
+      "interest": "中国市场需求与营收",
+      "leverage": "游说、产品合规设计",
+      "exposure": "收入损失（H20 相关约 55 亿美元计提）"
+    },
+    {
+      "actor": "中国 AI 产业",
+      "interest": "算力供给与自主替代",
+      "leverage": "国产替代、库存与云厂商采购",
+      "exposure": "短期算力缺口"
+    },
+    {
+      "actor": "全球 AI 供应链",
+      "interest": "可预期的出口政策",
+      "leverage": "产能布局调整",
+      "exposure": "合规成本与订单不确定性"
+    }
+  ],
+  "tensions": [
+    {
+      "id": "t1",
+      "left": "美国安全审查目标",
+      "right": "美国芯片企业的商业利益",
+      "nature": "非对抗性为主（同体制内分歧，可经许可机制缓解）",
+      "principal": true,
+      "note": "主要矛盾：管制强度与商业损失的平衡，决定 H20 类产品的可售性。"
+    },
+    {
+      "id": "t2",
+      "left": "对华技术封锁",
+      "right": "中国自主替代加速",
+      "nature": "对抗性",
+      "principal": false,
+      "note": "封锁在短期限制对手，但长期刺激自主替代。"
+    }
+  ],
+  "game_rounds": [
+    {
+      "round": 1,
+      "action": "美方限制 H20 对华销售",
+      "reaction": "英伟达计提约 55 亿美元损失",
+      "lesson": "管制直接转化为企业成本"
+    },
+    {
+      "round": 2,
+      "action": "BIS 废止 AI Diffusion Rule 但保留先进计算限制",
+      "reaction": "市场解读为部分缓和，合规不确定性仍在",
+      "lesson": "管制口径可调整，但战略底色不变"
+    }
+  ],
+  "verdict_reads": [
+    {
+      "scope": "AI Diffusion Rule 直接落地",
+      "verdict": "UNLIKELY",
+      "reason": "BIS 已启动废止程序",
+      "evidence_fact_ids": ["f1"]
+    },
+    {
+      "scope": "先进计算芯片对华限制",
+      "verdict": "CREDIBLE_IN_SHORT_TERM",
+      "reason": "H20 限制与许可要求延续，战略矛盾为主要矛盾",
+      "evidence_fact_ids": ["f2", "f3"]
+    }
+  ],
+  "political_economy": [
+    {
+      "check": "谁获利",
+      "result": "美国安全部门与先进制程主导地位受益；中国国产算力产业链获得替代激励",
+      "detail": "长期收益不确定，短期以成本为主"
+    },
+    {
+      "check": "谁吃亏",
+      "result": "英伟达等美国芯片企业与云厂商损失中国收入；中国 AI 客户承担算力短缺",
+      "detail": "吃亏方实力强，持续游说调整管制口径"
+    },
+    {
+      "check": "吃亏方是否允许",
+      "result": "部分允许：商业损失可被国家安全叙事覆盖；但损失过大时会推动许可例外",
+      "detail": "允许程度取决于安全收益与商业成本的显性对比"
+    }
+  ],
+  "falsification": [
+    {
+      "scope": "管制延续判断",
+      "condition": "若美方批准 H20 类产品对华销售或大幅放宽许可，则韧性判断下调"
+    },
+    {
+      "scope": "中国替代加速",
+      "condition": "若国产算力在性能/产能上显著追平，则封锁效果衰减"
+    }
+  ],
+  "monitor": [
+    "t1：许可证审批节奏与英伟达财报指引",
+    "t2：中国国产替代进展与采购结构"
+  ],
+  "sources": [
+    {
+      "id": "bis-may-2025",
+      "label": "BIS 出口管制动态综述（2025-05）",
+      "url": "https://natlawreview.com/article/bis-issues-four-key-updates-advanced-computing-and-ai-export-controls",
+      "status": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ]
+}

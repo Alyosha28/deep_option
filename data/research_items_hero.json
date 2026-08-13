@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "synthetic": true,
+    "note": "合同演示用示例数据（synthetic=True），不构成真实市场证据。正式运行时应替换为 futu-news-search / futu-stock-digest / 公告接口输出的带来源条目，并保留原文链接与抓取时间。"
+  },
+  "items": [
+    {
+      "id": "demo-earnings-2026q2",
+      "kind": "earnings",
+      "title": "2026Q2 业绩前瞻（示例）",
+      "published_at": "2026-08-10T09:00:00+08:00",
+      "source": "SAMPLE-FIXTURE",
+      "url": "",
+      "body": "示例：市场关注收入与利润增长、回购持续以及 AI 资本开支指引；本条目含“增长/超预期”关键词，用于演示情绪整理规则。",
+      "tags": ["earnings", "demo"],
+      "synthetic": true
+    },
+    {
+      "id": "demo-announcement-buyback",
+      "kind": "announcement",
+      "title": "回购与股东回报公告（示例）",
+      "published_at": "2026-08-09T16:30:00+08:00",
+      "source": "SAMPLE-FIXTURE",
+      "url": "",
+      "body": "示例：公司在交易窗口内公告回购与派息安排；合成条目仅用于演示公告类整理与来源留痕。",
+      "tags": ["buyback", "dividend", "demo"],
+      "synthetic": true
+    },
+    {
+      "id": "demo-news-regulation",
+      "kind": "news",
+      "title": "监管与竞争环境报道（示例）",
+      "published_at": "2026-08-08T12:00:00+08:00",
+      "source": "SAMPLE-FIXTURE",
+      "url": "",
+      "body": "示例：行业出现监管审查与竞争加剧、增速下滑担忧的报道；合成条目用于演示消息面情绪分类。",
+      "tags": ["regulation", "news", "demo"],
+      "synthetic": true
+    },
+    {
+      "id": "demo-research-mixed",
+      "kind": "research",
+      "title": "券商观点分歧（示例）",
+      "published_at": "2026-08-07T10:00:00+08:00",
+      "source": "SAMPLE-FIXTURE",
+      "url": "",
+      "body": "示例：分析师上调目标价与下调盈利预测并存，观点分歧；合成条目仅用于演示研报摘要与混合情绪。",
+      "tags": ["research", "demo"],
+      "synthetic": true
+    },
+    {
+      "id": "demo-industry-liquidity",
+      "kind": "industry",
+      "title": "港股科技板块成交与资金面（示例）",
+      "published_at": "2026-08-06T17:00:00+08:00",
+      "source": "SAMPLE-FIXTURE",
+      "url": "",
+      "body": "示例：板块成交、南向资金与期权市场活跃度数据；合成条目仅用于演示行业数据整理，不构成市场事实。",
+      "tags": ["industry", "liquidity", "demo"],
+      "synthetic": true
+    }
+  ]
+}

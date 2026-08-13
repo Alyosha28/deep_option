@@ -23,7 +23,7 @@ elements:
       text: "14 · BACKTEST EVIDENCE"
   - elementId: title
     elementType: text
-    bounds: [78, 44, 700, 24]
+    bounds: [78, 44, 700, 28]
     content:
       style: "$title"
       align: [left, middle]
@@ -145,10 +145,10 @@ elements:
       style: "$body"
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; color:$accent"><strong>01</strong></span> 历史期权链 bid/ask 不可得，成本按 IV 定价 + 5% 滑点近似</p>
-        <p><span style="font-family:Consolas; color:$accent"><strong>02</strong></span> 平仓按到期内在价值，忽略剩余时间价值（偏保守或偏乐观）</p>
-        <p><span style="font-family:Consolas; color:$accent"><strong>03</strong></span> 样本仅单标的 11~19 个财报期，t 统计量仅供量级参考</p>
-        <p><span style="font-family:Consolas; color:$accent"><strong>04</strong></span> 当前 2026/Q2 为在途模拟订单，属于样本外前瞻验证</p>
+        <p><span style="font-family:Consolas; color:#22D3EE"><strong>01</strong></span> 历史期权链 bid/ask 不可得，成本按 IV 定价 + 5% 滑点近似</p>
+        <p><span style="font-family:Consolas; color:#22D3EE"><strong>02</strong></span> 平仓按到期内在价值，忽略剩余时间价值（偏保守或偏乐观）</p>
+        <p><span style="font-family:Consolas; color:#22D3EE"><strong>03</strong></span> 样本仅单标的 11~19 个财报期，t 统计量仅供量级参考</p>
+        <p><span style="font-family:Consolas; color:#22D3EE"><strong>04</strong></span> 当前 2026/Q2 为在途模拟订单，属于样本外前瞻验证</p>
   - elementId: quote-panel
     elementType: shape
     bounds: [64, 384, 832, 40]
@@ -202,7 +202,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        <p>P0a 已跑通：两口径 d+2 一致为负，关键数字溯源率 <span style="color:$accent">100%</span>，审计链完整。</p>
+        <p>P0a 已跑通：两口径 d+2 一致为负，关键数字溯源率 <span style="color:#22D3EE">100%</span>，审计链完整。</p>
   - elementId: hairline-foot
     elementType: line
     bounds: [64, 512, 832, 1]

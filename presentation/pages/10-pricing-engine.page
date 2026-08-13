@@ -47,7 +47,7 @@ elements:
       align: [left, top]
       text: |
         <p style="line-height:1.1">自研引擎不发明 BS：只做确定性复算与可成交成本口径</p>
-        <p style="margin-top:2px"><span style="font-size:12px; color:$textSub;">BS + 美式二叉树 + IV 二分 + bump-and-reprice Greeks；港股规格路由与 mid/ask 成本分栏</span></p>
+        <p style="margin-top:2px"><span style="font-size:12px; color:#8B949E;">BS + 美式二叉树 + IV 二分 + bump-and-reprice Greeks；港股规格路由与 mid/ask 成本分栏</span></p>
   - elementId: enginePanel
     elementType: shape
     bounds: [480, 104, 416, 150]
@@ -86,10 +86,10 @@ elements:
       lineHeight: 1.2
       align: [left, top]
       text: |
-        <p><span style="font-family:Consolas; color:$accent;"><strong>01</strong></span> <strong>BS closed-form</strong> <span style="color:$textSub;">—— 欧式解析解</span></p>
-        <p><span style="font-family:Consolas; color:$accent;"><strong>02</strong></span> <strong>美式二叉树</strong> <span style="color:$textSub;">—— 提前行权 · 离散股息</span></p>
-        <p><span style="font-family:Consolas; color:$accent;"><strong>03</strong></span> <strong>IV 二分</strong> <span style="color:$textSub;">—— 盘口价反解 σ</span></p>
-        <p><span style="font-family:Consolas; color:$accent;"><strong>04</strong></span> <strong>bump-and-reprice</strong> <span style="color:$textSub;">—— Greeks 差分</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE;"><strong>01</strong></span> <strong>BS closed-form</strong> <span style="color:#8B949E;">—— 欧式解析解</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE;"><strong>02</strong></span> <strong>美式二叉树</strong> <span style="color:#8B949E;">—— 提前行权 · 离散股息</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE;"><strong>03</strong></span> <strong>IV 二分</strong> <span style="color:#8B949E;">—— 盘口价反解 σ</span></p>
+        <p><span style="font-family:Consolas; color:#22D3EE;"><strong>04</strong></span> <strong>bump-and-reprice</strong> <span style="color:#8B949E;">—— Greeks 差分</span></p>
   - elementId: bsFormula
     elementType: image
     bounds: [496, 187, 384, 34]
@@ -105,11 +105,11 @@ elements:
       wrap: false
       align: [left, middle]
       text: |-
-        <span style="color:$accent;">不发明 BS / 二叉树</span><span style="color:$textSub;">—— 自研只做确定性实现：先解析规格，再定价</span>
+        <span style="color:#22D3EE;">不发明 BS / 二叉树</span><span style="color:#8B949E;">—— 自研只做确定性实现：先解析规格，再定价</span>
   - elementId: greeksTable
     elementType: table
     bounds: [480, 258, 416, 75]
-    columnWidths: [0.13, 0.24, 0.13, 0.24, 0.13, 0.13]
+    columnWidths: [0.13, 0.24, 0.13, 0.24, 0.11, 0.15]
     rowHeights: [0.33, 0.33, 0.34]
     style: "$default"
     rows:
@@ -167,7 +167,7 @@ elements:
       wrap: false
       align: [left, middle]
       text: |-
-        <span style="font-size:11px; color:$accent;"><strong>港股规格</strong></span><span style="font-size:10px; color:$textSub;">：个股 = 美式·实物（提前行权/公司行动）｜指数 = 欧式·现金</span>
+        <span style="font-size:11px; color:#22D3EE;"><strong>港股规格</strong></span><span style="font-size:10px; color:#8B949E;">：个股 = 美式·实物（提前行权/公司行动）｜指数 = 欧式·现金</span>
   - elementId: pnlChart
     elementType: image
     bounds: [64, 104, 416, 234]
@@ -190,7 +190,7 @@ elements:
       wrap: false
       align: [left, middle]
       text: |-
-        <span style="color:$textSub;">mid 观察 </span><span style="font-family:Consolas; color:$text;">2,109.5×2=4,219.0</span><span style="color:$textSub;"> ｜ ask 可成交 </span><span style="font-family:Consolas; color:$accent;"><strong>2,207.0×2=4,414.0</strong></span><span style="color:$textSub;"> · 最大亏损</span>
+        <span style="color:#8B949E;">mid 观察 </span><span style="font-family:Consolas; color:#E6EDF3;">2,109.5×2=4,219.0</span><span style="color:#8B949E;"> ｜ ask 可成交 </span><span style="font-family:Consolas; color:#22D3EE;"><strong>2,207.0×2=4,414.0</strong></span><span style="color:#8B949E;"> · 最大亏损</span>
   - elementId: chartSource
     elementType: text
     bounds: [64, 362, 416, 10]
@@ -234,7 +234,7 @@ elements:
       lineHeight: 1.2
       wrap: false
       align: [left, middle]
-      text: "引擎的诚实 &gt; 引擎的聪明：mid 是观察，ask 才是成本。"
+      text: "引擎的诚实 > 引擎的聪明：mid 是观察，ask 才是成本。"
   - elementId: sumBg
     elementType: shape
     bounds: [64, 436, 832, 48]
@@ -264,7 +264,7 @@ elements:
       wrap: false
       align: [left, middle]
       text: |-
-        <span>只复算不发明 BS：成本按 mid/ask 分栏，最大亏损 </span><span style="font-family:Consolas; color:$accent;"><strong>4,414.0</strong></span><span> HKD</span>
+        <span>只复算不发明 BS：成本按 mid/ask 分栏，最大亏损 </span><span style="font-family:Consolas; color:#22D3EE;"><strong>4,414.0</strong></span><span> HKD</span>
   - elementId: hairlineFooter
     elementType: line
     bounds: [64, 512, 832, 1]

@@ -1,0 +1,230 @@
+{
+  "id": "us-cn-tariff-2025-04",
+  "name": "2025 年 4 月美国对华关税升级",
+  "date": "2025-04-02",
+  "type": "tariff",
+  "status": "ACTIVE",
+  "updated_at": "2026-08-13T00:00:00+08:00",
+  "description": "美国于 2025 年 4 月宣布大规模对等关税，中国随即反制，全球金融市场剧烈波动；随后美国对多数经济体暂停关税 90 天，但对华税率维持高位并转入谈判。",
+  "facts": [
+    {
+      "id": "f1",
+      "date": "2025-04-02",
+      "fact": "美国宣布对等关税（基线 10% 并对多国加征更高税率）。",
+      "source": "Reuters（2025-04-01）",
+      "source_url": "https://www.reuters.com/world/us/trump-aides-draft-proposal-least-20-tariffs-most-imports-us-washington-post-2025-04-01/",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f2",
+      "date": "2025-04-04",
+      "fact": "中国宣布对美商品加征 34% 反制关税并对稀土实施出口管制。",
+      "source": "Reuters 通讯稿（2025-04-04）",
+      "source_url": "https://www.dailymail.com/wires/reuters/article-14571385/China-impose-tariffs-34-US-goods-April-10.html",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f3",
+      "date": "2025-04-07",
+      "fact": "全球股指大幅下跌，VIX 收于 46.98，为 2020 年 4 月以来最高收盘。",
+      "source": "Reuters（2025-04-07）",
+      "source_url": "https://www.dailymail.co.uk/wires/reuters/article-14579679/Stocks-plunge-tariff-turmoil-VIX-fear-gauge-spikes.html",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f4",
+      "date": "2025-04-09",
+      "fact": "美国宣布对约 75 个经济体暂停加征关税 90 天，同时将对华税率上调至 125%。",
+      "source": "Reuters（2025-04-09）",
+      "source_url": "https://www.reuters.com/world/trump-announces-90-day-pause-tariffs-2025-04-09/",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f5",
+      "date": "2025-04-11",
+      "fact": "中方将对美关税上调至 125%，并表示若美方继续加码将不再跟进。",
+      "source": "Reuters（2025-04-11）",
+      "source_url": "https://www.reuters.com/world/china/china-increase-tariffs-us-goods-125-up-84-finance-ministry-says-2025-04-11/",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f6",
+      "date": "2025-05-11",
+      "fact": "中美在日内瓦等渠道启动高级别磋商，关税缓和的预期反复。",
+      "source": "Reuters（2025-05-11）",
+      "source_url": "https://www.reuters.com/world/china/us-commerce-secretary-lutnick-says-china-talks-aimed-lowering-trade-tensions-2025-05-11/",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ],
+  "stakeholders": [
+    {
+      "actor": "美国政府",
+      "interest": "国内政治收益与战略施压",
+      "leverage": "关税工具、进口许可",
+      "exposure": "通胀与选民成本、市场动荡"
+    },
+    {
+      "actor": "中国政府",
+      "interest": "战略自主与产业链安全",
+      "leverage": "反制关税、供应链工具",
+      "exposure": "出口与外资预期"
+    },
+    {
+      "actor": "美国进口商/零售商",
+      "interest": "低成本供应链",
+      "leverage": "游说与采购调整",
+      "exposure": "利润与库存成本"
+    },
+    {
+      "actor": "中国出口企业",
+      "interest": "订单稳定",
+      "leverage": "产能转移与议价",
+      "exposure": "需求下滑"
+    },
+    {
+      "actor": "全球金融市场",
+      "interest": "低波动与可预期政策",
+      "leverage": "风险定价（股债汇）",
+      "exposure": "恐慌抛售与流动性收缩"
+    }
+  ],
+  "tensions": [
+    {
+      "id": "t1",
+      "left": "美国战略施压目标",
+      "right": "美国国内企业与通胀成本",
+      "nature": "非对抗性（同体制内利益分歧，可经政治渠道缓解）",
+      "principal": false,
+      "note": "关税推高进口成本，进口商/零售/下游制造受损，形成国内反制力量。"
+    },
+    {
+      "id": "t2",
+      "left": "中美战略竞争",
+      "right": "中美经济相互依存",
+      "nature": "对抗性为主、伴随非对抗性面向",
+      "principal": true,
+      "note": "主要矛盾：战略竞争决定政策底线；相互依存决定政策成本与不可持续面。"
+    },
+    {
+      "id": "t3",
+      "left": "市场恐慌定价",
+      "right": "政策可逆性事实",
+      "nature": "非对抗性（认知与事实的偏差）",
+      "principal": false,
+      "note": "恐慌把最坏情景当作基准情景；求是原则要求先核验政策可逆性与落地约束。"
+    }
+  ],
+  "game_rounds": [
+    {
+      "round": 1,
+      "action": "美方宣布对等关税",
+      "reaction": "全球市场下跌、美债承压",
+      "lesson": "政策成本迅速显性化"
+    },
+    {
+      "round": 2,
+      "action": "中方 34% 反制并管制稀土",
+      "reaction": "关税螺旋升级",
+      "lesson": "单边施压触发对等反制"
+    },
+    {
+      "round": 3,
+      "action": "美方对多数经济体暂停 90 天、对华上调至 125%",
+      "reaction": "市场阶段性反弹，中美关税仍高",
+      "lesson": "全球性关税不可持续，战略关税短期可维持"
+    },
+    {
+      "round": 4,
+      "action": "中方上调至 125% 并停止跟注",
+      "reaction": "双方转向谈判渠道",
+      "lesson": "边际成本递增后，谈判成为共同出路"
+    }
+  ],
+  "verdict_reads": [
+    {
+      "scope": "全球性/广泛关税",
+      "verdict": "LIKELY_UNSUSTAINABLE",
+      "reason": "90 天暂停后未恢复全面加征；国内成本显性化构成持续反制压力",
+      "evidence_fact_ids": ["f3", "f4"]
+    },
+    {
+      "scope": "中美战略核心关税",
+      "verdict": "CREDIBLE_IN_SHORT_TERM",
+      "reason": "125% 税率持续且与谈判并行；战略矛盾为主要矛盾",
+      "evidence_fact_ids": ["f4", "f5", "f6"]
+    }
+  ],
+  "political_economy": [
+    {
+      "check": "谁获利",
+      "result": "美国部分进口替代产业与国内政治受益者短期获利；中国自主可控产业链获得长期激励",
+      "detail": "获利方的收益存在时间差与不确定性，未必能稳定转化为政治支持"
+    },
+    {
+      "check": "谁吃亏",
+      "result": "美国进口商/零售商/消费者与中国出口企业短期受损；全球风险资产持有者承担波动成本",
+      "detail": "吃亏方范围广、数量大，成本显性化后反制力量强"
+    },
+    {
+      "check": "吃亏方是否允许",
+      "result": "部分允许（成本可转嫁/可承受），部分不允许（利润与选票成本显性化后反制）",
+      "detail": "允许与否取决于成本显性化速度与替代选项"
+    },
+    {
+      "check": "资本与政策的矛盾",
+      "result": "产业资本反对高关税（供应链成本），部分国内资本受益（保护主义红利）；金融资本厌恶不确定性",
+      "detail": "政策在国内并非铁板一块，利益集团持续博弈"
+    }
+  ],
+  "macro_fundamentals": [
+    {
+      "factor": "中美贸易依存度",
+      "observation": "双边贸易规模巨大但相互依存度下降，供应链部分替代",
+      "source": "需以官方贸易数据核验"
+    },
+    {
+      "factor": "通胀与利率环境",
+      "observation": "关税推升进口成本，与通胀目标存在张力",
+      "source": "需以当期 CPI 与政策声明核验"
+    },
+    {
+      "factor": "供应链调整时间",
+      "observation": "产能转移以年计，短期难以完全替代",
+      "source": "需以产业数据核验"
+    }
+  ],
+  "falsification": [
+    {
+      "scope": "全球性关税不可持续",
+      "condition": "若美国国内通胀回落且企业成本未显性化，则维持关税的国内阻力下降，该判断需要上调"
+    },
+    {
+      "scope": "中美战略关税韧性",
+      "condition": "若中方出口显著恶化且无替代路径，或美方政治优先级让位于通胀，则缓和空间上升"
+    },
+    {
+      "scope": "整体框架",
+      "condition": "若博弈从经济域扩展至金融/军事域，原模型失效，需重建"
+    }
+  ],
+  "monitor": [
+    "t1（国内企业与通胀成本）是否在选举周期中上升为主要矛盾",
+    "t3（恐慌定价）是否随政策澄清消退",
+    "t2 是否从对抗性为主转化为可谈判的非对抗性状态"
+  ],
+  "sources": [
+    {
+      "id": "reuters-apr-2025",
+      "label": "Reuters 关税时间线报道（2025-04）",
+      "url": "https://www.reuters.com/world/trump-announces-90-day-pause-tariffs-2025-04-09/",
+      "status": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ]
+}

@@ -15,7 +15,8 @@
         <span class="brand-name">期权智能终端</span>
       </div>
       <div class="topbar-meta">
-        <span class="chip chip-accent">REPLAY · FROZEN</span>
+        <span class="chip chip-accent" id="mode-chip">REPLAY · FROZEN</span>
+        <span class="chip" id="llm-chip">LLM · offline 回退</span>
         <span class="chip chip-neutral">OpenD 127.0.0.1:11111</span>
         <span class="chip chip-neutral" id="clock">--:--:--</span>
       </div>
@@ -60,7 +61,7 @@
           <textarea id="scenario-input" rows="3" aria-label="输入期权观点">腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。</textarea>
           <button class="btn-run" id="run-btn" type="button">重新运行（演示）</button>
         </div>
-        <p class="footnote">演示 UI：重新运行动画，不产生真实下单。</p>
+        <p class="footnote" id="footnote">正在加载数据…</p>
       </section>
 
       <!-- 面板 2：期权链与流动性 -->
@@ -197,12 +198,42 @@
             <span class="panel-tag">2026Q2</span>
           </div>
           <dl class="event-metrics">
-            <div><dt>业绩日期</dt><dd>2026-08-12</dd></div>
-            <div><dt>预期 EPS YoY</dt><dd>+4.21%</dd></div>
-            <div><dt>预期营收 YoY</dt><dd>+9.71%</dd></div>
-            <div><dt>历史 IV crush</dt><dd>1.19 / 2.23 pp</dd></div>
+            <div><dt>业绩日期</dt><dd id="earnings-date">--</dd></div>
+            <div><dt>预期 EPS YoY</dt><dd id="eps-yoy">--</dd></div>
+            <div><dt>预期营收 YoY</dt><dd id="rev-yoy">--</dd></div>
+            <div><dt>历史 IV crush</dt><dd id="crush-history">--</dd></div>
           </dl>
           <p class="source-line">来源：futuapi 快照 · <span id="captured-at"></span></p>
+        </div>
+
+        <div class="macro-card">
+          <div class="panel-head">
+            <h3>宏观研判 · 政策事件库</h3>
+            <span class="panel-tag" id="macro-confidence">--</span>
+          </div>
+          <div class="macro-strip">
+            <div class="macro-cell">
+              <span>消息面情绪指数</span>
+              <strong id="sentiment-index">--</strong>
+              <em id="sentiment-verdict">--</em>
+            </div>
+            <div class="macro-cell">
+              <span>IV 情绪晴雨表</span>
+              <strong id="iv-state">--</strong>
+              <em id="skew-verdict">--</em>
+            </div>
+            <div class="macro-cell macro-cell-wide">
+              <span>主要矛盾</span>
+              <strong class="principal" id="principal-pair">--</strong>
+            </div>
+          </div>
+          <p class="macro-mood" id="macro-mood"></p>
+          <h3>情景研判</h3>
+          <ul class="scenario-list" id="scenario-list"></ul>
+          <h3>事件库来源健康</h3>
+          <div class="library-health" id="library-health"></div>
+          <ul class="promoted-list" id="promoted-list"></ul>
+          <p class="note" id="macro-note"></p>
         </div>
 
         <div class="audit-card">
@@ -215,6 +246,36 @@
         </div>
       </section>
     </main>
+
+    <section class="debate-dock" id="debate-dock" aria-label="十角色辩论运行时">
+      <button class="debate-toggle" id="debate-toggle" type="button"
+        aria-expanded="false" aria-controls="debate-body">
+        <span class="debate-toggle-title">
+          <span class="debate-status-dot" id="debate-dot" aria-hidden="true"></span>
+          十角色辩论 · 研究共识
+        </span>
+        <span class="debate-toggle-meta" id="debate-summary">未运行</span>
+        <span class="debate-caret" id="debate-caret" aria-hidden="true">▸</span>
+      </button>
+      <div class="debate-body" id="debate-body" hidden>
+        <div class="debate-meta-grid" id="debate-meta"></div>
+        <div class="debate-columns">
+          <div class="debate-col">
+            <h3 class="debate-h">轮次与角色</h3>
+            <div class="debate-rounds" id="debate-rounds"></div>
+          </div>
+          <div class="debate-col">
+            <h3 class="debate-h">分歧点</h3>
+            <div class="debate-disputes" id="debate-disputes"></div>
+          </div>
+        </div>
+        <div class="debate-consensus-card">
+          <h3 class="debate-h">研究共识</h3>
+          <div class="debate-consensus" id="debate-consensus"></div>
+        </div>
+        <p class="note debate-disclaimer" id="debate-disclaimer"></p>
+      </div>
+    </section>
 
     <footer class="footer">
       <span>决策支持 / 研究用途，非投资建议 · 不构成交易要约</span>

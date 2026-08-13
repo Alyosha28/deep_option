@@ -1,0 +1,84 @@
+{
+  "user_agent": "GOAI-options-terminal/0.1 research demo (local, no redistribution)",
+  "max_items_per_source": 20,
+  "note": "官方公开来源白名单：RSS 仅收录美联储/BLS/ECB；FRED CSV 覆盖通胀、利率、贸易与就业宏观序列；SEC EDGAR 用于上市公司重大事件（8-K）；cn_html_list 收录中国官方 HTML 列表页（央行/统计局/海关）。2026-08-13 实测：PBC 新闻发布与统计局数据发布可达并已启用；海关总署本机 TLS 证书链校验失败（Python 与 curl 均失败），默认停用待复核。",
+  "sources": [
+    {
+      "id": "fred-macro",
+      "kind": "fred_csv",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv",
+      "label": "FRED 宏观序列",
+      "series": [
+        {"id": "CPIAUCSL", "topic": "inflation", "label": "美国 CPI（季调）"},
+        {"id": "PCEPI", "topic": "inflation", "label": "美国 PCE 价格指数"},
+        {"id": "DFF", "topic": "rates", "label": "美国联邦基金有效利率"},
+        {"id": "DFEDTARU", "topic": "rates", "label": "联邦基金目标区间上限"},
+        {"id": "DGS10", "topic": "rates", "label": "美国 10 年期国债收益率"},
+        {"id": "UNRATE", "topic": "jobs", "label": "美国失业率"},
+        {"id": "PAYEMS", "topic": "jobs", "label": "美国非农就业人数"},
+        {"id": "BOPGSTB", "topic": "trade", "label": "美国商品与服务贸易余额"}
+      ]
+    },
+    {
+      "id": "fed-press",
+      "kind": "rss",
+      "url": "https://www.federalreserve.gov/feeds/press_all.xml",
+      "label": "美联储新闻稿",
+      "topics": ["rates", "policy"]
+    },
+    {
+      "id": "fed-monetary",
+      "kind": "rss",
+      "url": "https://www.federalreserve.gov/feeds/press_monetary.xml",
+      "label": "美联储货币政策声明",
+      "topics": ["rates"]
+    },
+    {
+      "id": "bls-releases",
+      "kind": "rss",
+      "url": "https://www.bls.gov/news.release/releases.xml",
+      "label": "BLS 数据发布",
+      "topics": ["inflation", "jobs", "trade"]
+    },
+    {
+      "id": "ecb-press",
+      "kind": "rss",
+      "url": "https://www.ecb.europa.eu/rss/press.html",
+      "label": "ECB 新闻稿",
+      "topics": ["rates", "policy"]
+    },
+    {
+      "id": "sec-edgar-tencent",
+      "kind": "sec_atom",
+      "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&ticker=TCEHY&type=8-K&dateb=&owner=include&count=10&output=atom",
+      "label": "SEC EDGAR（腾讯 ADR 8-K）",
+      "topics": ["corporate"]
+    },
+    {
+      "id": "pbc-news",
+      "kind": "cn_html_list",
+      "url": "https://www.pbc.gov.cn/goutongjiaoliu/113456/113469/index.html",
+      "label": "中国人民银行新闻发布",
+      "enabled": true,
+      "enrich_numeric": true,
+      "topics": ["rates", "policy"]
+    },
+    {
+      "id": "stats-releases",
+      "kind": "cn_html_list",
+      "url": "https://www.stats.gov.cn/sj/zxfb/",
+      "label": "国家统计局数据发布",
+      "enabled": true,
+      "enrich_numeric": true,
+      "topics": ["inflation", "jobs", "trade", "policy"]
+    },
+    {
+      "id": "customs-news",
+      "kind": "cn_html_list",
+      "url": "https://www.customs.gov.cn/customs/xwfb34/index.html",
+      "label": "海关总署新闻发布",
+      "enabled": false,
+      "topics": ["trade", "policy"]
+    }
+  ]
+}

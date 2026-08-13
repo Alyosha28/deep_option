@@ -70,7 +70,7 @@ elements:
   # ---------- 痛点卡 1（左宽列） ----------
   - elementId: card1-box
     elementType: shape
-    bounds: [64, 104, 520, 120]
+    bounds: [64, 104, 520, 128]
     shapeName: roundRect
     adjustments: [5000]
     fill: {type: solid, color: "$panel"}
@@ -98,7 +98,7 @@ elements:
       lineHeight: 1.5
       align: [left, top]
       text: |
-        <p><span style="font-size:13px; color:$text"><strong>信息分散：行情 / 规则 / 社区各在一处</strong></span></p>
+        <p><span style="font-size:13px; color:#E6EDF3"><strong>信息分散：行情 / 规则 / 社区各在一处</strong></span></p>
         <p style="margin-top:10px">拼一张完整的决策图，需要手动跑遍行情、交易规则、社区观点多个渠道，再逐一对齐口径。</p>
 
   # ---------- 痛点卡 2（右窄列，高错位） ----------
@@ -132,13 +132,13 @@ elements:
       lineHeight: 1.5
       align: [left, top]
       text: |
-        <p><span style="font-size:13px; color:$text"><strong>理论价 ≠ 可成交价：exec 口径</strong></span></p>
+        <p><span style="font-size:13px; color:#E6EDF3"><strong>理论价 ≠ 可成交价：exec 口径</strong></span></p>
         <p style="margin-top:10px">mid 只是观察值；买入成本必须按 ask × 乘数 + 费用 + 滑点，exec 口径才算真成本。</p>
 
   # ---------- 痛点卡 3（左宽列，行错位） ----------
   - elementId: card3-box
     elementType: shape
-    bounds: [64, 236, 520, 128]
+    bounds: [64, 240, 520, 128]
     shapeName: roundRect
     adjustments: [5000]
     fill: {type: solid, color: "$panel"}
@@ -146,7 +146,7 @@ elements:
 
   - elementId: card3-num
     elementType: text
-    bounds: [76, 246, 28, 14]
+    bounds: [76, 250, 28, 14]
     content:
       fontFamily: {latin: Consolas, ea: Microsoft YaHei}
       fontSize: 9
@@ -158,7 +158,7 @@ elements:
 
   - elementId: card3-text
     elementType: text
-    bounds: [76, 264, 496, 88]
+    bounds: [76, 268, 496, 88]
     content:
       fontFamily: {latin: Arial, ea: Microsoft YaHei}
       fontSize: 11
@@ -166,13 +166,13 @@ elements:
       lineHeight: 1.5
       align: [left, top]
       text: |
-        <p><span style="font-size:13px; color:$text"><strong>港股规则差异：美式实物 vs 欧式现金</strong></span></p>
+        <p><span style="font-size:13px; color:#E6EDF3"><strong>港股规则差异：美式实物 vs 欧式现金</strong></span></p>
         <p style="margin-top:10px">个股期权美式、实物交割；指数期权欧式、现金结算——混淆行权与交割方式，盈亏与风险都会算错。</p>
 
   # ---------- 痛点卡 4（右窄列，低错位） ----------
   - elementId: card4-box
     elementType: shape
-    bounds: [600, 244, 296, 120]
+    bounds: [600, 240, 296, 128]
     shapeName: roundRect
     adjustments: [5000]
     fill: {type: solid, color: "$panel"}
@@ -180,7 +180,7 @@ elements:
 
   - elementId: card4-num
     elementType: text
-    bounds: [612, 254, 28, 14]
+    bounds: [612, 250, 28, 14]
     content:
       fontFamily: {latin: Consolas, ea: Microsoft YaHei}
       fontSize: 9
@@ -192,7 +192,7 @@ elements:
 
   - elementId: card4-text
     elementType: text
-    bounds: [612, 272, 272, 80]
+    bounds: [612, 268, 264, 80]
     content:
       fontFamily: {latin: Arial, ea: Microsoft YaHei}
       fontSize: 11
@@ -200,7 +200,7 @@ elements:
       lineHeight: 1.5
       align: [left, top]
       text: |
-        <p><span style="font-size:13px; color:$text"><strong>LLM 编造金融数字</strong></span></p>
+        <p><span style="font-size:13px; color:#E6EDF3"><strong>LLM 编造金融数字</strong></span></p>
         <p style="margin-top:10px">金融数字编造为 0 是硬指标；每个数字必须能回答「来源文件 + 字段路径」。</p>
 
   # ---------- 金句条 ----------

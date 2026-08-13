@@ -43,6 +43,14 @@ window.GOAI_DATA = {
     riskBudgetPct: 5,
     constraints: ["单笔最多亏损 5%"],
   },
+  llm: {
+    available: false,
+    provider: "DeepSeek",
+    model: "deepseek-chat",
+    status: "offline",
+  },
+  debateTrace: null,
+  researchConsensus: null,
   expiries: [
     {
       expiry: "2026-08-14",

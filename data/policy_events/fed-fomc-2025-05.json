@@ -1,0 +1,152 @@
+{
+  "id": "fed-fomc-2025-05",
+  "name": "美联储 FOMC 2025 年 5 月议息会议",
+  "date": "2025-05-07",
+  "type": "monetary-policy",
+  "status": "ACTIVE",
+  "updated_at": "2026-08-13T00:00:00+08:00",
+  "description": "FOMC 在 2025 年 5 月会议维持联邦基金利率目标区间 4.25%-4.50% 不变，并指出经济前景不确定性上升、通胀与失业风险均上升。",
+  "facts": [
+    {
+      "id": "f1",
+      "date": "2025-05-07",
+      "fact": "FOMC 维持联邦基金利率目标区间 4.25%-4.50% 不变。",
+      "source": "Federal Reserve FOMC 声明",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20250507a.htm",
+      "verification": "VERIFIED",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f2",
+      "date": "2025-05-07",
+      "fact": "声明指出经济前景不确定性进一步上升，委员会认为失业与通胀风险均上升。",
+      "source": "Federal Reserve FOMC 声明",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20250507a.htm",
+      "verification": "VERIFIED",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    },
+    {
+      "id": "f3",
+      "date": "2025-05-07",
+      "fact": "主席鲍威尔在记者会上表示政策利率处于合适位置，等待关税对经济的进一步影响明朗。",
+      "source": "Federal Reserve 记者会文稿",
+      "source_url": "https://www.federalreserve.gov/mediacenter/files/FOMCpresconf20250507.pdf",
+      "verification": "PENDING",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ],
+  "stakeholders": [
+    {
+      "actor": "美联储",
+      "interest": "双重使命（就业 + 通胀）与政策可信度",
+      "leverage": "利率与缩表工具",
+      "exposure": "政策滞后与独立性受损风险"
+    },
+    {
+      "actor": "市场参与者",
+      "interest": "降息路径可预期性",
+      "leverage": "风险定价（利率期货/期权）",
+      "exposure": "预期反复引发的波动"
+    },
+    {
+      "actor": "企业与家庭",
+      "interest": "融资成本与就业稳定",
+      "leverage": "经济数据反馈",
+      "exposure": "利率高位抑制需求"
+    }
+  ],
+  "tensions": [
+    {
+      "id": "t1",
+      "left": "关税推升通胀的风险",
+      "right": "增长与就业放缓的风险",
+      "nature": "非对抗性（同一目标体系内的权衡）",
+      "principal": true,
+      "note": "主要矛盾：滞胀式张力决定美联储按兵不动、等待数据。"
+    },
+    {
+      "id": "t2",
+      "left": "市场降息预期",
+      "right": "美联储数据依赖的渐进路径",
+      "nature": "非对抗性（预期差可通过沟通收敛）",
+      "principal": false,
+      "note": "预期反复会放大利率与波动率波动。"
+    },
+    {
+      "id": "t3",
+      "left": "政策独立性",
+      "right": "外部政治施压",
+      "nature": "非对抗性为主，处理不当可转化为对抗性",
+      "principal": false,
+      "note": "独立性受损会削弱长期政策可信度。"
+    }
+  ],
+  "game_rounds": [
+    {
+      "round": 1,
+      "action": "关税冲击推升通胀与不确定性",
+      "reaction": "市场抢跑降息预期",
+      "lesson": "预期管理成为政策的一部分"
+    },
+    {
+      "round": 2,
+      "action": "FOMC 按兵不动、强调数据依赖",
+      "reaction": "利率预期回摆",
+      "lesson": "按兵不动本身是沟通工具"
+    }
+  ],
+  "verdict_reads": [
+    {
+      "scope": "2025-05 立即降息",
+      "verdict": "UNLIKELY",
+      "reason": "声明明确维持利率并强调双重风险，未给出降息信号",
+      "evidence_fact_ids": ["f1", "f2"]
+    },
+    {
+      "scope": "数据依赖的渐进调整",
+      "verdict": "CREDIBLE",
+      "reason": "声明保留视数据调整的选项，市场按数据定价",
+      "evidence_fact_ids": ["f2", "f3"]
+    }
+  ],
+  "political_economy": [
+    {
+      "check": "谁获利",
+      "result": "持有现金与短债的储蓄者、维持物价稳定的受益群体",
+      "detail": "高利率对储蓄者有利，但边际收益递减"
+    },
+    {
+      "check": "谁吃亏",
+      "result": "高杠杆企业与家庭、依赖融资的成长股与风险资产",
+      "detail": "利率维持越久，负债端成本压力越大"
+    },
+    {
+      "check": "吃亏方是否允许",
+      "result": "受限：美联储以双重使命为边界，选举压力不能直接改写利率决策",
+      "detail": "独立性是主要约束；但长期高利率会通过经济放缓转化为政治成本"
+    }
+  ],
+  "falsification": [
+    {
+      "scope": "按兵不动判断",
+      "condition": "若通胀显著回落且就业恶化，则降息路径提前"
+    },
+    {
+      "scope": "通胀风险",
+      "condition": "若关税通胀传导被吸收且通胀预期稳定，则滞胀式张力缓解"
+    }
+  ],
+  "monitor": [
+    "t2（市场预期与数据依赖的预期差）是否再次放大",
+    "t3（政策独立性）是否因外部施压而显性化"
+  ],
+  "sources": [
+    {
+      "id": "fomc-may-2025",
+      "label": "Federal Reserve FOMC 声明（2025-05-07）",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20250507a.htm",
+      "status": "VERIFIED",
+      "retrieved_at": "2026-08-13T00:00:00+08:00"
+    }
+  ]
+}

@@ -26,6 +26,8 @@ from src.hero_tencent_straddle import (
     build_proposal,
     expiry_analysis,
 )
+from src.macro_assessment import build_macro_assessment
+from src.research_evidence import build_research_evidence
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = ROOT / "data" / "hero_inputs.json"
@@ -201,8 +203,12 @@ def load_frozen_snapshot(
             raise ValueError(f"frozen snapshot leg group {index} must be an object")
         _require_text(group, "expiry")
         _require_number(group, "dte", positive=True)
-        _validate_leg(group.get("call"), "call")
-        _validate_leg(group.get("put"), "put")
+        call_leg = group.get("call")
+        put_leg = group.get("put")
+        if not isinstance(call_leg, dict) or not isinstance(put_leg, dict):
+            raise ValueError(f"frozen snapshot leg group {index} must contain call and put")
+        _validate_leg(call_leg, "call")
+        _validate_leg(put_leg, "put")
 
     return {
         "mode": "REPLAY",
@@ -436,7 +442,6 @@ def risk_gate(engine: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
     payload = data["payload"]
     account = payload["account"]
     primary = engine["primary"]
-    groups = {group["expiry"]: group for group in payload["legs"]}
     primary_input = next(item for item in payload["legs"] if item["expiry"] == primary["expiry"])
     secondary_input = next(item for item in payload["legs"] if item["expiry"] == engine["secondary"]["expiry"])
 
@@ -553,6 +558,8 @@ def build_decision_card(
     edge: dict[str, Any],
     risk: dict[str, Any],
     action: dict[str, Any],
+    research_evidence: Mapping[str, Any] | None = None,
+    macro_assessment: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """阶段 5a：可溯源决策卡。"""
 
@@ -644,6 +651,22 @@ def build_decision_card(
             "source": data["source"],
             "snapshot_sha256": data["snapshot_sha256"],
         },
+        "research_evidence": (
+            research_evidence
+            if research_evidence is not None
+            else {
+                "available": False,
+                "note": "未提供研究条目输入，本决策卡不包含投研整理与影响研判段",
+            }
+        ),
+        "macro_assessment": (
+            macro_assessment
+            if macro_assessment is not None
+            else {
+                "available": False,
+                "note": "未提供政策事件输入，本决策卡不包含宏观研判段",
+            }
+        ),
         "proposal_ref": {
             "primary_expiry": proposal["primary_expiry"],
             "secondary_expiry": proposal["secondary_expiry"],
@@ -674,6 +697,9 @@ def run_pipeline(
     *,
     scenario: Mapping[str, Any] | None = None,
     cost_model: Mapping[str, Any] | None = None,
+    research_items_path: str | Path | None = None,
+    macro_policy_path: str | Path | None = None,
+    macro_policy_id: str | None = None,
     human_confirmed: bool = False,
     audit_enabled: bool = True,
     write_card: bool = True,
@@ -699,7 +725,37 @@ def run_pipeline(
     edge = edge_gate(engine, payload["earnings"], data["spot"])
     risk = risk_gate(engine, data)
     action = action_gate(data, edge, risk, human_confirmed=human_confirmed)
-    card = build_decision_card(data, engine, edge, risk, action)
+    research_evidence = None
+    if research_items_path is not None:
+        research_evidence = build_research_evidence(
+            data["underlying"],
+            payload["earnings"],
+            DEFAULT_BACKTEST,
+            research_items_path,
+        )
+        research_evidence = {"available": True, **research_evidence}
+    macro = None
+    if macro_policy_path is not None:
+        if research_items_path is None:
+            raise ValueError("macro assessment requires --research-items")
+        macro = build_macro_assessment(
+            payload,
+            research_items_path,
+            macro_policy_path,
+            policy_id=macro_policy_id,
+        )
+        macro = {"available": True, **macro}
+    elif macro_policy_id is not None:
+        raise ValueError("--policy-id requires --macro-policy")
+    card = build_decision_card(
+        data,
+        engine,
+        edge,
+        risk,
+        action,
+        research_evidence=research_evidence,
+        macro_assessment=macro,
+    )
 
     data_evidence = {
         "mode": data["mode"],
@@ -727,6 +783,48 @@ def run_pipeline(
             ("edge_gate", edge),
             ("risk_gate", {"decision": risk["decision"], "blocked": risk["blocked"], "findings": risk["findings"]}),
             ("action_gate", action),
+            (
+                "research_evidence",
+                {
+                    "available": research_evidence is not None,
+                    "item_count": (
+                        research_evidence["digest"]["item_count"]
+                        if research_evidence is not None
+                        else 0
+                    ),
+                    "synthetic_only": (
+                        research_evidence["digest"]["synthetic_only"]
+                        if research_evidence is not None
+                        else None
+                    ),
+                    "stock_verdict": (
+                        research_evidence["stock_price_impact"]["verdict"]
+                        if research_evidence is not None
+                        else None
+                    ),
+                    "option_verdict": (
+                        research_evidence["option_impact"]["verdict"]
+                        if research_evidence is not None
+                        else None
+                    ),
+                },
+            ),
+            (
+                "macro_assessment",
+                {
+                    "available": macro is not None,
+                    "sentiment_index": (
+                        macro["sentiment"]["index"] if macro is not None else None
+                    ),
+                    "iv_state": macro["iv_emotion"]["state"] if macro is not None else None,
+                    "skew_verdict": (
+                        macro["iv_emotion"]["skew_verdict"] if macro is not None else None
+                    ),
+                    "confidence": (
+                        macro["macro_judgment"]["confidence"] if macro is not None else None
+                    ),
+                },
+            ),
             ("decision_card", {
                 "underlying": card["underlying"],
                 "verdict": card["verdict"],
@@ -756,10 +854,34 @@ def _fmt_hkd(value: float) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="GOAI 期权端到端决策管线")
     parser.add_argument("--input", default=str(DEFAULT_INPUT), help="冻结快照 JSON 路径")
+    parser.add_argument(
+        "--research-items",
+        default=None,
+        help="研究条目 JSON 路径（可选，启用投研证据段）",
+    )
+    parser.add_argument(
+        "--macro-policy",
+        default=None,
+        help=(
+            "政策事件 JSON 路径或 policy_events 目录（可选，需同时提供 "
+            "--research-items，启用宏观研判段）"
+        ),
+    )
+    parser.add_argument(
+        "--policy-id",
+        default=None,
+        help="从政策事件库选择事件 id（缺省取 ACTIVE 中 date 最新者）",
+    )
     parser.add_argument("--no-audit", action="store_true", help="跳过审计留痕")
     args = parser.parse_args()
 
-    card = run_pipeline(args.input, audit_enabled=not args.no_audit)
+    card = run_pipeline(
+        args.input,
+        research_items_path=args.research_items,
+        macro_policy_path=args.macro_policy,
+        macro_policy_id=args.policy_id,
+        audit_enabled=not args.no_audit,
+    )
     primary = card["numbers"]
     print("=" * 78)
     print(f"GOAI 决策卡 | {card['underlying']} | 结论：{card['verdict']}")
@@ -777,6 +899,39 @@ def main() -> None:
     for item in card["risk_gate"]["findings"]:
         print(f"  {item}")
     print(f"\nAction 门：{card['action_gate']['action']} -> {card['action_gate']['next_step']}")
+    if card["research_evidence"].get("available"):
+        digest = card["research_evidence"]["digest"]
+        print(
+            f"\n投研证据：{digest['item_count']} 条（synthetic={digest['synthetic_only']}）| "
+            f"股价 {card['research_evidence']['stock_price_impact']['verdict']} | "
+            f"期权 {card['research_evidence']['option_impact']['verdict']}"
+        )
+    if card["macro_assessment"].get("available"):
+        macro = card["macro_assessment"]
+        policy = macro["policy_analysis"]
+        library = policy.get("library")
+        if library is not None:
+            verification = library["health_report"]["verification"]
+            policy_label = (
+                f"政策事件库 {library['event_count']} 个 | "
+                f"主事件 {policy['event_id']} | VERIFIED "
+                f"{verification['VERIFIED']}/PENDING {verification['PENDING']}"
+            )
+        else:
+            policy_label = f"政策事件 {policy['event_name']}（{policy['event_id']}）"
+        print(
+            f"\n宏观研判：情绪 {macro['sentiment']['verdict']}（{macro['sentiment']['index']}）| "
+            f"IV {macro['iv_emotion']['state']} | {policy_label} | "
+            f"主要矛盾 {policy['principal_contradiction']['pair']}"
+        )
+        if library is not None:
+            promoted = library["health_report"].get("recently_promoted", [])
+            if promoted:
+                latest = promoted[0]
+                print(
+                    f"  最近激活：{len(promoted)} 个事件，最新 {latest['id']} "
+                    f"（{latest['promoted_at']}，{latest['promoted_by'] or 'manual-review'}）"
+                )
     print(f"\n决策卡 JSON：{card.get('output_path')}")
     print("免责声明：决策支持/研究用途，非投资建议；默认模拟盘，任何订单须人机确认。")
 

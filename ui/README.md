@@ -1,25 +1,48 @@
-# GOAI 期权智能终端 - 参考 UI
+# GOAI 期权智能终端 - 前端（数据终端）
 
-一版可直接在浏览器打开的四面板参考界面（`index.html` + `styles.css` + `app.js` + `data.js`，无外部依赖、无构建步骤）。
+四面板终端界面（`index.html` + `styles.css` + `app.js` + `data.js`，无外部依赖、无构建步骤）。
+前端零计算：所有数字由本地只读服务 `/api/state` 提供，`data.js` 只是服务不可用时的静态回退。
+
+## 在整体架构中的角色
+
+本前端是 **GOAI 的数据展示面**，与 DSH 编排层并存：
+
+- **DSH 对话入口**：自然语言经 `goai_chat` 工具驱动「场景解析 → 五阶段管线 → 十角色辩论」，
+  决策卡数据仍来自本服务的 `/api/state`；Phase 1a 会在 DSH GUI 内追加决策卡面板。
+- **独立模式**：评审机器不装 DSH 也能完整演示——直接启动本服务并用对话面板驱动管线。
+- **静态回退**：双击 `ui/index.html` 打开冻结演示数据。
 
 ## 打开方式
 
-直接用浏览器打开 `ui/index.html`，或：
+直接用浏览器打开 `ui/index.html`（静态回退模式），或启动本地服务接入真实管线：
 
 ```powershell
-python -m http.server 8000 --directory ui
+python -m src.ui_server --port 8000
 ```
 
 然后访问 `http://127.0.0.1:8000/`。
+
+接口（仅本机 127.0.0.1）：
+
+- `GET /api/state`：决策卡 + 投研证据 + 宏观研判 + 政策事件库 + 来源健康报告
+- `GET /api/policy-library`：事件库与健康报告
+- `POST /api/run`：用冻结快照重跑五阶段管线（默认写审计与决策卡文件；`?no_audit=1` 仅测试）
+- `POST /api/chat`：自然语言 → 确定性场景解析 → 管线 → 十角色辩论（body `{"message": ...}`；
+  无 DeepSeek key 自动离线回退）
+
+页面里的「重新运行」按钮在服务模式下会真实重跑管线并整卡刷新；静态回退模式只做动画。
 
 ## 数据来源
 
 所有数字取自真实产物，未虚构：
 
 - `data/hero_inputs.json`：2026-08-08 Futu OpenD 冻结快照（正股、期权链、IV、OI、账户）
-- `data/decision_card_2026-08-12.json`：自研引擎产出的决策卡（成本、Greeks、情景损益、Edge/Risk/Action 门、审计哈希）
+- 决策卡：自研引擎产出的成本、Greeks、情景损益、Edge/Risk/Action 门、审计哈希
+- 宏观研判：情绪指数、IV 晴雨表、政策博弈/政治经济学、求是检验
+- 政策事件库：事件状态、来源核验（VERIFIED/PENDING/FAILED）与最近激活事件
 
 冻结快照仅录制了 ATM 480 合约，界面中已显式标注，没有补造其他行权价。
+自动监控入库的 `DRAFT` 事件只出现在事件库健康统计里，不进入主要矛盾分析。
 
 ## 设计参考（开源金融项目）
 
@@ -44,4 +67,7 @@ python -m http.server 8000 --directory ui
 
 ## 与当前产品能力的关系
 
-这是参考 UI，不是可运行的产品入口。数据展示对应 P0a（Replay/冻结快照）决策卡；Live 数据、对话 Agent 编排和模拟确认流程尚未接入。
+数据展示对应 P0a（Replay/冻结快照）决策卡。对话链路（确定性场景解析 + 十角色辩论）已通过
+`POST /api/chat` 接入本页面，并经 DSH 的 `goai_chat` 工具在 Harness 内可用；
+尚未接入的是 Live 行情与模拟确认流程（P0b/P0c）。
+前端只做格式化与渲染，不产生任何数字；任何模拟订单仍须用户独立确认。

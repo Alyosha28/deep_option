@@ -69,48 +69,80 @@ elements:
     style: "$default"
     rows:
       - - text: "维度"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "固定计算器"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "通用 LLM"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "GOAI Agent"
           color: "$accent"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
       - - text: "场景理解"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "读不懂「业绩前方向不确定」"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "听得懂场景，还能追问补全"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "解析场景、编排工具、写结论"
           color: "$accent"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
       - - text: "数字从哪来"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "公式写死在代码里"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "概率生成，会编数字"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "确定性工具产出"
           color: "$accent"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
       - - text: "可复算 / 可核验"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "能复算，但只会预设项"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "同问不同答，无法核验"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "SHA-256 审计，数字可溯源"
           color: "$accent"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
       - - text: "出错的表现"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "报错 → 改代码重跑"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "错了不自知，还很笃定"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "证据不足就 NO_TRADE"
           color: "$accent"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
       - - text: "判决"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "会算，但只会算"
           color: "$textSub"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "会编，但数字不可信"
           color: "$warn"
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
         - text: "理解归 LLM，数字归工具"
           color: "$accent"
           bold: true
+          fontFamily: {latin: Arial, ea: Microsoft YaHei}
+
+  # —— 表头 accent 底线（QA：导出器未实现 tableStyles 首行底边，补 Line）——
+  - elementId: compare-header-rule
+    elementType: line
+    bounds: [64, 144.2, 832, 1]
+    viewBox: [832, 1]
+    points: "0,0.5 832,0.5"
+    border: {style: solid, width: 1, color: "$accent"}
 
   # —— 金句条（§4.2）——
   - elementId: quote-bg
@@ -136,7 +168,7 @@ elements:
       color: "$accent"
       align: [left, middle]
       wrap: false
-      text: "&gt;"
+      text: ">"
 
   - elementId: quote-text
     elementType: text
@@ -173,7 +205,7 @@ elements:
       align: [left, middle]
       wrap: false
       text: |
-        分工让「会编」退场：理解与表达归 LLM，数字与溯源归工具；数字编造目标为 <span style="color:$accent; font-family:Consolas">0</span>。
+        分工让「会编」退场：理解与表达归 LLM，数字与溯源归工具；数字编造目标为 <span style="color:#22D3EE; font-family:Consolas">0</span>。
 
   # —— 页脚（§4.4）——
   - elementId: footer-hairline
@@ -222,6 +254,9 @@ animations:
     effect: wipe-in
     direction: right
     trigger: onClick
+  - elementId: compare-header-rule
+    effect: fade-in
+    trigger: withPrevious
   # G3 点击组：结论条 fade-in
   - elementId: conclusion-bg
     effect: fade-in
