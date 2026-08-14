@@ -1,0 +1,103 @@
+pageType: content
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 40, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "回测证据 · 09"
+  - elementId: title
+    elementType: text
+    bounds: [64, 64, 832, 44]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 24
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "历史回测与压力测试：负期望不是巧合"
+  - elementId: hairline
+    elementType: shape
+    bounds: [64, 120, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: roi-chart
+    elementType: image
+    bounds: [64, 146, 406, 268]
+    src: "media/chart_roi.png"
+    fit: {mode: contain}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: roi-caption
+    elementType: text
+    bounds: [64, 422, 406, 26]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>口径A：引擎 + 历史 IV，11 期（2023Q3–2026Q1）｜口径B：市场预期波动代理，19 期（2021Q3–2026Q1）</p>
+  - elementId: crush-chart
+    elementType: image
+    bounds: [490, 146, 406, 268]
+    src: "media/chart_crush.png"
+    fit: {mode: contain}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: crush-caption
+    elementType: text
+    bounds: [490, 422, 406, 26]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p>IV crush -20 / -35 / -50% × 上行 / 下行 P&L（HKD，ask 口径，方向正确情形）</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 456, 4, 36]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: quote
+    elementType: text
+    bounds: [80, 458, 800, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: true
+      text: "回测与压力测试同声说：买入业绩跨式，历史上是负期望。"
+  - elementId: source
+    elementType: text
+    bounds: [64, 500, 832, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "data/backtest_tencent_straddle.json · data/decision_card_2026-08-13.json（proposal_ref）"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "09 / 17"

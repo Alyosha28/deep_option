@@ -1,0 +1,181 @@
+pageType: content
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 40, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "竞品与差异 · 15"
+  - elementId: title
+    elementType: text
+    bounds: [64, 64, 832, 44]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 24
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "比我们数据强的没我们的流程，比我们概念近的没我们的诚实"
+  - elementId: hairline
+    elementType: shape
+    bounds: [64, 120, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: row1-panel
+    elementType: shape
+    bounds: [64, 140, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row1-tag
+    elementType: text
+    bounds: [84, 157, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "01"
+  - elementId: row1-body
+    elementType: text
+    bounds: [146, 149, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>富途 / 老虎 / IBKR</strong> · 数据强，缺端到端研究流程与决策解释</p>
+  - elementId: row2-panel
+    elementType: shape
+    bounds: [64, 216, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row2-tag
+    elementType: text
+    bounds: [84, 233, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "02"
+  - elementId: row2-body
+    elementType: text
+    bounds: [146, 225, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>moomoo Engine / Option Alpha</strong> · 异动预警与规则自动化强，不做完整决策与账户约束求解</p>
+  - elementId: row3-panel
+    elementType: shape
+    bounds: [64, 292, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row3-tag
+    elementType: text
+    bounds: [84, 309, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "03"
+  - elementId: row3-body
+    elementType: text
+    bounds: [146, 301, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>moontower.ai</strong> · 观点→期权表达，概念最接近；但以选股表达为主，不落账户与审计闭环</p>
+  - elementId: row4-panel
+    elementType: shape
+    bounds: [64, 368, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row4-tag
+    elementType: text
+    bounds: [84, 385, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "04"
+  - elementId: row4-body
+    elementType: text
+    bounds: [146, 377, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>我们的增量</strong> · 对话场景→账户约束求解 / 流动性评分+预警 / IV crush 模块 / 规则差异显性化 / 审计溯源</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 456, 4, 36]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: quote
+    elementType: text
+    bounds: [80, 458, 800, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: true
+      text: "护城河 = 完整研究流程 + 敢说 NO_TRADE + 全链路审计。"
+  - elementId: source
+    elementType: text
+    bounds: [64, 500, 832, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "research/01-market-landscape.md · PROJECT_STATE.md §3"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "15 / 17"

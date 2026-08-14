@@ -1,0 +1,181 @@
+pageType: content
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 40, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "问题 · 03"
+  - elementId: title
+    elementType: text
+    bounds: [64, 64, 832, 44]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 24
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "会看 Call/Put 的散户，卡在四件事上"
+  - elementId: hairline
+    elementType: shape
+    bounds: [64, 120, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: row1-panel
+    elementType: shape
+    bounds: [64, 140, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row1-tag
+    elementType: text
+    bounds: [84, 157, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "01"
+  - elementId: row1-body
+    elementType: text
+    bounds: [146, 149, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>信息散</strong> · 行情、合约规则、定价、风险、账户分散在五个页面</p>
+  - elementId: row2-panel
+    elementType: shape
+    bounds: [64, 216, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row2-tag
+    elementType: text
+    bounds: [84, 233, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "02"
+  - elementId: row2-body
+    elementType: text
+    bounds: [146, 225, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>数字虚</strong> · 界面价格 ≠ 可成交价格（价差 + 手续费 + 滑点）</p>
+  - elementId: row3-panel
+    elementType: shape
+    bounds: [64, 292, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row3-tag
+    elementType: text
+    bounds: [84, 309, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "03"
+  - elementId: row3-body
+    elementType: text
+    bounds: [146, 301, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>规则乱</strong> · 港股美式行权 / 实物交割 / 持仓限额，照搬美股经验会踩坑</p>
+  - elementId: row4-panel
+    elementType: shape
+    bounds: [64, 368, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row4-tag
+    elementType: text
+    bounds: [84, 385, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "04"
+  - elementId: row4-body
+    elementType: text
+    bounds: [146, 377, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>大模型编数</strong> · ChatGPT 能「算」出看起来很专业的假数字——金融里是致命的</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 456, 4, 36]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: quote
+    elementType: text
+    bounds: [80, 458, 800, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: true
+      text: "通用大模型的问题不是不会说话，是它不知道自己不知道。"
+  - elementId: source
+    elementType: text
+    bounds: [64, 500, 832, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "docs/PRD.md §1.2"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "03 / 17"

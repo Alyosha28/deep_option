@@ -1,0 +1,92 @@
+pageType: cover
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: accent-bar
+    elementType: shape
+    bounds: [64, 84, 56, 4]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 106, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "GOAI · BOUNDLESS AGENTS · AI+金融"
+  - elementId: title
+    elementType: text
+    bounds: [64, 140, 832, 64]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 40
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "GOAI · DeepSeek Harness 金融期权终端"
+  - elementId: subtitle
+    elementType: text
+    bounds: [64, 216, 780, 40]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 16
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "一个敢对用户说「别买」的港美股期权决策 Agent"
+  - elementId: chip
+    elementType: shape
+    bounds: [64, 288, 240, 34]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: chip-label
+    elementType: text
+    bounds: [78, 294, 212, 22]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "初赛评审 · 参考版 16 页"
+  - elementId: meta
+    elementType: text
+    bounds: [64, 352, 832, 84]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 11
+      color: "#6B726C"
+      lineHeight: 1.6
+      align: [left, top]
+      text: |
+        <p>GOAI 世界人工智能开源大赛 · Boundless Agents · 金融服务赛道</p>
+        <p>初赛提交 <span style="font-family:Consolas;">2026-08-16</span> · 队伍 <strong><span style="color:#1F2A2A;">Mogen Xdengly</span></strong>（3 人）</p>
+  - elementId: footer
+    elementType: text
+    bounds: [64, 462, 832, 16]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "决策支持与研究工具 · 非投资建议 · 比赛版本仅 Futu 模拟盘 · 公开仓库 github.com/Alyosha28/GOAi_competition"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "01 / 17"

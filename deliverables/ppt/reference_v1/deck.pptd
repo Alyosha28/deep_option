@@ -1,0 +1,30 @@
+version: v2
+title: GOAI 初赛参考版 PPT（Style E · 券商报告风）
+size: [960, 540]
+theme:
+  colors:
+    bg: "#F7F5F0"
+    panel: "#FDFCFA"
+    border: "#DDD8CD"
+    text: "#1F2A2A"
+    sub: "#6B726C"
+    accent: "#0E7C4A"
+    down: "#B0413E"
+pages:
+  - pages/01_cover.page
+  - pages/02_conclusion.page
+  - pages/03_painpoints.page
+  - pages/04_users.page
+  - pages/05_product.page
+  - pages/06_pipeline.page
+  - pages/07_decision_card.page
+  - pages/08_gates.page
+  - pages/09_backtest.page
+  - pages/10_data_layer.page
+  - pages/11_engine.page
+  - pages/12_debate.page
+  - pages/13_dsh.page
+  - pages/14_compliance.page
+  - pages/15_competitors.page
+  - pages/16_team_roadmap.page
+  - pages/17_closing.page

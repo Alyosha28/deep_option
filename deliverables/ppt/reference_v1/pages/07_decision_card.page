@@ -1,0 +1,231 @@
+pageType: content
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 40, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "决策卡 · 07"
+  - elementId: title
+    elementType: text
+    bounds: [64, 64, 832, 44]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 24
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "一张卡，回答六个问题"
+  - elementId: hairline
+    elementType: shape
+    bounds: [64, 120, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: r1-panel
+    elementType: shape
+    bounds: [64, 140, 832, 44]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: r1-tag
+    elementType: text
+    bounds: [84, 147, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 20
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "01"
+  - elementId: r1-body
+    elementType: text
+    bounds: [146, 145, 734, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "#1F2A2A"
+      align: [left, top]
+      wrap: false
+      text: "<p><strong>结论</strong> · <span style=\"color:#B0413E;\"><strong>NO_TRADE</strong></span> —— 当前成本与证据不支持交易，及对用户的含义</p>"
+  - elementId: r2-panel
+    elementType: shape
+    bounds: [64, 192, 832, 44]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: r2-tag
+    elementType: text
+    bounds: [84, 199, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 20
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "02"
+  - elementId: r2-body
+    elementType: text
+    bounds: [146, 197, 734, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "#1F2A2A"
+      align: [left, top]
+      wrap: false
+      text: "<p><strong>三条关键依据</strong> · 预期波动＜回本 / 历史负期望 / IV crush 转负</p>"
+  - elementId: r3-panel
+    elementType: shape
+    bounds: [64, 244, 832, 44]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: r3-tag
+    elementType: text
+    bounds: [84, 251, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 20
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "03"
+  - elementId: r3-body
+    elementType: text
+    bounds: [146, 249, 734, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "#1F2A2A"
+      align: [left, top]
+      wrap: false
+      text: "<p><strong>成本与亏损</strong> · 4,414 港币（ask 口径）≤ 5% 风险预算 5,000</p>"
+  - elementId: r4-panel
+    elementType: shape
+    bounds: [64, 296, 832, 44]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: r4-tag
+    elementType: text
+    bounds: [84, 303, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 20
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "04"
+  - elementId: r4-body
+    elementType: text
+    bounds: [146, 301, 734, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "#1F2A2A"
+      align: [left, top]
+      wrap: false
+      text: "<p><strong>数据模式</strong> · REPLAY / FROZEN，快照 2026-08-08 11:56，sha256 可验</p>"
+  - elementId: r5-panel
+    elementType: shape
+    bounds: [64, 348, 832, 44]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: r5-tag
+    elementType: text
+    bounds: [84, 355, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 20
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "05"
+  - elementId: r5-body
+    elementType: text
+    bounds: [146, 353, 734, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "#1F2A2A"
+      align: [left, top]
+      wrap: false
+      text: "<p><strong>什么会改变结论</strong> · 换 8/28 到期、Live 行情复核成本等 4 条，逐条列出</p>"
+  - elementId: r6-panel
+    elementType: shape
+    bounds: [64, 400, 832, 44]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: r6-tag
+    elementType: text
+    bounds: [84, 407, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 20
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "06"
+  - elementId: r6-body
+    elementType: text
+    bounds: [146, 405, 734, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12
+      color: "#1F2A2A"
+      align: [left, top]
+      wrap: false
+      text: "<p><strong>唯一下一步</strong> · 无需下单；调整期限 / 行权价后重新评估</p>"
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 456, 4, 36]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: quote
+    elementType: text
+    bounds: [80, 458, 800, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: true
+      text: "首屏只回答六个问题，详细证据在展开层。"
+  - elementId: source
+    elementType: text
+    bounds: [64, 500, 832, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "docs/PRD.md §3.4 · presentation/facts.md §1"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "07 / 17"

@@ -1,0 +1,80 @@
+pageType: cover
+background:
+  type: solid
+  color: "#FCFCF9"
+elements:
+  - elementId: accent-bar
+    elementType: shape
+    bounds: [64, 84, 64, 4]
+    shapeName: rect
+    fill: {type: solid, color: "#1D4ED8"}
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 106, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#1D4ED8"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "GOAI · BOUNDLESS AGENTS · AI+金融"
+  - elementId: title
+    elementType: text
+    bounds: [64, 140, 832, 64]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 40
+      bold: true
+      color: "#161A20"
+      align: [left, middle]
+      wrap: false
+      text: "GOAI · DeepSeek Harness 金融期权终端"
+  - elementId: subtitle
+    elementType: text
+    bounds: [64, 216, 780, 40]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 16
+      color: "#566070"
+      align: [left, top]
+      wrap: false
+      text: "一个敢对用户说「别买」的港美股期权决策 Agent"
+  - elementId: style-chip
+    elementType: shape
+    bounds: [64, 288, 210, 34]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FFFFFF"}
+    border: {style: solid, width: 1, color: "#D8D6CE"}
+  - elementId: style-label
+    elementType: text
+    bounds: [78, 294, 184, 22]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 12
+      bold: true
+      color: "#1D4ED8"
+      align: [left, middle]
+      wrap: false
+      text: "STYLE B · 纸底编辑风"
+  - elementId: footer
+    elementType: text
+    bounds: [64, 462, 832, 16]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "#566070"
+      align: [left, top]
+      wrap: false
+      text: "GOAI 世界人工智能开源大赛 · Boundless Agents · AI+金融 · 队伍 Mogen Xdengly · 视觉预览参考版"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#566070"
+      align: [right, middle]
+      wrap: false
+      text: "03 / 10"

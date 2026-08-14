@@ -1,0 +1,14 @@
+version: v2
+title: GOAI 参考版 PPT - 五皮肤预览
+size: [960, 540]
+pages:
+  - pages/01_style_a_cover.page
+  - pages/02_style_a_content.page
+  - pages/03_style_b_cover.page
+  - pages/04_style_b_content.page
+  - pages/05_style_c_cover.page
+  - pages/06_style_c_content.page
+  - pages/07_style_d_cover.page
+  - pages/08_style_d_content.page
+  - pages/09_style_e_cover.page
+  - pages/10_style_e_content.page

@@ -1,0 +1,181 @@
+pageType: content
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 40, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "安全与合规 · 14"
+  - elementId: title
+    elementType: text
+    bounds: [64, 64, 832, 44]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 24
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "审计、脱敏、人机确认——合规不是 PPT 里的一句话"
+  - elementId: hairline
+    elementType: shape
+    bounds: [64, 120, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: row1-panel
+    elementType: shape
+    bounds: [64, 140, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row1-tag
+    elementType: text
+    bounds: [84, 157, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "01"
+  - elementId: row1-body
+    elementType: text
+    bounds: [146, 149, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>非投资建议</strong> · 研究 / 教育工具，不自动交易；比赛版仅 Futu 模拟盘，实盘工具硬阻断</p>
+  - elementId: row2-panel
+    elementType: shape
+    bounds: [64, 216, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row2-tag
+    elementType: text
+    bounds: [84, 233, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "02"
+  - elementId: row2-body
+    elementType: text
+    bounds: [146, 225, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>人机确认</strong> · 任何模拟订单 = 用户独立确认 + 提交前复核；参数变化即失效</p>
+  - elementId: row3-panel
+    elementType: shape
+    bounds: [64, 292, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row3-tag
+    elementType: text
+    bounds: [84, 309, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "03"
+  - elementId: row3-body
+    elementType: text
+    bounds: [146, 301, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>审计链</strong> · 82 条记录、SHA-256 连续、密钥片段脱敏 [REDACTED]</p>
+  - elementId: row4-panel
+    elementType: shape
+    bounds: [64, 368, 832, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row4-tag
+    elementType: text
+    bounds: [84, 385, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "04"
+  - elementId: row4-body
+    elementType: text
+    bounds: [146, 377, 734, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>边界声明</strong> · 不替代金融机构、券商、理财顾问的专业判断（赛事规则 Q11 / §9.3）</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 456, 4, 36]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: quote
+    elementType: text
+    bounds: [80, 458, 800, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: true
+      text: "让用户始终知道：系统知道什么、假设什么、缺什么、能做什么。"
+  - elementId: source
+    elementType: text
+    bounds: [64, 500, 832, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "docs/PRD.md §7 · 规则手册 §9.3 / FAQ Q11"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "14 / 17"

@@ -1,0 +1,2 @@
+name: GOAI Options Terminal
+description: GOAI 期权决策终端专属 Agent：数字铁律（LLM 不算数）、模拟盘与人机确认、审计留痕；优先使用 goai_state/goai_run/goai_chat 工具，独立模式回退 python -m src.* CLI。基于 standard preset 复制，工具集与 standard 一致。

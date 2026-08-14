@@ -1,0 +1,199 @@
+pageType: content
+background:
+  type: solid
+  color: "#F7F5F0"
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [64, 40, 600, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      bold: true
+      color: "#0E7C4A"
+      letterSpacing: 3
+      align: [left, top]
+      wrap: false
+      text: "产品形态 · 05"
+  - elementId: title
+    elementType: text
+    bounds: [64, 64, 832, 44]
+    content:
+      fontFamily: {latin: Georgia, ea: SimSun}
+      fontSize: 24
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: false
+      text: "Bloomberg 的流程能力，零售的价格"
+  - elementId: hairline
+    elementType: shape
+    bounds: [64, 120, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: row1-panel
+    elementType: shape
+    bounds: [64, 140, 430, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row1-tag
+    elementType: text
+    bounds: [84, 157, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "01"
+  - elementId: row1-body
+    elementType: text
+    bounds: [146, 149, 330, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>四面板</strong> · 对话与任务 / 期权链与流动性 / 策略与账户 / 事件与审计</p>
+  - elementId: row2-panel
+    elementType: shape
+    bounds: [64, 216, 430, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row2-tag
+    elementType: text
+    bounds: [84, 233, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "02"
+  - elementId: row2-body
+    elementType: text
+    bounds: [146, 225, 330, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>对话入口</strong> · 自然语言直接驱动管线；底部 dock 展示十角色辩论</p>
+  - elementId: row3-panel
+    elementType: shape
+    bounds: [64, 292, 430, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row3-tag
+    elementType: text
+    bounds: [84, 309, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "03"
+  - elementId: row3-body
+    elementType: text
+    bounds: [146, 301, 330, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>前端零计算</strong> · 所有数字来自后端引擎，页面只做渲染</p>
+  - elementId: row4-panel
+    elementType: shape
+    bounds: [64, 368, 430, 64]
+    shapeName: roundRect
+    fill: {type: solid, color: "#FDFCFA"}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: row4-tag
+    elementType: text
+    bounds: [84, 385, 44, 30]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 22
+      bold: true
+      color: "#0E7C4A"
+      align: [left, middle]
+      wrap: false
+      text: "04"
+  - elementId: row4-body
+    elementType: text
+    bounds: [146, 377, 330, 46]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      color: "#1F2A2A"
+      lineHeight: 1.3
+      align: [left, top]
+      text: |
+        <p><strong>双入口</strong> · 独立浏览器终端 + DeepSeek Harness 对话</p>
+  - elementId: terminal-img
+    elementType: image
+    bounds: [522, 140, 374, 224]
+    src: "media/terminal.png"
+    fit: {mode: contain}
+    border: {style: solid, width: 1, color: "#DDD8CD"}
+  - elementId: terminal-caption
+    elementType: text
+    bounds: [522, 372, 374, 60]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 10
+      color: "#6B726C"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p>ui/preview.png · 四面板终端（冻结快照演示）</p>
+        <p>移动端见 ui/preview_mobile.png；数字全部来自 /api/state</p>
+  - elementId: quote-bar
+    elementType: shape
+    bounds: [64, 456, 4, 36]
+    shapeName: rect
+    fill: {type: solid, color: "#0E7C4A"}
+  - elementId: quote
+    elementType: text
+    bounds: [80, 458, 800, 34]
+    content:
+      fontFamily: {latin: Arial, ea: Microsoft YaHei}
+      fontSize: 12.5
+      bold: true
+      color: "#1F2A2A"
+      align: [left, middle]
+      wrap: true
+      text: "终端负责把数字摆清楚，Agent 负责把决策讲明白。"
+  - elementId: source
+    elementType: text
+    bounds: [64, 500, 832, 14]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9.5
+      color: "#6B726C"
+      align: [left, top]
+      wrap: false
+      text: "ui/ + src/ui_server.py（127.0.0.1:8000，仅本机）"
+  - elementId: page-number
+    elementType: text
+    bounds: [836, 518, 60, 12]
+    content:
+      fontFamily: {latin: Consolas, ea: Microsoft YaHei}
+      fontSize: 9
+      color: "#6B726C"
+      align: [right, middle]
+      wrap: false
+      text: "05 / 17"
