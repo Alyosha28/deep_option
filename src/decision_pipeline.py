@@ -14,8 +14,10 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
@@ -150,7 +152,7 @@ def _validate_leg(leg: Mapping[str, Any], name: str) -> None:
     _require_number(leg, "strike", positive=True)
     _require_number(leg, "bid")
     _require_number(leg, "ask")
-    _require_number(leg, "mid")
+    _require_number(leg, "mid", positive=True)
     _require_number(leg, "open_interest")
 
 
@@ -195,6 +197,12 @@ def load_frozen_snapshot(
     _require_number(account, "risk_budget_pct", positive=True)
     _require_number(account, "contract_multiplier", positive=True)
 
+    model = payload.get("model")
+    if not isinstance(model, dict):
+        raise ValueError("frozen snapshot model section is missing")
+    _require_number(model, "riskfree_rate")
+    _require_number(model, "div_yield")
+
     legs = payload.get("legs")
     if not isinstance(legs, list) or not legs:
         raise ValueError("frozen snapshot must contain at least one expiry leg")
@@ -226,6 +234,7 @@ def load_frozen_snapshot(
 def compute_engine(
     data: dict[str, Any],
     cost_model: Mapping[str, Any] | None = None,
+    scenario: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """阶段 3：自研引擎。IV 二分求解、Greeks bump-and-reprice、成本与情景损益。"""
 
@@ -294,7 +303,7 @@ def compute_engine(
         item["cost_lot_exec"] = item["cost_lot_ask"] + model["fees_hkd_per_lot"] + slippage
         item["max_loss_exec"] = item["cost_lot_exec"] * item["lots"]
 
-    proposal = build_proposal(payload, primary, secondary)
+    proposal = build_proposal(payload, primary, secondary, scenario=scenario)
     return {
         "primary": primary,
         "secondary": secondary,
@@ -409,24 +418,45 @@ def edge_gate(
             }
         )
 
-    crush = engine["proposal"]["legs"][0]["pnl_after_iv_crush"][0]["rows"]
-    worst_crush_pnl = min(row["pnl"] for row in crush)
-    if worst_crush_pnl < 0:
+    legs = engine["proposal"]["legs"]
+    primary_leg = next(
+        (leg for leg in legs if leg.get("expiry") == engine["primary"].get("expiry")),
+        legs[0],
+    )
+    crush = next(
+        (
+            row
+            for row in primary_leg.get("pnl_after_iv_crush", [])
+            if row.get("iv_crush") == "-20%"
+        ),
+        None,
+    )
+    if crush is None or not crush.get("rows"):
         checks.append(
             {
                 "check": "IV crush 情景",
-                "result": "FAIL",
-                "detail": f"预期波动 + IV -20% 后最差情景亏损 {worst_crush_pnl:,.0f} HKD",
+                "result": "UNKNOWN",
+                "detail": "IV crush 情景数据缺失，不参与 Edge 结论",
             }
         )
     else:
-        checks.append(
-            {
-                "check": "IV crush 情景",
-                "result": "PASS",
-                "detail": "预期波动下 IV crush 情景未转负",
-            }
-        )
+        worst_crush_pnl = min(row["pnl"] for row in crush["rows"])
+        if worst_crush_pnl < 0:
+            checks.append(
+                {
+                    "check": "IV crush 情景",
+                    "result": "FAIL",
+                    "detail": f"预期波动 + IV -20% 后最差情景亏损 {worst_crush_pnl:,.0f} HKD",
+                }
+            )
+        else:
+            checks.append(
+                {
+                    "check": "IV crush 情景",
+                    "result": "PASS",
+                    "detail": "预期波动下 IV crush 情景未转负",
+                }
+            )
 
     failed = any(item["result"] == "FAIL" for item in checks)
     return {
@@ -456,7 +486,10 @@ def risk_gate(engine: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
             f"PASS 最大亏损（executable 口径）{max_loss:,.0f} <= 预算 {budget:,.0f} HKD"
         )
     else:
-        blocked.append(f"最大亏损 {max_loss:,.0f} 超过 5% 风险预算 {budget:,.0f} HKD")
+        budget_pct = float(account["risk_budget_pct"])
+        blocked.append(
+            f"最大亏损 {max_loss:,.0f} 超过 {budget_pct:g}% 风险预算 {budget:,.0f} HKD"
+        )
 
     if primary["cost_lot_exec"] * max(primary["lots"], 1) <= cash:
         findings.append(f"PASS 权利金占用不超可用现金 {cash:,.0f} HKD")
@@ -552,12 +585,57 @@ def action_gate(
     }
 
 
+_VIEW_LABELS = {
+    "bullish": "看涨",
+    "bearish": "看跌",
+    "uncertain": "方向不确定",
+}
+_ACTION_LABELS = {
+    "NO_TRADE": "不交易",
+    "BLOCK": "风险阻断",
+    "DRAFT_ONLY": "仅草案（待 Live 数据/人工确认）",
+    "READY_FOR_CONFIRMATION": "可进入用户确认流程",
+}
+
+
+def _summary_text(
+    scenario: Mapping[str, Any] | None,
+    edge: Mapping[str, Any],
+    risk: Mapping[str, Any],
+    action: Mapping[str, Any],
+) -> str:
+    """由 Edge/Risk/Action 三门控的实际结果生成 summary，不写死任何结论。"""
+
+    view = str(scenario.get("view", "uncertain")).lower() if scenario else "uncertain"
+    view_label = _VIEW_LABELS.get(view, view)
+    horizon = scenario.get("horizon") if scenario else None
+    head = f"{view_label}观点、{horizon}场景" if horizon else f"{view_label}观点场景"
+
+    fail_count = sum(1 for item in edge.get("checks", []) if item.get("result") == "FAIL")
+    edge_part = f"Edge 门 {edge['verdict']}"
+    if fail_count:
+        edge_part += f"（{fail_count} 项 FAIL）"
+
+    blocked = list(risk.get("blocked") or [])
+    risk_part = f"Risk 门 {risk['decision']}"
+    if blocked:
+        risk_part += f"（{len(blocked)} 项一票否决）"
+
+    verdict = str(action["action"])
+    verdict_label = _ACTION_LABELS.get(verdict, verdict)
+    tail = f"最终判定 {verdict}（{verdict_label}）"
+    reasons = "; ".join(str(item) for item in (action.get("blocked") or []))
+    tail += f"：{reasons}" if reasons else "。"
+    return f"{head}：{edge_part}，{risk_part}，{tail}"
+
+
 def build_decision_card(
     data: dict[str, Any],
     engine: dict[str, Any],
     edge: dict[str, Any],
     risk: dict[str, Any],
     action: dict[str, Any],
+    scenario: Mapping[str, Any] | None = None,
     research_evidence: Mapping[str, Any] | None = None,
     macro_assessment: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -579,8 +657,8 @@ def build_decision_card(
         },
         {
             "claim": (
-                f"跨式盈亏平衡需要 {breakeven_move_pct:.2f}% 变动；"
-                "预期波动不足以覆盖成本"
+                f"主方案跨式盈亏平衡需要 {breakeven_move_pct:.2f}% 变动"
+                f"（预期波动 {earnings['expected_move_pct']:.2f}%，由 Edge 门对比判定）"
             ),
             "source": "self-built engine (BS/二叉树 + IV 二分 + bump-and-reprice)",
             "captured_at": data["captured_at"],
@@ -597,16 +675,30 @@ def build_decision_card(
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "underlying": data["underlying"],
         "scenario": {
-            "view": "uncertain",
-            "horizon": f"{earnings['date']} 业绩",
-            "account_cash_hkd": account["cash_hkd"],
-            "risk_budget_pct": account["risk_budget_pct"],
+            "view": str(scenario.get("view", "uncertain")) if scenario else "uncertain",
+            "horizon": (
+                str(scenario["horizon"])
+                if scenario and scenario.get("horizon")
+                else f"{earnings['date']} 业绩"
+            ),
+            "account_cash_hkd": (
+                float(scenario["account_cash_hkd"])
+                if scenario and scenario.get("account_cash_hkd") is not None
+                else account["cash_hkd"]
+            ),
+            "risk_budget_pct": (
+                float(scenario["risk_budget_pct"])
+                if scenario and scenario.get("risk_budget_pct") is not None
+                else account["risk_budget_pct"]
+            ),
+            "constraints": (
+                list(scenario.get("constraints", []))
+                if scenario and isinstance(scenario.get("constraints"), list)
+                else []
+            ),
         },
         "verdict": action["action"],
-        "summary": (
-            "当前冻结快照下，买入业绩跨式的预期波动不足以覆盖可成交成本，"
-            "历史回测亦显示负期望；Edge 门未过，结论为 NO_TRADE。"
-        ),
+        "summary": _summary_text(scenario, edge, risk, action),
         "key_evidence": key_evidence,
         "numbers": {
             "spot": spot,
@@ -638,7 +730,10 @@ def build_decision_card(
         },
         "conditions_that_change": [
             "正股在业绩日实际波动超过盈亏平衡所需幅度",
-            "切换到 8/28 到期或更低价差结构，成本显著下降",
+            (
+                f"切换到 {engine['secondary']['expiry'][5:].replace('-', '/').lstrip('0')} "
+                "到期或更低价差结构，成本显著下降"
+            ),
             "Live 行情 + 已验证费用/滑点 policy 后 executable 成本变化",
             "历史回测样本更新后 Edge 结论变化",
         ],
@@ -683,12 +778,16 @@ def build_decision_card(
 def audit(event: str, payload: Mapping[str, Any]) -> dict[str, Any]:
     """阶段 5b：JSONL + SHA-256 哈希链审计留痕。"""
 
-    result = subprocess.run(
-        [sys.executable, str(AUDIT_LOG_SCRIPT), "--event", event],
-        input=json.dumps(dict(payload), ensure_ascii=False).encode("utf-8"),
-        check=True,
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            [sys.executable, str(AUDIT_LOG_SCRIPT), "--event", event],
+            input=json.dumps(dict(payload), ensure_ascii=False).encode("utf-8"),
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"audit subprocess timed out after 30s (event={event})") from exc
     return json.loads(result.stdout.decode("utf-8"))
 
 
@@ -715,7 +814,9 @@ def run_pipeline(
             "horizon": f"{payload['earnings']['date']} 业绩",
             "account_cash_hkd": payload["account"]["cash_hkd"],
             "risk_budget_pct": payload["account"]["risk_budget_pct"],
-            "constraints": ["单笔最多亏损 5%"],
+            "constraints": [
+                f"单笔最多亏损 {float(payload['account']['risk_budget_pct']):g}%"
+            ],
         }
     parsed = parse_scenario(scenario)
     if parsed["underlying"] != data["underlying"]:
@@ -753,6 +854,7 @@ def run_pipeline(
         edge,
         risk,
         action,
+        scenario=parsed,
         research_evidence=research_evidence,
         macro_assessment=macro,
     )
@@ -838,10 +940,24 @@ def run_pipeline(
     if write_card:
         today = datetime.now(timezone.utc).date().isoformat()
         out_path = OUT_DIR / f"decision_card_{today}.json"
-        out_path.write_text(
-            json.dumps({**card, "audit_refs": audit_refs}, ensure_ascii=False, indent=2),
-            encoding="utf-8",
+        text = json.dumps(
+            {**card, "audit_refs": audit_refs}, ensure_ascii=False, indent=2
+        ) + "\n"
+        # 原子写：先写唯一临时文件再 os.replace，避免 ThreadingHTTPServer
+        # 并发 POST 竞态写坏 decision_card_{today}.json
+        fd, temp_name = tempfile.mkstemp(
+            dir=OUT_DIR, prefix=".decision_card_", suffix=".tmp"
         )
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+                fh.write(text)
+            os.replace(temp_name, out_path)
+        except BaseException:
+            try:
+                os.unlink(temp_name)
+            except OSError:
+                pass
+            raise
         card["output_path"] = str(out_path)
     card["audit_refs"] = audit_refs
     return card
@@ -889,7 +1005,10 @@ def main() -> None:
     print(f"SHA-256：{card['data_evidence']['snapshot_sha256'][:20]}...")
     print("=" * 78)
     print(card["summary"])
-    print(f"\n主方案：{primary['primary_expiry']} 480 ATM 跨式 x {primary['lots']} 张")
+    print(
+        f"\n主方案：{primary['primary_expiry']} {primary['strike']:g} ATM 跨式 x "
+        f"{primary['lots']} 张"
+    )
     print(f"  成本 ask {_fmt_hkd(primary['cost_per_lot_ask'])} / executable {_fmt_hkd(primary['cost_per_lot_exec'])} HKD 每张")
     print(f"  最大亏损 {_fmt_hkd(primary['max_loss'])} HKD | 盈亏平衡 {primary['breakeven'][0]:.2f} / {primary['breakeven'][1]:.2f}")
     print("\nEdge 门：")

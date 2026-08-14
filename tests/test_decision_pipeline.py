@@ -94,6 +94,27 @@ class FrozenSnapshotTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 load_frozen_snapshot(bad_path)
 
+    def test_model_section_is_validated(self):
+        original = json.loads(Path(DEFAULT_INPUT).read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as temp_dir:
+            malformed = dict(original)
+            malformed["model"] = {"riskfree_rate": "not-a-number", "div_yield": 0.0}
+            bad_path = Path(temp_dir, "bad_model.json")
+            bad_path.write_text(
+                json.dumps(malformed, ensure_ascii=False), encoding="utf-8"
+            )
+            with self.assertRaises(ValueError):
+                load_frozen_snapshot(bad_path)
+
+            missing = dict(original)
+            del missing["model"]
+            missing_path = Path(temp_dir, "no_model.json")
+            missing_path.write_text(
+                json.dumps(missing, ensure_ascii=False), encoding="utf-8"
+            )
+            with self.assertRaises(ValueError):
+                load_frozen_snapshot(missing_path)
+
 
 class GateTests(unittest.TestCase):
     def test_edge_gate_is_low_edge_when_expected_move_below_breakeven(self):
@@ -164,6 +185,43 @@ class FullPipelineTests(unittest.TestCase):
         self.assertEqual(len(card["key_evidence"]), 3)
         self.assertEqual(card["audit_refs"], [])
         self.assertNotIn("output_path", card)
+
+    def test_card_summary_and_scenario_follow_provided_scenario(self):
+        card = run_pipeline(
+            DEFAULT_INPUT,
+            scenario={
+                "underlying": "HK.00700",
+                "view": "bullish",
+                "horizon": "2026-08-28 到期前",
+                "account_cash_hkd": 250000,
+                "risk_budget_pct": 2,
+                "constraints": ["只用模拟盘"],
+            },
+            audit_enabled=False,
+            write_card=False,
+        )
+
+        self.assertEqual(card["scenario"]["view"], "bullish")
+        self.assertEqual(card["scenario"]["horizon"], "2026-08-28 到期前")
+        self.assertEqual(card["scenario"]["account_cash_hkd"], 250000.0)
+        self.assertEqual(card["scenario"]["risk_budget_pct"], 2.0)
+        self.assertEqual(card["scenario"]["constraints"], ["只用模拟盘"])
+        self.assertIn("看涨观点、2026-08-28 到期前场景", card["summary"])
+        self.assertIn(card["verdict"], card["summary"])
+
+    def test_risk_gate_blocked_message_uses_configured_budget(self):
+        data = load_frozen_snapshot(DEFAULT_INPUT)
+        engine = compute_engine(
+            data, cost_model={"fees_hkd_per_lot": 5000.0, "slippage_bps": 0.0}
+        )
+
+        result = risk_gate(engine, data)
+
+        self.assertEqual(result["decision"], "BLOCK")
+        budget_pct = float(data["payload"]["account"]["risk_budget_pct"])
+        self.assertTrue(
+            any(f"超过 {budget_pct:g}% 风险预算" in item for item in result["blocked"])
+        )
 
 
 if __name__ == "__main__":
