@@ -182,6 +182,11 @@ def build_proposal(data, primary, secondary, scenario=None):
 
 
 def risk_audit(data, primary, secondary):
+    """独立 CLI 展示用风险审计（与 decision_pipeline.risk_gate 同口径）。
+
+    注意：权威门控在 src/decision_pipeline.py 的 risk_gate()；本函数只服务于
+    hero CLI 的演示输出，数字口径保持一致但不参与决策卡判定。
+    """
     findings = []
     blocked = []
 
@@ -232,6 +237,7 @@ def audit(event: str, payload: dict) -> None:
         subprocess.run(
             cmd,
             input=json.dumps(payload, ensure_ascii=False),
+            encoding="utf-8",
             text=True,
             check=True,
             timeout=30,

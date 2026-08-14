@@ -651,6 +651,21 @@ class OrchestrationIsolationTests(unittest.TestCase):
                 )
                 self.assertEqual(result.typed_error.code, GatewayErrorCode.INVALID_REQUEST)
 
+    def test_financial_text_with_large_numbers_is_public_safe(self):
+        # 金融域常见合法文案（6 位以上数字）不再被误伤为敏感内容
+        error = GatewayError(
+            code=GatewayErrorCode.UPSTREAM_ERROR,
+            message="最大亏损 123456 HKD 超过预算 500000 HKD",
+            retryable=True,
+        )
+        self.assertIn("123456", error.to_dict()["message"])
+        with self.assertRaises(ValueError):
+            GatewayError(
+                code=GatewayErrorCode.UPSTREAM_ERROR,
+                message="token=abc123",
+                retryable=True,
+            )
+
     def test_sensitive_invalid_scenario_values_return_constant_typed_errors(self):
         class NeverCalled:
             mode = DataMode.LIVE

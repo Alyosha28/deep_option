@@ -349,7 +349,14 @@ class DecisionInputService:
                     origin_source=health.origin_source,
                 )
             else:
-                assert relevant_codes is not None
+                if relevant_codes is None:
+                    return self._component_error(
+                        GatewayErrorCode.INTERNAL_ERROR,
+                        "account-risk input codes were not resolved",
+                        {"operation": "refresh_decision_inputs", "account_ref": str(account_ref)},
+                        mode=health.mode,
+                        origin_source=health.origin_source,
+                    )
                 if self._deadline_exceeded(refresh_started):
                     return self._deadline_error(health.mode, health.origin_source, underlying, expiry)
                 try:

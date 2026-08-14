@@ -9,7 +9,8 @@ import unittest
 from http.server import ThreadingHTTPServer
 from typing import ClassVar
 
-from src.ui_server import Handler, build_state
+from src.decision_pipeline import DEFAULT_INPUT, compute_engine, load_frozen_snapshot
+from src.ui_server import Handler, _expiries_ui, build_state
 
 
 def _start_server() -> ThreadingHTTPServer:
@@ -74,6 +75,50 @@ class BuildStateTests(unittest.TestCase):
     def test_state_is_json_safe(self):
         json.dumps(build_state(), ensure_ascii=False)
 
+    def test_extra_legs_do_not_reuse_secondary_strategy(self):
+        data = load_frozen_snapshot(DEFAULT_INPUT)
+        payload = dict(data["payload"])
+        extra = json.loads(json.dumps(payload["legs"][1]))
+        extra["expiry"] = "2026-09-11"
+        extra["dte"] = extra["dte"] + 10
+        extra["call"]["strike"] = 999.0
+        extra["put"]["strike"] = 999.0
+        payload["legs"] = list(payload["legs"]) + [extra]
+        engine = compute_engine(data)
+
+        expiries = _expiries_ui(payload, engine)
+
+        self.assertEqual(len(expiries), 3)
+        self.assertIsNotNone(expiries[0]["strategy"])
+        self.assertIsNotNone(expiries[1]["strategy"])
+        self.assertIsNone(expiries[2]["strategy"])
+        self.assertEqual(expiries[2]["strike"], 999.0)
+        self.assertNotEqual(expiries[2]["strike"], expiries[1]["strike"])
+
+    def test_state_cache_serves_ttl_and_invalidates(self):
+        from src import ui_server as mod
+
+        calls = []
+        original = mod.build_state
+
+        def fake_build():
+            calls.append(1)
+            return {"cached": True}
+
+        mod.build_state = fake_build
+        try:
+            first = mod.build_state_cached()
+            second = mod.build_state_cached()
+            self.assertIs(first, second)
+            self.assertEqual(len(calls), 1)
+            mod.invalidate_state_cache()
+            third = mod.build_state_cached()
+            self.assertIsNot(third, first)
+            self.assertEqual(len(calls), 2)
+        finally:
+            mod.build_state = original
+            mod.invalidate_state_cache()
+
 
 class HttpEndpointTests(unittest.TestCase):
     server: ClassVar[ThreadingHTTPServer]
@@ -114,6 +159,20 @@ class HttpEndpointTests(unittest.TestCase):
 
         self.assertEqual(status, 404)
         self.assertIn("error", json.loads(body))
+
+    def test_foreign_host_header_is_rejected(self):
+        connection = http.client.HTTPConnection(
+            "127.0.0.1", self.server.server_address[1], timeout=120
+        )
+        connection.request(
+            "GET", "/api/state", headers={"Host": "evil.example.com"}
+        )
+        response = connection.getresponse()
+        raw = response.read().decode("utf-8")
+        connection.close()
+
+        self.assertEqual(response.status, 403)
+        self.assertIn("host", json.loads(raw)["error"].lower())
 
     def test_run_endpoint_offline(self):
         status, body = _request(self.server, "POST", "/api/run?no_audit=1")

@@ -37,6 +37,7 @@ from src.cn_source_parsers import CnFeedItem, decode_html, parse_cn_html_list
 from src.cn_data_extract import enrich_cn_item
 from src.policy_library import (
     DEFAULT_POLICY_DIR,
+    EmptyPolicyLibrary,
     load_policy_library,
     policy_health_report,
     upsert_policy_event,
@@ -472,11 +473,8 @@ def _existing_keys(library_dir: Path) -> tuple[set[str], set[str]]:
     try:
         library = load_policy_library(library_dir)
         events = list(library["events"])
-    except ValueError as exc:
-        if "empty" in str(exc):
-            events = []
-        else:
-            raise
+    except EmptyPolicyLibrary:
+        events = []
     event_ids = {event["id"] for event in events}
     urls: set[str] = set()
     for event in events:

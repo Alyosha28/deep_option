@@ -79,6 +79,50 @@ class PayloadValidationError(ValueError):
     """An operation payload is well-formed JSON but unusable for its contract."""
 
 
+SENSITIVE_FIELD_FRAGMENTS = (
+    "password",
+    "passwd",
+    "secret",
+    "token",
+    "api_key",
+    "private_key",
+    "acc_id",
+    "account_id",
+    "order_id",
+    "card_num",
+)
+
+
+def reject_sensitive_fields(
+    raw: Mapping[str, Any],
+    *,
+    label: str,
+    node_limit: int = 10_000,
+) -> None:
+    """递归拒绝键名包含敏感片段的对象。
+
+    收敛各数据模块（decision_pipeline / macro_assessment / policy_library /
+    research_evidence）此前各自复制的实现：行为与报错文案由 label 参数保持
+    向后兼容。
+    """
+    stack = list(raw.items())
+    visited = 0
+    while stack:
+        key, value = stack.pop()
+        visited += 1
+        if visited > node_limit:
+            raise ValueError(f"{label} exceeds the metadata traversal limit")
+        normalized = str(key).strip().lower()
+        if any(fragment in normalized for fragment in SENSITIVE_FIELD_FRAGMENTS):
+            raise ValueError(f"{label} contains a forbidden sensitive field: {key}")
+        if isinstance(value, dict):
+            stack.extend(value.items())
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                if isinstance(item, (dict, list)):
+                    stack.append((f"{key}[{index}]", item))
+
+
 def _reject_sensitive_keys(*values: Any) -> None:
     stack = list(values)
     visited = 0

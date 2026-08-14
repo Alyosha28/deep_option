@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import math
+from src.payload_validation import reject_sensitive_fields
 import statistics
 import subprocess
 import sys
@@ -37,19 +38,6 @@ KINDS = {"announcement", "earnings", "news", "research", "industry"}
 MAX_ITEMS = 500
 MAX_ITEM_BYTES = 64 * 1024
 MAX_FILE_BYTES = 8 * 1024 * 1024
-
-_SECRET_FRAGMENTS = (
-    "password",
-    "passwd",
-    "secret",
-    "token",
-    "api_key",
-    "private_key",
-    "acc_id",
-    "account_id",
-    "order_id",
-    "card_num",
-)
 
 # 演示级关键词规则：只用于把投研信息整理成可解释的摘要，不用于预测股价。
 POSITIVE_KEYWORDS = (
@@ -102,22 +90,8 @@ EVENT_KEYWORDS = (
 
 
 def _reject_sensitive(raw: Mapping[str, Any]) -> None:
-    stack = list(raw.items())
-    visited = 0
-    while stack:
-        key, value = stack.pop()
-        visited += 1
-        if visited > 10_000:
-            raise ValueError("research item exceeds the metadata traversal limit")
-        normalized = str(key).strip().lower()
-        if any(fragment in normalized for fragment in _SECRET_FRAGMENTS):
-            raise ValueError(f"research item contains a forbidden sensitive field: {key}")
-        if isinstance(value, dict):
-            stack.extend(value.items())
-        elif isinstance(value, list):
-            for index, item in enumerate(value):
-                if isinstance(item, (dict, list)):
-                    stack.append((f"{key}[{index}]", item))
+    # 敏感键拒绝逻辑收敛到 payload_validation.reject_sensitive_fields
+    reject_sensitive_fields(raw, label="research item")
 
 
 def _require_text(item: Mapping[str, Any], key: str) -> str:

@@ -88,9 +88,8 @@ class DataEnvelopeTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             GatewayError(
                 code=GatewayErrorCode.UPSTREAM_ERROR,
-                message="failed",
+                message="failed with acc_id=123456",
                 retryable=False,
-                details={"acc_id": 123456},
             )
 
         with self.assertRaises(ValueError):

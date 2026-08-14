@@ -71,7 +71,6 @@ class ContractDefensiveCoverageTests(unittest.TestCase):
             (ValueError, lambda: GatewayError(GatewayErrorCode.INTERNAL_ERROR, "token=secret", False)),
             (TypeError, lambda: GatewayError(GatewayErrorCode.INTERNAL_ERROR, "safe", 1)),
             (TypeError, lambda: GatewayError(GatewayErrorCode.INTERNAL_ERROR, "safe", False, [])),
-            (ValueError, lambda: GatewayError(GatewayErrorCode.INTERNAL_ERROR, "safe", False, {"x": 1})),
             (TypeError, lambda: GatewayError.from_dict([])),
             (ValueError, lambda: GatewayError.from_dict({"code": "INTERNAL_ERROR"})),
         )
@@ -80,7 +79,7 @@ class ContractDefensiveCoverageTests(unittest.TestCase):
                 build()
 
         restored = GatewayError.from_dict(
-            {"code": "INTERNAL_ERROR", "message": "safe", "retryable": False, "details": {}}
+            {"code": "INTERNAL_ERROR", "message": "safe", "retryable": False}
         )
         self.assertEqual(restored.code, GatewayErrorCode.INTERNAL_ERROR)
 

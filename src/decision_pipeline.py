@@ -28,6 +28,7 @@ from src.hero_tencent_straddle import (
     build_proposal,
     expiry_analysis,
 )
+from src.payload_validation import reject_sensitive_fields
 from src.macro_assessment import build_macro_assessment
 from src.research_evidence import build_research_evidence
 
@@ -36,37 +37,11 @@ DEFAULT_INPUT = ROOT / "data" / "hero_inputs.json"
 DEFAULT_BACKTEST = ROOT / "data" / "backtest_tencent_straddle.json"
 
 VIEWS = {"bullish", "bearish", "uncertain"}
-_SECRET_FRAGMENTS = (
-    "password",
-    "passwd",
-    "secret",
-    "token",
-    "api_key",
-    "private_key",
-    "acc_id",
-    "account_id",
-    "order_id",
-    "card_num",
-)
 
 
 def _reject_sensitive(raw: Mapping[str, Any]) -> None:
-    stack = list(raw.items())
-    visited = 0
-    while stack:
-        key, value = stack.pop()
-        visited += 1
-        if visited > 10_000:
-            raise ValueError("scenario exceeds the metadata traversal limit")
-        normalized = str(key).strip().lower()
-        if any(fragment in normalized for fragment in _SECRET_FRAGMENTS):
-            raise ValueError(f"scenario contains a forbidden sensitive field: {key}")
-        if isinstance(value, dict):
-            stack.extend(value.items())
-        elif isinstance(value, list):
-            for index, item in enumerate(value):
-                if isinstance(item, (dict, list)):
-                    stack.append((f"{key}[{index}]", item))
+    # 敏感键拒绝逻辑收敛到 payload_validation.reject_sensitive_fields
+    reject_sensitive_fields(raw, label="scenario")
 
 
 def parse_scenario(raw: Mapping[str, Any]) -> dict[str, Any]:

@@ -25,6 +25,10 @@ _MAX_PATH_LOCKS = 1024
 _LOCKS_GUARD = threading.Lock()
 _PATH_LOCKS: dict[pathlib.Path, threading.Lock] = {}
 _FALLBACK_PATH_LOCK = threading.Lock()
+# 记录数缓存：record() 只首次数一次行数，之后进程内自增，
+# 避免每次 append 全文件重扫的 O(n²)（单写者设计，见 record 文档）。
+_RECORD_COUNTS: dict[pathlib.Path, int] = {}
+_RECORD_COUNTS_LOCK = threading.Lock()
 
 
 def _is_link_or_reparse(path: pathlib.Path) -> bool:
@@ -103,18 +107,30 @@ class SnapshotRecorder:
         path = self.target_dir / f"{date}_{tag}.jsonl"
         # Serialize and write while holding a per-path lock.  A fresh file handle
         # for each call also makes flushing/closing deterministic for readers.
+        # 记录数走进程内缓存（首次数一次，之后自增）；跨进程并发写同一文件
+        # 不在支持范围内（_path_lock 本身也是进程内锁）。
+        resolved_path = path.resolve()
         with _path_lock(path):
             if path.exists():
                 if _is_link_or_reparse(path) or not path.is_file():
                     raise ValueError("snapshot output must be a regular non-link file")
                 if path.stat().st_size + record_size + 1 > _MAX_FILE_BYTES:
                     raise ValueError("snapshot file exceeds the configured size limit")
-                with path.open("r", encoding="utf-8") as existing:
-                    if sum(1 for _ in existing) >= _MAX_RECORDS_PER_FILE:
-                        raise ValueError("snapshot file exceeds the configured record limit")
+            with _RECORD_COUNTS_LOCK:
+                count = _RECORD_COUNTS.get(resolved_path)
+                if count is None:
+                    count = 0
+                    if path.exists():
+                        with path.open("r", encoding="utf-8") as existing:
+                            count = sum(1 for _ in existing)
+                    _RECORD_COUNTS[resolved_path] = count
+                if count >= _MAX_RECORDS_PER_FILE:
+                    raise ValueError("snapshot file exceeds the configured record limit")
             with path.open("a", encoding="utf-8", newline="") as fh:
                 fh.write(json_line)
                 fh.write("\n")
+            with _RECORD_COUNTS_LOCK:
+                _RECORD_COUNTS[resolved_path] = _RECORD_COUNTS[resolved_path] + 1
         return path
 
     def list_files(self, tag: Optional[str] = None) -> list:

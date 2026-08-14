@@ -24,8 +24,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
+from src.payload_validation import reject_sensitive_fields
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_POLICY_DIR = ROOT / "data" / "policy_events"
+
+
+class EmptyPolicyLibrary(ValueError):
+    """政策事件库为空（目录存在但没有可加载的事件文件）。"""
 
 REQUIRED_EVENT_FIELDS = (
     "id",
@@ -43,37 +49,9 @@ ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 STALE_DAYS = 30
 MAX_FILE_BYTES = 8 * 1024 * 1024
 
-_SECRET_FRAGMENTS = (
-    "password",
-    "passwd",
-    "secret",
-    "token",
-    "api_key",
-    "private_key",
-    "acc_id",
-    "account_id",
-    "order_id",
-    "card_num",
-)
-
-
 def _reject_sensitive(raw: Mapping[str, Any]) -> None:
-    stack = list(raw.items())
-    visited = 0
-    while stack:
-        key, value = stack.pop()
-        visited += 1
-        if visited > 10_000:
-            raise ValueError("policy event exceeds the metadata traversal limit")
-        normalized = str(key).strip().lower()
-        if any(fragment in normalized for fragment in _SECRET_FRAGMENTS):
-            raise ValueError(f"policy event contains a forbidden sensitive field: {key}")
-        if isinstance(value, dict):
-            stack.extend(value.items())
-        elif isinstance(value, list):
-            for index, item in enumerate(value):
-                if isinstance(item, (dict, list)):
-                    stack.append((f"{key}[{index}]", item))
+    # 敏感键拒绝逻辑收敛到 payload_validation.reject_sensitive_fields
+    reject_sensitive_fields(raw, label="policy event")
 
 
 def _require_text(item: Mapping[str, Any], key: str) -> str:
@@ -166,7 +144,7 @@ def load_policy_library(
     for path in sorted(library_dir.glob("*.json")):
         events.append(_load_event_file(path))
     if not events:
-        raise ValueError(f"policy library is empty (no JSON events under {library_dir})")
+        raise EmptyPolicyLibrary(f"policy library is empty (no JSON events under {library_dir})")
     seen: set[str] = set()
     for event in events:
         event_id = event["id"]

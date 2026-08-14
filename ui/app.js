@@ -185,6 +185,14 @@
     var s = expiry.strategy;
     el("strategy-expiry-label").textContent =
       expiry.expiry.slice(5) + " · " + expiry.dte + " DTE";
+    if (!s) {
+      el("strategy-lots").textContent = "— 该到期未纳入策略计算";
+      ["cost-ask", "cost-exec", "max-loss", "breakeven",
+       "g-delta", "g-gamma", "g-vega", "g-theta", "g-rho"].forEach(function (id) {
+        el(id).textContent = "—";
+      });
+      return;
+    }
     el("strategy-lots").textContent =
       s.lots + " 张 @ " + fmt(expiry.strike, 0);
     el("cost-ask").textContent = fmt(s.costPerLotAsk);

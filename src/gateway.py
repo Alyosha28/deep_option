@@ -38,9 +38,12 @@ _SENSITIVE_KEYS = {
     "api_key",
     "private_key",
 }
+# 注意：不再把 6 位以上纯数字当作敏感文本（金融域常见「最大亏损 123456 HKD」
+# 这类合法文案）；账号类数字的防泄漏由键名白名单 + futu_adapter._safe_message
+# 在源头脱敏承担。
 _SENSITIVE_TEXT = re.compile(
     r"(?i)(?:\b(?:token|password|passwd|bearer|secret|acc_id|card_num)\b|"
-    r"[A-Z]:\\|\\\\|/(?:home|root|users|var|tmp|etc)/|\b\d{6,}\b)"
+    r"[A-Z]:\\|\\\\|/(?:home|root|users|var|tmp|etc)/)"
 )
 _PUBLIC_ORIGINS = {"FUTU", "REPLAY", "APPLICATION"}
 _ENTITLEMENT_VALUES = {"available", "denied", "unverified"}
@@ -192,8 +195,6 @@ class GatewayError:
     code: GatewayErrorCode
     message: str
     retryable: bool
-    details: dict[str, Any] = field(default_factory=dict)
-
     def __post_init__(self) -> None:
         object.__setattr__(self, "code", _enum_value(GatewayErrorCode, self.code, "code"))
         if not isinstance(self.message, str) or not self.message.strip():
@@ -201,32 +202,25 @@ class GatewayError:
         _validate_public_text(self.message, "message")
         if not isinstance(self.retryable, bool):
             raise TypeError("retryable must be a boolean")
-        if not isinstance(self.details, dict):
-            raise TypeError("details must be a dict")
-        if self.details:
-            raise ValueError("public gateway errors do not permit arbitrary details")
-        object.__setattr__(self, "details", _json_clone(self.details, "details"))
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "code": self.code.value,
             "message": self.message,
             "retryable": self.retryable,
-            "details": _json_clone(self.details, "details"),
         }
 
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "GatewayError":
         if not isinstance(payload, dict):
             raise TypeError("typed_error must be a dict")
-        expected = {"code", "message", "retryable", "details"}
+        expected = {"code", "message", "retryable"}
         if set(payload) != expected:
             raise ValueError("typed_error fields do not match the gateway schema")
         return cls(
             code=_enum_value(GatewayErrorCode, payload["code"], "typed_error.code"),
             message=payload["message"],
             retryable=payload["retryable"],
-            details=payload["details"],
         )
 
 

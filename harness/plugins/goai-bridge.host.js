@@ -30,9 +30,10 @@ return {
 
     async function getCurl() {
       if (curlExe) return { exe: curlExe }
-      if (curlError) return { error: curlError }
+      // 解析失败不永久缓存：下一次调用重新解析（curl 安装/进 PATH 后自愈）
       try {
         curlExe = await ctx.subprocess.resolveExecutable('curl.exe')
+        curlError = null
         return { exe: curlExe }
       } catch (err) {
         curlError = '找不到 curl.exe: ' + String(err && err.message ? err.message : err)
@@ -129,6 +130,13 @@ return {
     }
 
     function ensureEngine() {
+      if (engineHandle && engineExited && !engineExternal) {
+        // 引擎启动成功后崩溃（booting 已 resolved）：丢弃句柄，重新拉起
+        console.log('[goai-bridge] 引擎进程已退出，重新拉起')
+        engineHandle = null
+        engineExited = false
+        booting = null
+      }
       if (booting) return booting
       booting = (async () => {
         try {
@@ -162,10 +170,10 @@ return {
             if (engineExited) {
               return { ok: false, detail: '引擎进程提前退出，stderr: ' + engineStderrTail() }
             }
-            const h2 = await apiGet('/api/state', 20000)
+            const h2 = await apiGet('/api/state', 12000)
             if (h2.ok) return { ok: true }
           }
-          return { ok: false, detail: '引擎 40 秒内未就绪，stderr: ' + engineStderrTail() }
+          return { ok: false, detail: '引擎 40 次探测内未就绪（每次最多约 23 秒，最坏约 15 分钟），stderr: ' + engineStderrTail() }
         } catch (err) {
           return { ok: false, detail: '引擎启动异常: ' + String(err && err.message ? err.message : err) }
         }

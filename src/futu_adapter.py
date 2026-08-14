@@ -193,6 +193,10 @@ class FutuLiveGateway:
 
     Context factories and the TCP probe are injectable so the entire surface can
     be contract-tested without importing the SDK or connecting to OpenD.
+
+    并发模型：Futu SDK context 不是线程安全的，所有 SDK 调用在 _lock（RLock）
+    下串行执行——这是刻意的安全取舍（演示终端的查询频率远低于吞吐上限，
+    且另有 rate limit 兜底）；连接级失败后缓存 context 会被丢弃重建（M2）。
     """
 
     mode = DataMode.LIVE

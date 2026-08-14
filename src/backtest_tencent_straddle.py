@@ -28,9 +28,27 @@ AUDIT_LOG_SCRIPT = ROOT / ".agents" / "skills" / "futu-options-agent" / "scripts
 
 from src.pricing_engine import price  # noqa: E402
 
-R = 0.035
-Q = 0.0
-T_DAYS = 6.0 / 365.0
+
+def _model_params() -> tuple[float, float, float]:
+    """从冻结快照读取利率/股息率与主到期天数，与决策管线口径保持一致。
+
+    快照缺失或畸形时回退文档化的固定口径（0.035 / 0.0 / 6 天，与 hero 快照
+    当前取值一致）；只要快照在，回测口径就随快照 model 段同步，不再静默漂移。
+    """
+    snapshot_path = ROOT / "data" / "hero_inputs.json"
+    try:
+        with open(snapshot_path, encoding="utf-8") as fh:
+            snapshot = json.load(fh)
+        model = snapshot.get("model") or {}
+        riskfree = float(model["riskfree_rate"])
+        div_yield = float(model["div_yield"])
+        primary_dte = float(sorted(float(leg["dte"]) for leg in snapshot["legs"])[0])
+        return riskfree, div_yield, primary_dte / 365.0
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return 0.035, 0.0, 6.0 / 365.0
+
+
+R, Q, T_DAYS = _model_params()
 SLIPPAGE = 0.05
 HORIZONS = (1, 2, 5)
 

@@ -16,6 +16,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import threading
+import time
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -99,39 +101,49 @@ def _expiries_ui(
     payload: Mapping[str, Any],
     engine: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
-    """把快照 legs 与引擎结果拼成前端需要的到期/策略结构。"""
+    """把快照 legs 与引擎结果拼成前端需要的到期/策略结构。
+
+    引擎只为主/次两个到期计算策略；快照中的其余到期只呈现行情与行权价，
+    strategy 置空——绝不把主/次到期的数字张冠李戴到其他到期。
+    """
 
     primary_expiry = engine["primary"]["expiry"]
+    engine_by_expiry = {
+        engine["primary"]["expiry"]: engine["primary"],
+        engine["secondary"]["expiry"]: engine["secondary"],
+    }
+    proposal_by_expiry = {
+        candidate["expiry"]: candidate for candidate in engine["proposal"]["legs"]
+    }
     expiries: list[dict[str, Any]] = []
     for leg in payload["legs"]:
-        item = (
-            engine["primary"]
-            if leg["expiry"] == primary_expiry
-            else engine["secondary"]
-        )
-        proposal_leg = next(
-            candidate
-            for candidate in engine["proposal"]["legs"]
-            if candidate["expiry"] == leg["expiry"]
-        )
+        item = engine_by_expiry.get(leg["expiry"])
+        proposal_leg = proposal_by_expiry.get(leg["expiry"])
+        strategy = None
+        if item is not None:
+            strategy = {
+                "lots": item["lots"],
+                "costPerLotAsk": item["cost_lot_ask"],
+                "costPerLotExec": item["cost_lot_exec"],
+                "maxLoss": item["max_loss_exec"],
+                "breakeven": [item["breakeven_low"], item["breakeven_high"]],
+                "greeks": dict(item["straddle_greeks"]),
+                "pnlAtExpiry": (
+                    proposal_leg.get("pnl_at_expiry") if proposal_leg else None
+                ),
+                "ivCrush": (
+                    proposal_leg.get("pnl_after_iv_crush") if proposal_leg else None
+                ),
+            }
         expiries.append(
             {
                 "expiry": leg["expiry"],
                 "dte": leg["dte"],
                 "primary": leg["expiry"] == primary_expiry,
-                "strike": item["strike"],
+                "strike": leg["call"]["strike"],
                 "call": _leg_ui(leg["call"]),
                 "put": _leg_ui(leg["put"]),
-                "strategy": {
-                    "lots": item["lots"],
-                    "costPerLotAsk": item["cost_lot_ask"],
-                    "costPerLotExec": item["cost_lot_exec"],
-                    "maxLoss": item["max_loss_exec"],
-                    "breakeven": [item["breakeven_low"], item["breakeven_high"]],
-                    "greeks": dict(item["straddle_greeks"]),
-                    "pnlAtExpiry": proposal_leg.get("pnl_at_expiry"),
-                    "ivCrush": proposal_leg.get("pnl_after_iv_crush"),
-                },
+                "strategy": strategy,
             }
         )
     return expiries
@@ -307,8 +319,47 @@ def build_state() -> dict[str, Any]:
     return compose_state(card)
 
 
+_STATE_CACHE_TTL_SECONDS = 30.0
+_STATE_CACHE: dict[str, Any] = {"value": None, "built_at": 0.0}
+_STATE_CACHE_LOCK = threading.Lock()
+
+
+def invalidate_state_cache() -> None:
+    """POST 重跑/对话后失效缓存，避免下次 GET /api/state 读到旧审计轨迹。"""
+    with _STATE_CACHE_LOCK:
+        _STATE_CACHE["value"] = None
+        _STATE_CACHE["built_at"] = 0.0
+
+
+def build_state_cached() -> dict[str, Any]:
+    """GET /api/state 专用：冻结快照的管线结果缓存 30s。
+
+    快照冻结不变，管线在同样输入下确定；短 TTL 缓存把并发刷新从
+    「每次全量重算（IV 二分×4 + 二叉树 Greeks）」降为 30 秒一次。
+    POST /api/run、/api/chat 与写审计路径总是实时重算并失效缓存。
+    """
+    now = time.monotonic()
+    with _STATE_CACHE_LOCK:
+        value = _STATE_CACHE["value"]
+        if value is not None and now - _STATE_CACHE["built_at"] < _STATE_CACHE_TTL_SECONDS:
+            return value
+    state = build_state()
+    with _STATE_CACHE_LOCK:
+        _STATE_CACHE["value"] = state
+        _STATE_CACHE["built_at"] = time.monotonic()
+    return state
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "GOAI-UI/1.0"
+
+    def _host_allowed(self) -> bool:
+        """只接受本机 Host（防 DNS rebinding 把浏览器访问导向本地服务）。"""
+        host = (self.headers.get("Host") or "").strip().lower()
+        if not host:
+            return False
+        hostname = host.rsplit(":", 1)[0].strip("[]")
+        return hostname in ("localhost", "127.0.0.1", "::1")
 
     def _send_json(self, payload: Any, status: int = 200) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -317,13 +368,27 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError):
+            # 客户端中途断开：静默处理，避免线程堆栈刷屏
+            pass
 
     def _send_error_json(self, exc: Exception) -> None:
-        self._send_json({"error": str(exc)}, status=500)
+        # 服务端错误不泄露堆栈与绝对路径（与 do_GET 注释一致）
+        message = str(exc)
+        message = message.replace(str(ROOT), "<repo>")
+        message = re.sub(r"[A-Za-z]:\\[^\s]+", "<path>", message)
+        self._send_json({"error": message[:400]}, status=500)
 
     def _read_json_body(self) -> dict[str, Any]:
-        length = int(self.headers.get("Content-Length", "0"))
+        raw_length = self.headers.get("Content-Length", "0")
+        try:
+            length = int(raw_length)
+        except ValueError as exc:
+            raise ValueError("Content-Length 无效") from exc
+        if length < 0 or length > 1024 * 1024:
+            raise ValueError("请求体超过 1 MiB 上限")
         raw = self.rfile.read(length) if length > 0 else b"{}"
         try:
             payload = json.loads(raw.decode("utf-8") or "{}")
@@ -337,9 +402,16 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/":
             path = "/index.html"
         relative = path.lstrip("/")
-        target = (UI_DIR / relative).resolve()
+        # 逐组件校验 symlink（校验发生在读取前，防止 TOCTOU 逃逸出 UI_DIR）
+        current = UI_DIR
+        for part in relative.split("/"):
+            current = current / part
+            if current.is_symlink():
+                self._send_json({"error": "not found"}, status=404)
+                return
+        target = current
         try:
-            target.relative_to(UI_DIR.resolve())
+            target.resolve().relative_to(UI_DIR.resolve())
         except ValueError:
             self._send_json({"error": "not found"}, status=404)
             return
@@ -352,13 +424,19 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
     def do_GET(self) -> None:  # noqa: N802 (stdlib handler naming)
         parsed = urlparse(self.path)
         try:
+            if not self._host_allowed():
+                self._send_json({"error": "forbidden host"}, status=403)
+                return
             if parsed.path == "/api/state":
-                self._send_json(build_state())
+                self._send_json(build_state_cached())
                 return
             if parsed.path == "/api/policy-library":
                 self._send_json(_policy_library_ui())
@@ -369,6 +447,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802 (stdlib handler naming)
         parsed = urlparse(self.path)
+        if not self._host_allowed():
+            self._send_json({"error": "forbidden host"}, status=403)
+            return
         if parsed.path not in ("/api/run", "/api/chat"):
             self._send_json({"error": "not found"}, status=404)
             return
@@ -387,6 +468,7 @@ class Handler(BaseHTTPRequestHandler):
                     snapshot,
                     audit_enabled=not no_audit,
                 )
+                invalidate_state_cache()
                 self._send_json(state)
                 return
             card = run_pipeline(
@@ -396,6 +478,7 @@ class Handler(BaseHTTPRequestHandler):
                 audit_enabled=not no_audit,
                 write_card=not no_audit,
             )
+            invalidate_state_cache()
             self._send_json(compose_state(card))
         except ValueError as exc:
             self._send_json({"error": str(exc)}, status=422)

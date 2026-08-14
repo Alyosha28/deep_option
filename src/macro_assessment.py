@@ -31,6 +31,7 @@ from src.research_evidence import (
     classify_item,
     load_research_items,
 )
+from src.payload_validation import reject_sensitive_fields
 from src.policy_library import (
     DEFAULT_POLICY_DIR,
     event_verification_summary,
@@ -49,41 +50,14 @@ AUDIT_LOG_SCRIPT = (
 )
 
 MAX_FILE_BYTES = 8 * 1024 * 1024
-_SECRET_FRAGMENTS = (
-    "password",
-    "passwd",
-    "secret",
-    "token",
-    "api_key",
-    "private_key",
-    "acc_id",
-    "account_id",
-    "order_id",
-    "card_num",
-)
-
 _REVERSAL_HINTS = ("不可持续", "暂停", "反制", "成本显性")
 _PERSISTENCE_HINTS = ("维持高位", "战略", "韧性")
 _ESCALATION_HINTS = ("升级", "螺旋", "失控")
 
 
 def _reject_sensitive(raw: Mapping[str, Any]) -> None:
-    stack = list(raw.items())
-    visited = 0
-    while stack:
-        key, value = stack.pop()
-        visited += 1
-        if visited > 10_000:
-            raise ValueError("policy event exceeds the metadata traversal limit")
-        normalized = str(key).strip().lower()
-        if any(fragment in normalized for fragment in _SECRET_FRAGMENTS):
-            raise ValueError(f"policy event contains a forbidden sensitive field: {key}")
-        if isinstance(value, dict):
-            stack.extend(value.items())
-        elif isinstance(value, list):
-            for index, item in enumerate(value):
-                if isinstance(item, (dict, list)):
-                    stack.append((f"{key}[{index}]", item))
+    # 敏感键拒绝逻辑收敛到 payload_validation.reject_sensitive_fields
+    reject_sensitive_fields(raw, label="policy event")
 
 
 def _require_text(item: Mapping[str, Any], key: str) -> str:
