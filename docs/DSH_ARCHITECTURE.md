@@ -35,7 +35,7 @@ Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent �
 │  （127.0.0.1:8000；四面板 UI 与 DSH 插件共用同一契约）            │
 ├────────────────────────────────────────────────────────────────┤
 │ Python 引擎（不动）：gateway / pricing / pipeline /              │
-│  debate runtime / audit 链 / policy library · 340 tests         │
+│  debate runtime / audit 链 / policy library · 367 tests         │
 └────────────────────────────────────────────────────────────────┘
 ```
 
@@ -84,7 +84,7 @@ Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent �
 ## 6. 阶段路线
 
 - **Phase 0（已完成，2026-08-13）**：goai-bridge host 插件 + 三工具全链路真机验证
-  （审计链 82 行、辩论 complete、consensus oppose/high）。
+  （审计链 83 行、辩论 complete、consensus oppose/high）。
 - **Phase 1a**：client 插件（DSH 内决策卡面板 + 预警 dock + 自定义工具卡）+ approval 接管。
 - **Phase 1b**：`goai-options` agent preset（复制 standard → 注入 GOAI 铁律 persona）。
 - **Phase 1c**：bootstrap 脚本（一条命令恢复插件注册）、`futu-options-agent` skill 更新、
@@ -96,4 +96,4 @@ Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent �
 1. JS/LLM 都不重算数字；verdict/门控只来自 Python 引擎。
 2. `python -m src.ui_server` 独立链路任何时候可跑，评审不依赖 DSH。
 3. 审计链只增不减；证据白名单、脱敏逻辑只增不减。
-4. Python 340 tests 全绿是底线；插件改动不触碰 `src/`。
+4. Python 367 tests 全绿是底线；插件改动不触碰 `src/`。

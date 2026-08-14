@@ -44,9 +44,9 @@
     快照 sha256 与 8.12 卡一致（`cf567c5985ea…`，captured 2026-08-08T11:56:30+08:00）。
   - `goai_chat` → 十角色辩论 `complete`，consensus `stance=oppose / confidence=high`
     （DeepSeek 真实调用，open_questions 3 条）。
-  - 审计链累计 82 行：35 条 `agent_output:<role>` + 2 条 `debate_consensus`，
+  - 审计链累计 83 行：35 条 `agent_output:<role>` + 2 条 `debate_consensus`，
     prev_hash→hash 连续，usage token 脱敏 `[REDACTED]`。
-  - 全量测试 `340 passed`（199.6s）。
+  - 全量测试 `367 passed` + 157 subtests（208.5s，pytest 9.0.3 / .venv；评审修复后口径）。
 - DSH 机制对应（答辩叙事）：可逆效应=插件生命周期回收引擎进程；不可变版本=插件 pkg
   版本化 + 事务化 update/rollback；输出提交式审批=计划以 DSH approval 服务接管
   `READY_FOR_CONFIRMATION`（Phase 1）。

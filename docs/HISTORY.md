@@ -226,3 +226,34 @@ JS 层不重算任何数字，只透传引擎结果。
   仓库路径（sandboxPolicy.workspaceRoot 不指向仓库）
 - 权限：本会话审批策略已切回 ask（preset workspace-write：沙箱 workspace-write + 审批 ask）；
   DSH 客户端插件激活需用户在授权卡打勾（单勾=当前版本，双勾=后续版本自动放行）
+
+
+---
+
+## 13. 代码评审修复轮 — 已完成（2026-08-14）
+
+对评审报告（B1 + M1-M5 + m1-m12 + harness M6-M9/M11）逐条修复，4 个 commit
+（4f4b520 / 98a69c6 / 5e6b077 / 93ca425），本地 main 待 push。
+
+- B1（唯一 Blocking）：决策卡 summary/scenario 改为按 Edge/Risk/Action 门控结果与 parsed
+  场景动态生成（新增 _summary_text），清掉 key_evidence 结论句、8/28 到期、480 ATM、
+  默认约束 5% 等全部写死文案；hero CLI 的 proposal scenario / 到期日 / r-q 参数同步数据驱动。
+- M1 定价引擎基准测试（BS 已知价 / IV 往返 / 美式下界 / Greeks 解析对照，19 条）时发现并
+  修复真 bug：美式 Greeks 小 bump 撞二叉树节点扭结，hero 参数（2 DTE、steps=500、h=0.5）
+  下 gamma 恒为 0.0（解析真值 0.0176/股）→ delta/gamma 改节点间距自适应 bump
+  （2×/6× spacing），决策卡美式 Greeks 数字随之修正。
+- M2 Futu 断连自愈（连接级失败 close+置空缓存）；M3 快照 model 段有限数值校验；
+  M4 requirements 补 pytest==9.0.3；M5 bridge 根路径参数化（GOAI_PROJECT_ROOT）。
+- 打磨轮：m4 敏感键拒绝收敛 payload_validation；m3 决策卡原子写；m10 审计 subprocess 超时；
+  m7 3+ 到期不张冠李戴（strategy 置空 + 前端防御渲染）；m8 /api/state 30s 缓存；
+  m9 UI 加固（Content-Length 上限 / 错误路径脱敏 / symlink 逐组件校验 / BrokenPipe /
+  Host 校验防 DNS rebinding）；m11 GatewayError 删除死重 details 字段（wire 3 字段）、
+  6 位数字误伤修复、assert 控制流、recorder 行数 O(n²)→缓存、watcher 类型化
+  EmptyPolicyLibrary；m12 回测 R/Q/T 与快照 model 同步（重跑输出字节一致）；
+  harness M6 引擎崩溃重拉 / M8 就绪探测文案 / M9 curl 解析失败重试。
+- 踩坑记录：hero CLI 的 audit 子进程 text=True 未指定 encoding="utf-8"，中文 payload 按
+  locale（GBK）编码后审计脚本 UTF-8 解码崩溃（与 §3 的 stdin 坑同源，pipeline 版用
+  bytes 编码早已规避）；M6 修复第一版把「崩溃重拉」分支放在 booting 短路之后导致失效。
+- 验收：.venv 按 requirements.txt 安装后 `python -m pytest tests -q` →
+  367 passed + 157 subtests（208.5s）；审计链 83 行哈希完整；回测输出字节一致；
+  /api/chat 自然语言场景（看跌/20 万/3%）summary 正确跟随场景，无 key 离线降级正常。

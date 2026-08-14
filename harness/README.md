@@ -35,7 +35,7 @@ python -m src.decision_pipeline         # 单次管线（写审计与决策卡�
 
 ## 阶段路线
 
-- Phase 0（已完成）：goai-bridge 三工具真机验证（审计链 82 行、340 tests）
+- Phase 0（已完成）：goai-bridge 三工具真机验证（审计链 83 行、367 tests）
 - Phase 1a（待审批可用）：client 插件——DSH 内决策卡面板 + 预警 dock + approval 接管
   `READY_FOR_CONFIRMATION`（激活需用户授权：单勾=当前版本，双勾=后续版本）
 - Phase 1b（已完成）：`goai-options` agent preset（GOAI persona + 铁律，已 mount-validate；

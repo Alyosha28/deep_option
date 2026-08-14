@@ -142,7 +142,7 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><strong>工程可信度</strong> · <strong>340 个测试全绿</strong>（199.6s）；审计链 82 条记录哈希连续</p>
+        <p><strong>工程可信度</strong> · <strong>367 个测试全绿</strong> + 157 subtests（208.5s）；审计链 83 条记录哈希连续</p>
   - elementId: quote-bar
     elementType: shape
     bounds: [64, 456, 4, 36]

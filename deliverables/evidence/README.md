@@ -9,9 +9,9 @@
 |---|---|---|---|
 | 1 | 四面板终端截图（桌面/移动） | `ui/preview.png`、`ui/preview_mobile.png` | 产品形态真实存在 |
 | 2 | 决策卡（2026-08-13，NO_TRADE） | `data/decision_card_2026-08-13.json` | 五阶段管线真实产出，数字可追溯 |
-| 3 | 审计链样例（SHA-256 哈希连续） | `research/audit/audit_log.jsonl`（82 行，35 agent_output + 2 debate_consensus） | 审计与可追溯（合规维度 10%） |
+| 3 | 审计链样例（SHA-256 哈希连续） | `research/audit/audit_log.jsonl`（83 行，35 agent_output + 2 debate_consensus） | 审计与可追溯（合规维度 10%） |
 | 4 | 十角色辩论真机记录 | 审计链内 `agent_output:<role>` 事件 + `PROJECT_STATE.md` §11/`docs/HISTORY.md` §11 | 多 Agent 能力真实跑通（任务闭环 25%） |
-| 5 | 测试统计 | `python -m unittest discover -s tests -q` → 340 passed（199.6s） | 工程可信度（技术深度 15%） |
+| 5 | 测试统计 | `pip install -r requirements.txt` 后 `python -m pytest tests -q` → 367 passed + 157 subtests（208.5s，pytest 9.0.3） | 工程可信度（技术深度 15%） |
 | 6 | 代码仓库 | https://github.com/Alyosha28/GOAi_competition（public） | 开放/复用（5%）+ 红线防御 |
 | 7 | DSH 编排层运行记录 | `docs/DSH_ARCHITECTURE.md` + `docs/HISTORY.md` §12 + `harness/README.md` | Agent 编排层架构与验证 |
 

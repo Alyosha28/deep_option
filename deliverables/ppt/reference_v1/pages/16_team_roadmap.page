@@ -142,7 +142,7 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><strong>进度</strong> · 管线 / 终端 / 辩论 / DSH 编排层已真机跑通；340 测试全绿；仓库已公开</p>
+        <p><strong>进度</strong> · 管线 / 终端 / 辩论 / DSH 编排层已真机跑通；367 测试全绿；仓库已公开</p>
   - elementId: quote-bar
     elementType: shape
     bounds: [64, 456, 4, 36]

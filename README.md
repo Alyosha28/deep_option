@@ -75,7 +75,7 @@ src/agents/                         十角色辩论运行时（llm_client/tools/
 src/ui_server.py                    引擎契约：四面板终端 + JSON API（127.0.0.1:8000）
 ui/                                 四面板终端前端（独立模式/静态回退）
 harness/plugins/goai-bridge.host.js DSH host 插件（大号金融插件的编排层）
-tests/                              Gateway 合同、安全边界与离线集成测试（340 passed）
+tests/                              Gateway 合同、安全边界与离线集成测试（367 passed + 157 subtests）
 research/                           市场、数据、边界和专家方法研究
 docs/PRD.md                         产品需求与比赛验收
 docs/DSH_ARCHITECTURE.md            DSH 编排层权威架构文档

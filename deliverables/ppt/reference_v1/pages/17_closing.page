@@ -114,7 +114,7 @@ elements:
       lineHeight: 1.3
       align: [left, top]
       text: |
-        <p><strong>证据随材料提交</strong> · 截图 / 决策卡 / 审计链 / 340 测试，见 deliverables/evidence/</p>
+        <p><strong>证据随材料提交</strong> · 截图 / 决策卡 / 审计链 / 367 测试，见 deliverables/evidence/</p>
   - elementId: row4-panel
     elementType: shape
     bounds: [64, 368, 832, 64]
