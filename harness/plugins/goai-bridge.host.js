@@ -14,8 +14,11 @@ return {
   apply(ctx) {
     const PORT = 8000
     const base = 'http://127.0.0.1:' + PORT
-    // 本插件属于 GOAI 仓库，root 固定为仓库路径（Phase 1 再做跨机参数化/fs 探测）。
-    const root = 'F:\\GOAi_competition'
+    // 项目根目录：优先读环境变量 GOAI_PROJECT_ROOT（跨机部署在启动 DSH 前设置），
+    // 未设置时回退到本仓库默认路径并打印提示。
+    const envRoot = (typeof process !== 'undefined' && process.env && process.env.GOAI_PROJECT_ROOT) || null
+    const root = envRoot || 'F:\\GOAi_competition'
+    if (!envRoot) console.log('[goai-bridge] GOAI_PROJECT_ROOT 未设置，使用默认路径 ' + root + '；换机部署请先设置该环境变量再注册本插件')
     const venvPython = root + '\\.venv\\Scripts\\python.exe'
 
     let engineHandle = null

@@ -377,6 +377,47 @@ class FutuLiveGateway:
                     raise self._exception_failure(exc, account=True) from None
             return self._account_contexts[account_ref]
 
+    def _drop_quote_context(self) -> None:
+        """连接级失败后丢弃缓存的 quote context；下一次调用按需重建。"""
+        with self._lock:
+            context = self._quote_context
+            if context is None:
+                return
+            self._quote_context = None
+            try:
+                context.close()
+            except Exception:
+                pass
+
+    def _drop_account_context(self, account_ref: str) -> None:
+        """丢弃指定账户的缓存 context；下一次账户调用按需重建。"""
+        with self._lock:
+            context = self._account_contexts.pop(account_ref, None)
+            if context is None:
+                return
+            try:
+                context.close()
+            except Exception:
+                pass
+
+    def _note_connection_failure(
+        self, failure: _GatewayFailure, *, account_ref: str | None = None
+    ) -> None:
+        """连接级失败后丢弃缓存连接，避免 OpenD 重启后旧 context 被永久复用。
+
+        只重置真正的连接类失败（OpenD 不可达 / SDK 错误）；限频、权限、
+        业务校验类失败不动缓存。
+        """
+        if failure.code in (
+            self._code("OPEND_UNAVAILABLE"),
+            self._code("UPSTREAM_ERROR", "SDK_ERROR"),
+            self._code("SDK_ERROR"),
+        ):
+            self._drop_quote_context()
+            return
+        if failure.code == self._code("ACCOUNT_UNAVAILABLE") and account_ref is not None:
+            self._drop_account_context(account_ref)
+
     def _make_quote_context(self) -> Any:
         # Deliberately imported only after the loopback probe succeeds.
         from futu import OpenQuoteContext
@@ -439,9 +480,12 @@ class FutuLiveGateway:
             }
             return self._success(request, data, source_time=source_time)
         except _GatewayFailure as failure:
+            self._note_connection_failure(failure)
             return self._error(request, failure)
         except Exception as exc:
-            return self._error(request, self._exception_failure(exc))
+            failure = self._exception_failure(exc)
+            self._note_connection_failure(failure)
+            return self._error(request, failure)
 
     def capabilities(self) -> DataEnvelope:
         request = {"operation": "capabilities"}
@@ -605,9 +649,12 @@ class FutuLiveGateway:
             source_time = min(value for value in parsed_source_times if value is not None)
             return self._success(request, output, source_time=source_time)
         except _GatewayFailure as failure:
+            self._note_connection_failure(failure)
             return self._error(request, failure)
         except Exception as exc:
-            return self._error(request, self._exception_failure(exc))
+            failure = self._exception_failure(exc)
+            self._note_connection_failure(failure)
+            return self._error(request, failure)
 
     def get_expiration_dates(self, underlying: str) -> DataEnvelope:
         try:
@@ -742,11 +789,14 @@ class FutuLiveGateway:
                 )
             return self._success(request, matches[0])
         except _GatewayFailure as failure:
+            self._note_connection_failure(failure)
             return self._error(request, failure)
         except (TypeError, ValueError) as exc:
             return self._error(request, self._invalid_failure(exc))
         except Exception as exc:
-            return self._error(request, self._exception_failure(exc))
+            failure = self._exception_failure(exc)
+            self._note_connection_failure(failure)
+            return self._error(request, failure)
 
     def get_option_quotes(self, legs: Sequence[OptionLeg]) -> DataEnvelope:
         request: Dict[str, Any]
@@ -824,9 +874,12 @@ class FutuLiveGateway:
                 quote_row["code"] = leg.code
             return self._success(request, quote_rows)
         except _GatewayFailure as failure:
+            self._note_connection_failure(failure)
             return self._error(request, failure)
         except Exception as exc:
-            return self._error(request, self._exception_failure(exc))
+            failure = self._exception_failure(exc)
+            self._note_connection_failure(failure)
+            return self._error(request, failure)
 
     def get_option_quote(self, legs: Sequence[OptionLeg]) -> DataEnvelope:
         """Compatibility spelling; new callers use ``get_option_quotes``."""
@@ -993,13 +1046,16 @@ class FutuLiveGateway:
             summary["positions"] = positions
             return self._success(request, summary, entitlements={"account_read": "available"})
         except _GatewayFailure as failure:
+            self._note_connection_failure(failure, account_ref=alias)
             return self._error(
                 request,
                 self._redact_account_failure(failure),
                 entitlement_domain="account_read",
             )
         except Exception as exc:
-            return self._error(request, self._exception_failure(exc, account=True))
+            failure = self._exception_failure(exc, account=True)
+            self._note_connection_failure(failure, account_ref=alias)
+            return self._error(request, failure)
 
     def _query_account_worker(
         self, binding: AccountBinding
@@ -1154,9 +1210,12 @@ class FutuLiveGateway:
                 )
             return self._success(request, data)
         except _GatewayFailure as failure:
+            self._note_connection_failure(failure)
             return self._error(request, failure)
         except Exception as exc:
-            return self._error(request, self._exception_failure(exc))
+            failure = self._exception_failure(exc)
+            self._note_connection_failure(failure)
+            return self._error(request, failure)
 
     def _ensure_ok(self, ret: Any, raw: Any, *, account: bool = False) -> None:
         if ret == 0:

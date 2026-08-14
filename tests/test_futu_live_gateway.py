@@ -123,3 +123,37 @@ class FutuLiveGatewayTests(unittest.TestCase):
         forbidden = ("place", "modify", "cancel", "unlock", "submit", "invoke")
         public_names = [name.lower() for name in dir(gateway) if not name.startswith("_")]
         self.assertFalse(any(word in name for name in public_names for word in forbidden))
+
+    def test_connection_failure_drops_cached_context_and_reconnects(self):
+        class RaisingQuoteContext(FakeQuoteContext):
+            def get_market_snapshot(self, codes):
+                raise ConnectionError("Connection refused")
+
+        dead = RaisingQuoteContext()
+        healthy = FakeQuoteContext()
+        created = []
+        contexts = iter([dead, healthy])
+
+        def factory():
+            context = next(contexts)
+            created.append(context)
+            return context
+
+        gateway = FutuLiveGateway(
+            quote_context_factory=factory,
+            opend_probe=lambda *_args: True,
+            clock=lambda: "2026-08-12T02:00:01+00:00",
+        )
+
+        first = gateway.get_market_snapshot(["HK.00700"])
+
+        self.assertEqual(first.status, EnvelopeStatus.ERROR)
+        self.assertEqual(first.typed_error.code, GatewayErrorCode.OPEND_UNAVAILABLE)
+        self.assertTrue(first.typed_error.retryable)
+        self.assertTrue(dead.closed)
+
+        second = gateway.get_market_snapshot(["HK.00700"])
+
+        self.assertEqual(second.status, EnvelopeStatus.OK)
+        self.assertEqual(second.data[0]["code"], "HK.00700")
+        self.assertEqual(len(created), 2)
