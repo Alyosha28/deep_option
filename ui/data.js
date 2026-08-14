@@ -88,7 +88,7 @@ window.GOAI_DATA = {
         maxLoss: 4414.0,
         breakeven: [458.905, 501.095],
         breakevenMovePct: 4.41,
-        greeks: { delta: -0.6887, gamma: 3.026, vega: 48.9981, theta: -183.3953, rho: 0.1047 },
+        greeks: { delta: -0.6887, gamma: 3.0117, vega: 48.9981, theta: -183.3953, rho: 0.1047 },
         pnlAtExpiry: [
           { label: "±预期波动", rows: [
             { direction: "up", spot: 497.55, pnl: -904.04 },
@@ -166,7 +166,7 @@ window.GOAI_DATA = {
       "方向不确定观点、2026-08-12 业绩场景：Edge 门 LOW_EDGE（3 项 FAIL），Risk 门 PASS，最终判定 NO_TRADE（不交易）：Edge 门未过：预期波动不足以覆盖跨式成本",
     keyEvidence: [
       { claim: "市场预期业绩波动 3.92%", source: "futuapi/OpenD 127.0.0.1:11111", capturedAt: "2026-08-08T11:56:30+08:00" },
-      { claim: "跨式盈亏平衡需要 4.41% 变动；预期波动不足以覆盖成本", source: "self-built engine（BS/二叉树 + IV 二分 + bump-and-reprice）", capturedAt: "2026-08-08T11:56:30+08:00" },
+      { claim: "主方案跨式盈亏平衡需要 4.41% 变动（预期波动 3.92%，由 Edge 门对比判定）", source: "self-built engine（BS/二叉树 + IV 二分 + bump-and-reprice）", capturedAt: "2026-08-08T11:56:30+08:00" },
       { claim: "IV 37.4% / IV Rank 72.9 / IV Pct 85.3", source: "futuapi/OpenD 127.0.0.1:11111", capturedAt: "2026-08-08T11:56:30+08:00" },
     ],
     edgeGate: {

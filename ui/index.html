@@ -3,283 +3,357 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="GOAI 港美股期权智能终端 - 四面板参考 UI（数据为冻结快照，非投资建议）">
+  <meta name="description" content="GOAI 港美股期权智能终端（数据为冻结快照，非投资建议）">
   <title>GOAI · 期权智能终端</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app">
+
+    <!-- ══ 顶栏：品牌 + 行情带 + 状态 ══ -->
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">GOAI</span>
-        <span class="brand-name">期权智能终端</span>
+        <span>
+          <div class="brand-name">期权智能终端</div>
+          <div class="brand-sub">Research &amp; Risk Terminal</div>
+        </span>
       </div>
+
+      <div class="tape" id="tape">
+        <span class="tape-item"><span class="tape-label">0700</span><span class="tape-value" id="t-spot">--</span></span>
+        <span class="tape-item"><span class="tape-label">Chg</span><span class="tape-value" id="t-chg">--</span></span>
+        <span class="tape-item"><span class="tape-label">IV</span><span class="tape-value amber" id="t-iv">--</span></span>
+        <span class="tape-item"><span class="tape-label">IV Rank</span><span class="tape-value" id="t-ivrank">--</span></span>
+        <span class="tape-item"><span class="tape-label">Exp Move</span><span class="tape-value amber" id="t-move">--</span></span>
+        <span class="tape-item"><span class="tape-label">Earnings</span><span class="tape-value" id="t-earnings">--</span></span>
+        <span class="tape-item"><span class="tape-label">Spot</span><span class="tape-value" id="t-prev">--</span></span>
+      </div>
+
       <div class="topbar-meta">
-        <span class="chip chip-accent" id="mode-chip">REPLAY · FROZEN</span>
+        <span class="chip" id="mode-chip">REPLAY · FROZEN</span>
         <span class="chip" id="llm-chip">LLM · offline 回退</span>
         <span class="chip chip-neutral">OpenD 127.0.0.1:11111</span>
-        <span class="chip chip-neutral" id="clock">--:--:--</span>
-      </div>
-      <div class="account-chip">
-        <span>账户 100,000 HKD</span>
-        <span class="dim">风险预算 5%</span>
+        <span id="clock">--:--:--</span>
       </div>
     </header>
 
-    <main class="shell">
-      <!-- 面板 1：对话与任务 -->
-      <section class="panel panel-chat" aria-label="对话与任务">
-        <div class="panel-head">
-          <h2>对话与任务</h2>
-          <span class="panel-tag">Stage 5/5</span>
-        </div>
-        <div class="chat-log" id="chat-log">
-          <div class="msg msg-user">
-            <p>腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。</p>
-          </div>
-          <div class="msg msg-agent">
-            <p>场景已解析，未补造未知字段：</p>
-            <pre class="json-block">{
-  "underlying": "HK.00700",
-  "view": "uncertain",
-  "horizon": "2026-08-12 业绩",
-  "account_cash_hkd": 100000,
-  "risk_budget_pct": 5,
-  "constraints": ["单笔最多亏损 5%"]
-}</pre>
-            <p>数据模式：REPLAY · FROZEN（2026-08-08 快照）。</p>
-          </div>
-        </div>
-        <ol class="stages" id="stages">
-          <li class="stage done"><span class="stage-dot"></span>场景解析</li>
-          <li class="stage done"><span class="stage-dot"></span>数据获取</li>
-          <li class="stage done"><span class="stage-dot"></span>引擎计算</li>
-          <li class="stage done"><span class="stage-dot"></span>Edge / Risk / Action</li>
-          <li class="stage done"><span class="stage-dot"></span>决策卡 + 审计</li>
-        </ol>
-        <div class="chat-input">
-          <textarea id="scenario-input" rows="3" aria-label="输入期权观点">腾讯业绩快到了，方向不确定。账户 10 万港币，单笔最多亏 5%，帮我看看跨式。</textarea>
-          <button class="btn-run" id="run-btn" type="button">重新运行（演示）</button>
-        </div>
-        <p class="footnote" id="footnote">正在加载数据…</p>
-      </section>
+    <!-- ══ 视图页签 ══ -->
+    <nav class="viewbar" id="viewbar" role="tablist" aria-label="视图">
+      <button class="view-tab active" role="tab" data-view="overview" type="button"><span class="idx">01</span>总览</button>
+      <button class="view-tab" role="tab" data-view="card" type="button"><span class="idx">02</span>决策卡</button>
+      <button class="view-tab" role="tab" data-view="chain" type="button"><span class="idx">03</span>期权链</button>
+      <button class="view-tab" role="tab" data-view="macro" type="button"><span class="idx">04</span>宏观</button>
+      <button class="view-tab" role="tab" data-view="research" type="button"><span class="idx">05</span>投研</button>
+      <button class="view-tab" role="tab" data-view="library" type="button"><span class="idx">06</span>政策库</button>
+      <button class="view-tab" role="tab" data-view="debate" type="button"><span class="idx">07</span>辩论</button>
+      <div class="viewbar-right">
+        <span class="chip chip-neutral" id="footnote-chip">连接中…</span>
+      </div>
+    </nav>
 
-      <!-- 面板 2：期权链与流动性 -->
-      <section class="panel panel-market" aria-label="期权链与流动性">
-        <div class="underlying-strip">
-          <div>
-            <h1>腾讯控股 <span class="code">HK.00700</span></h1>
-            <p class="dim">2026-08-08 周末快照 · 周五收盘价</p>
+    <!-- ══ 主区 ══ -->
+    <main class="main" id="main">
+
+      <!-- 01 · 总览 -->
+      <section class="view active" id="view-overview" role="tabpanel">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">01</span>决策总览</span>
+            <span class="panel-meta" id="ov-meta">--</span>
           </div>
-          <div class="quote">
-            <strong class="spot">478.80</strong>
-            <span class="dim">昨收 479.20</span>
-          </div>
-          <dl class="metrics">
-            <div><dt>IV</dt><dd>37.4%</dd></div>
-            <div><dt>IV Rank</dt><dd>72.9</dd></div>
-            <div><dt>IV Pct</dt><dd>85.3</dd></div>
-            <div><dt>HV30</dt><dd>44.5%</dd></div>
-            <div><dt>预期波动</dt><dd class="accent">±3.92%</dd></div>
-          </dl>
-        </div>
-
-        <div class="expiry-tabs" id="expiry-tabs" role="tablist" aria-label="到期日">
-          <button class="expiry-tab active" role="tab" aria-selected="true" data-expiry="2026-08-14" type="button">
-            8/14 主到期 <span class="tag">6 DTE</span>
-          </button>
-          <button class="expiry-tab" role="tab" aria-selected="false" data-expiry="2026-08-28" type="button">
-            8/28 次到期 <span class="tag">20 DTE</span>
-          </button>
-        </div>
-
-        <div class="chain-wrap">
-          <table class="chain" id="chain-table">
-            <caption class="sr-only">期权链：Call / Put 报价、IV 与持仓</caption>
-            <thead>
-              <tr>
-                <th scope="col">到期</th>
-                <th scope="col" colspan="2">Call（买）</th>
-                <th scope="col">Call IV</th>
-                <th scope="col">Call OI</th>
-                <th scope="col">行权价</th>
-                <th scope="col">Put IV</th>
-                <th scope="col">Put OI</th>
-                <th scope="col" colspan="2">Put（买）</th>
-                <th scope="col">价差</th>
-              </tr>
-            </thead>
-            <tbody id="chain-body"><!-- JS 渲染 --></tbody>
-          </table>
-          <p class="note">冻结快照仅录制 ATM 480 合约；完整链未录制，未虚构其他行权价。</p>
-        </div>
-
-        <div class="strategy-grid">
-          <div class="strategy-card">
-            <div class="panel-head">
-              <h3>策略与账户</h3>
-              <span class="panel-tag" id="strategy-expiry-label">8/14 · 6 DTE</span>
+          <div class="panel-body">
+            <div class="verdict-banner" id="verdict-banner">
+              <span class="verdict-code" id="verdict">NO_TRADE</span>
+              <span class="verdict-text">
+                <div class="verdict-label">Decision Card Summary</div>
+                <div class="verdict-summary" id="summary">--</div>
+              </span>
             </div>
-            <div class="strategy-summary">
-              <div class="leg-line">
-                <span>买入跨式</span>
-                <strong id="strategy-lots">2 张 @ 480</strong>
+
+            <div class="grid cols-3" style="margin-top:10px">
+              <div class="gate">
+                <div class="gate-head"><span>Edge 门</span><span class="tag tag-fail" id="edge-verdict">--</span></div>
+                <ul class="gate-checks" id="edge-checks"></ul>
               </div>
-              <dl class="strategy-metrics">
-                <div><dt>成本 ask / 张</dt><dd id="cost-ask">2,207</dd></div>
-                <div><dt>executable / 张</dt><dd id="cost-exec">2,207</dd></div>
-                <div><dt>最大亏损</dt><dd id="max-loss">4,414 HKD</dd></div>
-                <div><dt>盈亏平衡</dt><dd id="breakeven">458.91 / 501.10</dd></div>
-              </dl>
+              <div class="gate">
+                <div class="gate-head"><span>Risk 门</span><span class="tag tag-pass" id="risk-verdict">--</span></div>
+                <ul class="gate-checks" id="risk-checks"></ul>
+              </div>
+              <div class="gate">
+                <div class="gate-head"><span>Action 门</span><span class="tag tag-neutral" id="action-verdict">--</span></div>
+                <p class="gate-next" id="action-next">--</p>
+                <ul class="gate-checks" id="action-blocked"></ul>
+              </div>
             </div>
-            <div class="greeks">
-              <span>Δ <b id="g-delta">-0.69</b></span>
-              <span>Γ <b id="g-gamma">3.03</b></span>
-              <span>ν <b id="g-vega">49.00</b></span>
-              <span>Θ <b id="g-theta">-183.40</b></span>
-              <span>ρ <b id="g-rho">0.10</b></span>
-            </div>
-            <div class="cost-model">
-              <span class="dot-warn"></span>
-              费用/滑点 policy 未冻结（UNVERIFIED），当前以 ask 计
+
+            <div class="grid cols-2-1" style="margin-top:10px">
+              <div>
+                <div class="grid cols-4">
+                  <div class="stat"><span class="stat-label">主方案</span><span class="stat-value" id="ov-lots">--</span><span class="stat-sub" id="ov-expiry">--</span></div>
+                  <div class="stat"><span class="stat-label">成本 ask/张</span><span class="stat-value num" id="ov-cost-ask">--</span><span class="stat-sub">HKD</span></div>
+                  <div class="stat"><span class="stat-label">exec/张</span><span class="stat-value num" id="ov-cost-exec">--</span><span class="stat-sub">HKD</span></div>
+                  <div class="stat"><span class="stat-label">最大亏损</span><span class="stat-value num num-neg" id="ov-maxloss">--</span><span class="stat-sub" id="ov-budget">--</span></div>
+                </div>
+                <div class="greeks">
+                  <div class="greek"><span class="g-name">Δ delta</span><div class="g-val" id="g-delta">--</div></div>
+                  <div class="greek"><span class="g-name">Γ gamma</span><div class="g-val" id="g-gamma">--</div></div>
+                  <div class="greek"><span class="g-name">ν vega</span><div class="g-val" id="g-vega">--</div></div>
+                  <div class="greek"><span class="g-name">Θ theta</span><div class="g-val" id="g-theta">--</div></div>
+                  <div class="greek"><span class="g-name">ρ rho</span><div class="g-val" id="g-rho">--</div></div>
+                </div>
+                <p class="note-line" id="ov-breakeven">--</p>
+              </div>
+              <div class="stat" style="height:100%">
+                <span class="stat-label">快照身份 Snapshot</span>
+                <span class="stat-value" style="font-size:12px;line-height:1.6" id="ov-snapshot">--</span>
+                <span class="stat-sub" id="ov-freshness">--</span>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="payoff-card">
-            <div class="panel-head">
-              <h3>到期情景损益（主到期）</h3>
-              <span class="panel-tag">自研引擎</span>
-            </div>
-            <svg id="payoff-chart" viewBox="0 0 560 250" role="img" aria-label="到期损益曲线">
-              <defs>
-                <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="rgba(245,185,66,0.28)"/>
-                  <stop offset="100%" stop-color="rgba(245,185,66,0)"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <div class="iv-crush" id="iv-crush"><!-- JS 渲染 --></div>
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">01</span>关键证据</span>
+            <span class="panel-meta">Evidence</span>
+          </div>
+          <div class="panel-body">
+            <ul class="kv-list" id="evidence-list"></ul>
           </div>
         </div>
       </section>
 
-      <!-- 面板 3：事件与证据 / 决策卡 -->
-      <section class="panel panel-right" aria-label="决策卡、事件与审计">
-        <div class="decision-card">
+      <!-- 02 · 决策卡 -->
+      <section class="view" id="view-card" role="tabpanel">
+        <div class="panel">
           <div class="panel-head">
-            <h2>决策卡</h2>
-            <span class="verdict verdict-no-trade" id="verdict">NO_TRADE</span>
+            <span class="panel-title"><span class="k">02</span>决策卡</span>
+            <span class="panel-meta" id="card-meta">--</span>
           </div>
-          <p class="summary" id="summary"></p>
-          <h3>关键证据</h3>
-          <ul class="evidence" id="evidence-list"></ul>
-          <h3>什么会改变结论</h3>
-          <ul class="conditions" id="conditions-list"></ul>
-        </div>
-
-        <div class="gates">
-          <div class="gate">
-            <div class="gate-head"><span>Edge 门</span><span class="tag tag-fail">LOW_EDGE</span></div>
-            <ul class="gate-checks" id="edge-checks"></ul>
-          </div>
-          <div class="gate">
-            <div class="gate-head"><span>Risk 门</span><span class="tag tag-pass">PASS</span></div>
-            <ul class="gate-checks" id="risk-checks"></ul>
-          </div>
-          <div class="gate">
-            <div class="gate-head"><span>Action 门</span><span class="tag tag-fail">NO_TRADE</span></div>
-            <p class="gate-next" id="action-next"></p>
-          </div>
-        </div>
-
-        <div class="event-card">
-          <div class="panel-head">
-            <h3>事件与证据</h3>
-            <span class="panel-tag">2026Q2</span>
-          </div>
-          <dl class="event-metrics">
-            <div><dt>业绩日期</dt><dd id="earnings-date">--</dd></div>
-            <div><dt>预期 EPS YoY</dt><dd id="eps-yoy">--</dd></div>
-            <div><dt>预期营收 YoY</dt><dd id="rev-yoy">--</dd></div>
-            <div><dt>历史 IV crush</dt><dd id="crush-history">--</dd></div>
-          </dl>
-          <p class="source-line">来源：futuapi 快照 · <span id="captured-at"></span></p>
-        </div>
-
-        <div class="macro-card">
-          <div class="panel-head">
-            <h3>宏观研判 · 政策事件库</h3>
-            <span class="panel-tag" id="macro-confidence">--</span>
-          </div>
-          <div class="macro-strip">
-            <div class="macro-cell">
-              <span>消息面情绪指数</span>
-              <strong id="sentiment-index">--</strong>
-              <em id="sentiment-verdict">--</em>
+          <div class="panel-body">
+            <div class="verdict-banner" id="verdict-banner-2">
+              <span class="verdict-code" id="verdict-2">--</span>
+              <span class="verdict-text">
+                <div class="verdict-label">Summary</div>
+                <div class="verdict-summary" id="summary-2">--</div>
+              </span>
             </div>
-            <div class="macro-cell">
-              <span>IV 情绪晴雨表</span>
-              <strong id="iv-state">--</strong>
-              <em id="skew-verdict">--</em>
+            <div class="grid cols-2" style="margin-top:10px">
+              <div>
+                <h4 class="debate-h">关键证据 Key Evidence</h4>
+                <ul class="kv-list" id="evidence-list-2"></ul>
+              </div>
+              <div>
+                <h4 class="debate-h">什么会改变结论 Conditions</h4>
+                <ul class="bullet-list" id="conditions-list"></ul>
+              </div>
             </div>
-            <div class="macro-cell macro-cell-wide">
-              <span>主要矛盾</span>
-              <strong class="principal" id="principal-pair">--</strong>
+            <div class="grid cols-2" style="margin-top:10px">
+              <div>
+                <h4 class="debate-h">事件与业绩 Events</h4>
+                <dl class="dl">
+                  <div class="dl-item"><dt>业绩日期</dt><dd id="earnings-date">--</dd></div>
+                  <div class="dl-item"><dt>预期 EPS YoY</dt><dd id="eps-yoy">--</dd></div>
+                  <div class="dl-item"><dt>预期营收 YoY</dt><dd id="rev-yoy">--</dd></div>
+                  <div class="dl-item"><dt>历史 IV crush</dt><dd id="crush-history">--</dd></div>
+                  <div class="dl-item"><dt>捕获时间</dt><dd id="captured-at" style="font-size:11px">--</dd></div>
+                </dl>
+              </div>
+              <div>
+                <h4 class="debate-h">审计链 Audit Trail</h4>
+                <ul class="audit-list" id="audit-list"></ul>
+              </div>
             </div>
           </div>
-          <p class="macro-mood" id="macro-mood"></p>
-          <h3>情景研判</h3>
-          <ul class="scenario-list" id="scenario-list"></ul>
-          <h3>事件库来源健康</h3>
-          <div class="library-health" id="library-health"></div>
-          <ul class="promoted-list" id="promoted-list"></ul>
-          <p class="note" id="macro-note"></p>
+        </div>
+      </section>
+
+      <!-- 03 · 期权链 -->
+      <section class="view" id="view-chain" role="tabpanel">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">03</span>期权链与流动性</span>
+            <span class="panel-meta" id="chain-meta">--</span>
+          </div>
+          <div class="panel-body">
+            <div class="expiry-tabs" id="expiry-tabs" role="tablist" aria-label="到期日"></div>
+            <div class="table-wrap" style="margin-top:10px">
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th scope="col">到期</th>
+                    <th scope="col" colspan="2">Call bid/ask</th>
+                    <th scope="col">Call IV</th>
+                    <th scope="col">Call OI</th>
+                    <th scope="col">行权价</th>
+                    <th scope="col">Put IV</th>
+                    <th scope="col">Put OI</th>
+                    <th scope="col" colspan="2">Put bid/ask</th>
+                    <th scope="col">价差</th>
+                  </tr>
+                </thead>
+                <tbody id="chain-body"></tbody>
+              </table>
+            </div>
+            <p class="note-line">冻结快照仅录制 ATM 合约；完整链未录制，未虚构其他行权价。</p>
+          </div>
         </div>
 
-        <div class="audit-card">
-          <div class="panel-head">
-            <h3>审计链</h3>
-            <span class="panel-tag">SHA-256</span>
+        <div class="grid cols-2">
+          <div class="panel" style="margin-bottom:0">
+            <div class="panel-head">
+              <span class="panel-title"><span class="k">03</span>策略与账户</span>
+              <span class="panel-meta" id="strategy-expiry-label">--</span>
+            </div>
+            <div class="panel-body">
+              <div class="grid cols-4">
+                <div class="stat"><span class="stat-label">持仓</span><span class="stat-value" id="strategy-lots">--</span></div>
+                <div class="stat"><span class="stat-label">成本 ask/张</span><span class="stat-value num" id="cost-ask">--</span></div>
+                <div class="stat"><span class="stat-label">exec/张</span><span class="stat-value num" id="cost-exec">--</span></div>
+                <div class="stat"><span class="stat-label">最大亏损</span><span class="stat-value num num-neg" id="max-loss">--</span></div>
+              </div>
+              <div class="greeks">
+                <div class="greek"><span class="g-name">Δ</span><div class="g-val" id="g-2-delta">--</div></div>
+                <div class="greek"><span class="g-name">Γ</span><div class="g-val" id="g-2-gamma">--</div></div>
+                <div class="greek"><span class="g-name">ν</span><div class="g-val" id="g-2-vega">--</div></div>
+                <div class="greek"><span class="g-name">Θ</span><div class="g-val" id="g-2-theta">--</div></div>
+                <div class="greek"><span class="g-name">ρ</span><div class="g-val" id="g-2-rho">--</div></div>
+              </div>
+              <p class="note-line" id="breakeven">--</p>
+              <p class="note-line"><span class="dot dot-frozen"></span>费用/滑点 policy 未冻结（UNVERIFIED），当前以 ask 计</p>
+            </div>
           </div>
-          <ol class="audit-list" id="audit-list"></ol>
-          <p class="note">完整 JSONL 见 research/audit/audit_log.jsonl（本地，不入库）。</p>
+          <div class="panel" style="margin-bottom:0">
+            <div class="panel-head">
+              <span class="panel-title"><span class="k">03</span>到期损益 &amp; IV crush</span>
+              <span class="panel-meta">自研引擎</span>
+            </div>
+            <div class="panel-body">
+              <svg id="payoff-chart" viewBox="0 0 560 250" role="img" aria-label="到期损益曲线" style="width:100%;height:auto"></svg>
+              <div id="iv-crush" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 · 宏观 -->
+      <section class="view" id="view-macro" role="tabpanel">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">04</span>宏观研判</span>
+            <span class="panel-meta" id="macro-confidence">--</span>
+          </div>
+          <div class="panel-body">
+            <div class="grid cols-3">
+              <div class="stat"><span class="stat-label">消息面情绪指数</span><span class="stat-value" id="sentiment-index">--</span><span class="stat-sub" id="sentiment-verdict">--</span></div>
+              <div class="stat"><span class="stat-label">IV 情绪晴雨表</span><span class="stat-value" id="iv-state">--</span><span class="stat-sub" id="skew-verdict">--</span></div>
+              <div class="stat"><span class="stat-label">主要矛盾</span><span class="stat-value" id="principal-pair" style="font-size:14px">--</span><span class="stat-sub" id="macro-mood">--</span></div>
+            </div>
+            <h4 class="debate-h" style="margin-top:12px">情景研判 Scenarios</h4>
+            <ul class="scenario-list" id="scenario-list"></ul>
+            <h4 class="debate-h" style="margin-top:12px">事件库来源健康 Library Health</h4>
+            <div class="health-pills" id="library-health"></div>
+            <ul class="bullet-list" id="promoted-list" style="margin-top:8px"></ul>
+            <p class="note-line" id="macro-note"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 · 投研 -->
+      <section class="view" id="view-research" role="tabpanel">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">05</span>投研证据</span>
+            <span class="panel-meta" id="research-meta">--</span>
+          </div>
+          <div class="panel-body">
+            <div class="grid cols-2">
+              <div class="stat"><span class="stat-label">条目数</span><span class="stat-value" id="rs-item-count">--</span><span class="stat-sub" id="rs-synthetic">--</span></div>
+              <div class="stat"><span class="stat-label">股价影响研判</span><span class="stat-value" id="rs-stock-verdict" style="font-size:14px">--</span><span class="stat-sub" id="rs-option-verdict">--</span></div>
+            </div>
+            <h4 class="debate-h" style="margin-top:12px">条目明细 Items</h4>
+            <div class="table-wrap">
+              <table class="data">
+                <thead><tr><th class="l">标题</th><th class="l">类型</th><th class="l">情绪</th><th>日期</th><th class="l">来源</th></tr></thead>
+                <tbody id="research-items"></tbody>
+              </table>
+            </div>
+            <p class="note-line" id="research-note"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 · 政策库 -->
+      <section class="view" id="view-library" role="tabpanel">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">06</span>政策事件库</span>
+            <span class="panel-meta" id="library-meta">--</span>
+          </div>
+          <div class="panel-body">
+            <div class="health-pills" id="library-health-2"></div>
+            <div class="table-wrap" style="margin-top:10px">
+              <table class="data">
+                <thead><tr><th class="l">ID</th><th class="l">名称</th><th>日期</th><th class="l">类型</th><th class="l">状态</th><th class="l">核验读取</th></tr></thead>
+                <tbody id="library-events"></tbody>
+              </table>
+            </div>
+            <p class="note-line" id="library-note"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 · 辩论 -->
+      <section class="view" id="view-debate" role="tabpanel">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title"><span class="k">07</span>十角色辩论 · 研究共识</span>
+            <span class="panel-meta" id="debate-summary">未运行</span>
+          </div>
+          <div class="panel-body">
+            <div class="debate-meta-grid" id="debate-meta"></div>
+            <div class="debate-columns">
+              <div>
+                <h3 class="debate-h">轮次与角色 Rounds</h3>
+                <div id="debate-rounds"></div>
+              </div>
+              <div>
+                <h3 class="debate-h">分歧点 Disputes</h3>
+                <div id="debate-disputes"></div>
+              </div>
+            </div>
+            <div class="consensus-card">
+              <h3 class="debate-h">研究共识 Consensus</h3>
+              <div id="debate-consensus"></div>
+            </div>
+            <p class="note-line" id="debate-disclaimer"></p>
+          </div>
         </div>
       </section>
     </main>
 
-    <section class="debate-dock" id="debate-dock" aria-label="十角色辩论运行时">
-      <button class="debate-toggle" id="debate-toggle" type="button"
-        aria-expanded="false" aria-controls="debate-body">
-        <span class="debate-toggle-title">
-          <span class="debate-status-dot" id="debate-dot" aria-hidden="true"></span>
-          十角色辩论 · 研究共识
-        </span>
-        <span class="debate-toggle-meta" id="debate-summary">未运行</span>
-        <span class="debate-caret" id="debate-caret" aria-hidden="true">▸</span>
-      </button>
-      <div class="debate-body" id="debate-body" hidden>
-        <div class="debate-meta-grid" id="debate-meta"></div>
-        <div class="debate-columns">
-          <div class="debate-col">
-            <h3 class="debate-h">轮次与角色</h3>
-            <div class="debate-rounds" id="debate-rounds"></div>
-          </div>
-          <div class="debate-col">
-            <h3 class="debate-h">分歧点</h3>
-            <div class="debate-disputes" id="debate-disputes"></div>
-          </div>
-        </div>
-        <div class="debate-consensus-card">
-          <h3 class="debate-h">研究共识</h3>
-          <div class="debate-consensus" id="debate-consensus"></div>
-        </div>
-        <p class="note debate-disclaimer" id="debate-disclaimer"></p>
+    <!-- ══ 对话抽屉 ══ -->
+    <section class="chat-drawer" id="chat-drawer" aria-label="对话记录">
+      <div class="chat-log" id="chat-log"></div>
+      <div class="stage-strip" id="stages">
+        <span class="stage done">场景解析</span>
+        <span class="stage done">数据获取</span>
+        <span class="stage done">引擎计算</span>
+        <span class="stage done">Edge / Risk / Action</span>
+        <span class="stage done">决策卡 + 审计</span>
       </div>
     </section>
 
-    <footer class="footer">
-      <span>决策支持 / 研究用途，非投资建议 · 不构成交易要约</span>
-      <span>默认模拟盘，任何订单须用户独立确认</span>
+    <!-- ══ 底部命令条 ══ -->
+    <footer class="commandbar">
+      <span class="cmd-prompt" aria-hidden="true">&gt;</span>
+      <input class="cmd-input" id="scenario-input" type="text"
+        placeholder="输入期权场景，例如：腾讯业绩前方向不确定，账户 10 万港币，单笔最多亏 5%，评估跨式"
+        aria-label="输入期权场景">
+      <button class="btn btn-primary" id="run-btn" type="button">RUN ▸</button>
+      <button class="btn" id="chat-toggle" type="button" aria-expanded="false">对话 ▾</button>
+      <span class="cmd-foot">模拟盘 · 任何订单须用户独立确认</span>
     </footer>
   </div>
 
