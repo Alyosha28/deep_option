@@ -337,5 +337,171 @@ class DiscreteDividendPipelineTests(unittest.TestCase):
         self.assertEqual(engine["dividends"], [])
 
 
+class ExecutableCostTests(unittest.TestCase):
+    """executable-cost 完整口径：快照声明 vs 调用方验证 vs UNVERIFIED。"""
+
+    def _snapshot_with_account(self, account_extra: dict) -> tuple[dict, Path]:
+        original = json.loads(Path(DEFAULT_INPUT).read_text(encoding="utf-8"))
+        modified = dict(original)
+        modified["account"] = {**original["account"], **account_extra}
+        temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(temp_dir.cleanup)
+        path = Path(temp_dir.name, "hero_exec.json")
+        path.write_text(json.dumps(modified, ensure_ascii=False), encoding="utf-8")
+        return modified, path
+
+    def test_snapshot_cost_policy_upgrades_exec_cost(self):
+        _payload, path = self._snapshot_with_account(
+            {
+                "cost_policy": {
+                    "fees_hkd_per_lot": 13.0,
+                    "slippage_bps": 5.0,
+                    "source": "futu fee table 2026-08",
+                }
+            }
+        )
+        base = load_frozen_snapshot(DEFAULT_INPUT)
+        with_policy = load_frozen_snapshot(path)
+        engine_base = compute_engine(base)
+        engine_policy = compute_engine(with_policy)
+
+        exec_base = engine_base["execution"]
+        exec_policy = engine_policy["execution"]
+        self.assertEqual(exec_base["cost_model_status"], "UNVERIFIED")
+        self.assertEqual(exec_policy["cost_model_status"], "SNAPSHOT_DECLARED")
+        self.assertEqual(exec_policy["fees_per_lot"], 13.0)
+        self.assertEqual(exec_policy["slippage_bps"], 5.0)
+        expected_exec = (
+            engine_policy["primary"]["cost_lot_ask"]
+            + 13.0
+            + engine_policy["primary"]["cost_lot_ask"] * 5.0 / 10_000.0
+        )
+        self.assertAlmostEqual(exec_policy["cost_per_lot_exec"], expected_exec, places=8)
+        self.assertIn("account.cost_policy", engine_policy["cost_model"]["note"])
+        self.assertAlmostEqual(
+            exec_policy["cash_required"],
+            exec_policy["cost_per_lot_exec"] * max(engine_policy["primary"]["lots"], 1),
+            places=8,
+        )
+
+    def test_caller_verified_model_overrides_snapshot_policy(self):
+        _payload, path = self._snapshot_with_account(
+            {"cost_policy": {"fees_hkd_per_lot": 13.0, "slippage_bps": 5.0}}
+        )
+        data = load_frozen_snapshot(path)
+        engine = compute_engine(
+            data, cost_model={"fees_hkd_per_lot": 21.0, "slippage_bps": 2.0}
+        )
+
+        self.assertEqual(engine["execution"]["cost_model_status"], "VERIFIED")
+        self.assertEqual(engine["execution"]["fees_per_lot"], 21.0)
+        self.assertEqual(engine["execution"]["slippage_bps"], 2.0)
+        self.assertEqual(engine["cost_model"]["status"], "VERIFIED")
+
+    def test_trade_limits_cap_lots_and_block_on_position_limit(self):
+        _payload, path = self._snapshot_with_account(
+            {
+                "cash_hkd": 1_000_000,
+                "risk_budget_pct": 50,
+                "trade_limits": {
+                    "max_qty_per_order": 2,
+                    "position_limit_per_direction": 100,
+                    "existing_positions": {"call": 99, "put": 0},
+                },
+            }
+        )
+        data = load_frozen_snapshot(path)
+        engine = compute_engine(data)
+        risk = risk_gate(engine, data)
+
+        self.assertEqual(engine["execution"]["lots"], 2, "张数必须被单笔上限约束")
+        self.assertEqual(risk["decision"], "BLOCK")
+        self.assertTrue(
+            any("持仓限额违规" in item for item in risk["blocked"]),
+            risk["blocked"],
+        )
+        self.assertTrue(
+            any("费用/滑点 policy 未冻结" in item for item in risk["findings"]),
+            "无 cost_policy 时保持 UNVERIFIED WARN",
+        )
+
+    def test_trade_limits_pass_when_within_limits(self):
+        _payload, path = self._snapshot_with_account(
+            {
+                "cash_hkd": 1_000_000,
+                "risk_budget_pct": 50,
+                "cost_policy": {"fees_hkd_per_lot": 13.0, "slippage_bps": 5.0},
+                "trade_limits": {
+                    "max_qty_per_order": 100,
+                    "position_limit_per_direction": 200,
+                    "existing_positions": {"call": 3, "put": 3},
+                },
+            }
+        )
+        data = load_frozen_snapshot(path)
+        engine = compute_engine(data)
+        risk = risk_gate(engine, data)
+
+        self.assertEqual(risk["decision"], "PASS")
+        self.assertTrue(
+            any(item.startswith("PASS 可执行成本口径已声明") for item in risk["findings"])
+        )
+        self.assertTrue(
+            any(item.startswith("PASS 持仓限额") for item in risk["findings"])
+        )
+        self.assertFalse(
+            any("未在本次冻结快照中验证" in item for item in risk["findings"]),
+            "声明了 trade_limits 后不应再有未验证 WARN",
+        )
+
+    def test_malformed_policies_are_rejected_at_load(self):
+        for extra in (
+            {"cost_policy": {"fees_hkd_per_lot": -1.0, "slippage_bps": 0.0}},
+            {"cost_policy": {"fees_hkd_per_lot": "x", "slippage_bps": 0.0}},
+            {"cost_policy": "policy"},
+            {"trade_limits": {"max_qty_per_order": 0}},
+            {"trade_limits": {"max_qty_per_order": -5}},
+            {"trade_limits": {"existing_positions": {"call": -1}}},
+            {"trade_limits": {}},
+        ):
+            _payload, path = self._snapshot_with_account(extra)
+            with self.assertRaises(ValueError, msg=repr(extra)):
+                load_frozen_snapshot(path)
+
+    def test_hero_without_policy_keeps_unverified_findings(self):
+        base = load_frozen_snapshot(DEFAULT_INPUT)
+        engine = compute_engine(base)
+        risk = risk_gate(engine, base)
+
+        self.assertEqual(engine["execution"]["cost_model_status"], "UNVERIFIED")
+        self.assertTrue(
+            any("费用/滑点 policy 未冻结" in item for item in risk["findings"])
+        )
+        self.assertTrue(
+            any("get_max_trd_qtys 未在本次冻结快照中验证" in item for item in risk["findings"])
+        )
+
+    def test_card_exposes_executable_cost_block(self):
+        _payload, path = self._snapshot_with_account(
+            {
+                "cost_policy": {"fees_hkd_per_lot": 13.0, "slippage_bps": 5.0},
+                "trade_limits": {"max_qty_per_order": 50},
+            }
+        )
+        data = load_frozen_snapshot(path)
+        card = run_pipeline(
+            path,
+            audit_enabled=False,
+            write_card=False,
+            snapshot_data=data,
+        )
+
+        exec_cost = card["numbers"]["executable_cost"]
+        self.assertEqual(exec_cost["status"], "SNAPSHOT_DECLARED")
+        self.assertEqual(exec_cost["fees_hkd_per_lot"], 13.0)
+        self.assertEqual(exec_cost["slippage_bps"], 5.0)
+        self.assertEqual(exec_cost["max_qty_per_order"], 50)
+
+
 if __name__ == "__main__":
     unittest.main()

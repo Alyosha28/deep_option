@@ -481,6 +481,12 @@
     if (el("ov-lots")) el("ov-lots").textContent = strategy.lots != null ? strategy.lots + " 张 @ " + fmt(expiry.strike, 0) : "--";
     if (el("ov-expiry")) el("ov-expiry").textContent = expiry ? expiry.expiry.slice(5) + " / " + expiry.dte + " 天" : "--";
     if (el("ov-cost-ask")) el("ov-cost-ask").textContent = fmt(strategy.costPerLotAsk);
+    if (el("ov-cost-exec")) {
+      var execCost = strategy.costPerLotExec != null ? strategy.costPerLotExec : risk.execCostPerLot;
+      el("ov-cost-exec").textContent = fmt(execCost);
+      var status = risk.costStatus;
+      el("ov-cost-exec").dataset.tone = status === "UNVERIFIED" ? "warn" : status === "VERIFIED" || status === "SNAPSHOT_DECLARED" ? "good" : "";
+    }
     if (el("ov-maxloss")) el("ov-maxloss").textContent = fmt(strategy.maxLoss != null ? strategy.maxLoss : risk.maxLoss);
     if (el("ov-budget")) el("ov-budget").textContent = fmt(risk.budgetHkd != null ? risk.budgetHkd : account.cashHkd * account.riskBudgetPct / 100) + " HKD";
     if (el("ov-breakeven")) el("ov-breakeven").textContent = strategy.breakeven ? fmt(strategy.breakeven[0], 2) + " / " + fmt(strategy.breakeven[1], 2) : "--";

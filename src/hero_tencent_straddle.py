@@ -41,7 +41,7 @@ def leg_analysis(spot, strike, dte, mid, r, q, opt_type, dividends=None):
     return iv, g
 
 
-def expiry_analysis(spot, expiry, call, put, r, q, account, dividends=None):
+def expiry_analysis(spot, expiry, call, put, r, q, account, dividends=None, trade_limits=None):
     dte = expiry["dte"]
     mult = account["contract_multiplier"]
     iv_c, g_c = leg_analysis(spot, call["strike"], dte, call["mid"], r, q, "CALL", dividends)
@@ -56,6 +56,8 @@ def expiry_analysis(spot, expiry, call, put, r, q, account, dividends=None):
     budget = cash * account["risk_budget_pct"] / 100.0
     lots = math.floor(min(cash / cost_lot_ask, budget / cost_lot_ask)) if cost_lot_ask > 0 else 0
     lots = max(lots, 0)
+    if trade_limits and trade_limits.get("max_qty_per_order") is not None:
+        lots = min(lots, int(trade_limits["max_qty_per_order"]))
 
     return {
         "expiry": expiry["expiry"],

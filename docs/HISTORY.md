@@ -355,3 +355,25 @@ JS 层不重算任何数字，只透传引擎结果。
   双通道、窗口外/非法股息拒绝）、管线 +5（方向性 IV 移动、证据条、
   applied 语义、hero 无股息不回归）。
 - hero 快照保持无股息声明：hero 数字零漂移（全部钉死数字回归通过）。
+
+### ② executable-cost 完整口径（已完成 2026-08-16）
+
+三层成本口径（优先级递减）：调用方传入的已验证模型（`VERIFIED`）→ 快照
+`account.cost_policy` 声明（`SNAPSHOT_DECLARED`，随快照哈希固定）→ 缺省
+`UNVERIFIED`（ask 计，诚实标注）。
+
+- 快照契约：可选 `account.cost_policy`（`fees_hkd_per_lot`/`slippage_bps`/
+  `source`）与 `account.trade_limits`（`max_qty_per_order`/
+  `position_limit_per_direction`/`existing_positions.{call,put}`/`source`）；
+  结构校验进 load_frozen_snapshot（非负有限数、正整数、至少一项限额）。
+- 引擎：executable 成本 = ask + 每张费用 + 滑点（bps），张数受
+  `max_qty_per_order` 约束；`engine["execution"]` 汇总
+  （fees/slippage/status/cost_per_lot_exec/cash_required/lots/trade_limits）。
+- 风险门：口径已声明 → `PASS 可执行成本口径已声明…`；trade_limits 存在 →
+  持仓限额检查（call/put 方案后张数 ≤ 限额，违规一票否决）+ 单笔上限 NOTE；
+  两者缺失 → 保留原有 UNVERIFIED/未验证 WARN（hero 快照行为钉死不变）。
+- 决策卡：`numbers.executable_cost` 块（fees/slippage/exec 成本/现金占用/
+  status/限额）；审计 `engine_computed` 增加 `execution` 段；终端 risk 面板
+  （`terminal.risk`）与总览新增「可执行成本 / 张」展示（带状态 tone）。
+- 测试：管线 +7（快照声明升级/调用方覆盖/上限约束与持仓限额 BLOCK/PASS/
+  非法声明拒绝/hero UNVERIFIED 不回归/决策卡 executable_cost 块）。

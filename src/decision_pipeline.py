@@ -178,6 +178,8 @@ def load_frozen_snapshot(
     _require_number(account, "cash_hkd", positive=True)
     _require_number(account, "risk_budget_pct", positive=True)
     _require_number(account, "contract_multiplier", positive=True)
+    _validate_cost_policy(account)
+    _validate_trade_limits(account)
 
     model = payload.get("model")
     if not isinstance(model, dict):
@@ -310,6 +312,101 @@ def _parse_dividend_schedule(
     return schedule, summary
 
 
+def _validate_cost_policy(
+    account: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Validate optional ``account.cost_policy``（快照声明的费用/滑点口径）。"""
+
+    raw = account.get("cost_policy")
+    if raw is None:
+        return None
+    if not isinstance(raw, dict):
+        raise ValueError("frozen snapshot account.cost_policy must be an object")
+    fees = raw.get("fees_hkd_per_lot", 0.0)
+    slippage_bps = raw.get("slippage_bps", 0.0)
+    for key, value in (("fees_hkd_per_lot", fees), ("slippage_bps", slippage_bps)):
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            or float(value) < 0
+        ):
+            raise ValueError(
+                f"account.cost_policy.{key} must be a non-negative number"
+            )
+    source = str(raw.get("source") or "snapshot").strip()[:120]
+    return {
+        "fees_hkd_per_lot": float(fees),
+        "slippage_bps": float(slippage_bps),
+        "source": source,
+    }
+
+
+def _validate_trade_limits(
+    account: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Validate optional ``account.trade_limits``（单笔上限/持仓限额/现有持仓）。"""
+
+    raw = account.get("trade_limits")
+    if raw is None:
+        return None
+    if not isinstance(raw, dict):
+        raise ValueError("frozen snapshot account.trade_limits must be an object")
+
+    def positive_int(value: Any, name: str) -> int | None:
+        if value is None:
+            return None
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, int)
+            or float(value) <= 0
+        ):
+            raise ValueError(f"account.trade_limits.{name} must be a positive integer")
+        return int(value)
+
+    limits: dict[str, Any] = {
+        "max_qty_per_order": positive_int(
+            raw.get("max_qty_per_order"), "max_qty_per_order"
+        ),
+        "position_limit_per_direction": positive_int(
+            raw.get("position_limit_per_direction"), "position_limit_per_direction"
+        ),
+    }
+    existing_raw = raw.get("existing_positions")
+    if existing_raw is not None:
+        if not isinstance(existing_raw, dict):
+            raise ValueError(
+                "account.trade_limits.existing_positions must be an object"
+            )
+        existing: dict[str, int] = {}
+        for side in ("call", "put"):
+            value = existing_raw.get(side)
+            if value is None:
+                continue
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, int)
+                or float(value) < 0
+            ):
+                raise ValueError(
+                    f"account.trade_limits.existing_positions.{side} must be a non-negative integer"
+                )
+            existing[side] = int(value)
+        limits["existing_positions"] = existing
+    else:
+        limits["existing_positions"] = {}
+    if not any(
+        limits[key] is not None
+        for key in ("max_qty_per_order", "position_limit_per_direction")
+    ):
+        raise ValueError(
+            "account.trade_limits must declare max_qty_per_order or position_limit_per_direction"
+        )
+    source = str(raw.get("source") or "snapshot").strip()[:120]
+    limits["source"] = source
+    return limits
+
+
 def compute_engine(
     data: dict[str, Any],
     cost_model: Mapping[str, Any] | None = None,
@@ -327,6 +424,8 @@ def compute_engine(
     for item in dividend_summary:
         item["applied"] = 0.0 < item["tau_years"] < max_t
     account = payload["account"]
+    cost_policy = _validate_cost_policy(account)
+    trade_limits = _validate_trade_limits(account)
     groups = {group["expiry"]: group for group in payload["legs"]}
     expiries = sorted(groups, key=lambda item: groups[item]["dte"])
     if len(expiries) < 2:
@@ -340,6 +439,7 @@ def compute_engine(
         q,
         account,
         dividends,
+        trade_limits,
     )
     secondary = expiry_analysis(
         spot,
@@ -350,6 +450,7 @@ def compute_engine(
         q,
         account,
         dividends,
+        trade_limits,
     )
 
     model = {
@@ -383,6 +484,16 @@ def compute_engine(
             "status": "VERIFIED",
             "note": "调用方提供的已验证成本模型",
         }
+    elif cost_policy is not None:
+        model = {
+            "fees_hkd_per_lot": cost_policy["fees_hkd_per_lot"],
+            "slippage_bps": cost_policy["slippage_bps"],
+            "status": "SNAPSHOT_DECLARED",
+            "note": (
+                "费用/滑点口径来自快照 account.cost_policy"
+                f"（{cost_policy['source']}，随快照哈希固定）"
+            ),
+        }
 
     for item in (primary, secondary):
         slippage = item["cost_lot_ask"] * model["slippage_bps"] / 10_000.0
@@ -390,12 +501,22 @@ def compute_engine(
         item["max_loss_exec"] = item["cost_lot_exec"] * item["lots"]
 
     proposal = build_proposal(payload, primary, secondary, scenario=scenario, dividends=dividends)
+    cash_required = primary["cost_lot_exec"] * max(primary["lots"], 1)
     return {
         "primary": primary,
         "secondary": secondary,
         "proposal": proposal,
         "cost_model": model,
         "dividends": dividend_summary,
+        "execution": {
+            "fees_per_lot": model["fees_hkd_per_lot"],
+            "slippage_bps": model["slippage_bps"],
+            "cost_model_status": model["status"],
+            "cost_per_lot_exec": primary["cost_lot_exec"],
+            "cash_required": cash_required,
+            "lots": primary["lots"],
+            "trade_limits": trade_limits,
+        },
     }
 
 
@@ -618,13 +739,46 @@ def risk_gate(engine: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
         findings.append("WARN 主到期 OI 偏低，流动性不足风险")
     findings.append("NOTE OI：" + "；".join(low_oi))
 
-    findings.append(
-        "WARN 持仓限额/LOP 与 get_max_trd_qtys 未在本次冻结快照中验证；"
-        "进入模拟提交前必须用 Live 账户复核"
-    )
-    findings.append(
-        "WARN 费用/滑点 policy 未冻结，executable 成本当前以 ask 计（状态 UNVERIFIED）"
-    )
+    execution = engine.get("execution") or {}
+    cost_status = execution.get("cost_model_status", "UNVERIFIED")
+    if cost_status in ("VERIFIED", "SNAPSHOT_DECLARED"):
+        findings.append(
+            f"PASS 可执行成本口径已声明：每张费用 {float(execution.get('fees_per_lot', 0)):g} HKD"
+            f" + 滑点 {float(execution.get('slippage_bps', 0)):g} bps（状态 {cost_status}）"
+        )
+    else:
+        findings.append(
+            "WARN 费用/滑点 policy 未冻结，executable 成本当前以 ask 计（状态 UNVERIFIED）"
+        )
+
+    trade_limits = execution.get("trade_limits")
+    if trade_limits:
+        limit = trade_limits.get("position_limit_per_direction")
+        existing = trade_limits.get("existing_positions") or {}
+        lots_now = int(primary.get("lots", 0))
+        call_after = int(existing.get("call", 0)) + lots_now
+        put_after = int(existing.get("put", 0)) + lots_now
+        if limit is not None:
+            if call_after <= limit and put_after <= limit:
+                findings.append(
+                    f"PASS 持仓限额：方案后 call {call_after} / put {put_after} 张"
+                    f" ≤ 单方向限额 {int(limit)} 张"
+                )
+            else:
+                blocked.append(
+                    f"持仓限额违规：方案后 call {call_after} 或 put {put_after} 张"
+                    f"超过单方向限额 {int(limit)} 张"
+                )
+        if trade_limits.get("max_qty_per_order") is not None:
+            findings.append(
+                f"NOTE 单笔上限 {int(trade_limits['max_qty_per_order'])} 张"
+                "已约束方案张数（超出部分不计入）"
+            )
+    else:
+        findings.append(
+            "WARN 持仓限额/LOP 与 get_max_trd_qtys 未在本次冻结快照中验证；"
+            "进入模拟提交前必须用 Live 账户复核"
+        )
     findings.append(
         "WARN 美式个股期权可提前行权 + 实物交割，存在 pin/assignment 风险"
     )
@@ -819,6 +973,19 @@ def build_decision_card(
             "straddle_greeks_per_lot": {
                 key: round(value, 4) for key, value in primary["straddle_greeks"].items()
             },
+            "executable_cost": {
+                "fees_hkd_per_lot": engine["execution"]["fees_per_lot"],
+                "slippage_bps": engine["execution"]["slippage_bps"],
+                "cost_per_lot_exec": engine["execution"]["cost_per_lot_exec"],
+                "cash_required": engine["execution"]["cash_required"],
+                "status": engine["execution"]["cost_model_status"],
+                "max_qty_per_order": (engine["execution"].get("trade_limits") or {}).get(
+                    "max_qty_per_order"
+                ),
+                "position_limit_per_direction": (
+                    engine["execution"].get("trade_limits") or {}
+                ).get("position_limit_per_direction"),
+            },
         },
         "edge_gate": {
             "verdict": edge["verdict"],
@@ -1002,6 +1169,13 @@ def run_pipeline(
                 "discrete_dividend_count": sum(
                     1 for item in engine.get("dividends", []) if item.get("applied")
                 ),
+                "execution": {
+                    "cost_model_status": engine["execution"]["cost_model_status"],
+                    "fees_per_lot": engine["execution"]["fees_per_lot"],
+                    "slippage_bps": engine["execution"]["slippage_bps"],
+                    "cash_required": engine["execution"]["cash_required"],
+                    "trade_limits": engine["execution"]["trade_limits"],
+                },
                 "straddle_greeks_per_lot": {
                     key: round(value, 4)
                     for key, value in engine["primary"]["straddle_greeks"].items()

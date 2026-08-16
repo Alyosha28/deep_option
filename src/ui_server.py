@@ -1049,6 +1049,7 @@ def _terminal_ui(
     card: Mapping[str, Any],
     expiries: list[dict[str, Any]],
     snapshot_data: Mapping[str, Any] | None = None,
+    engine: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compose the dense desktop-terminal surface without inventing market data.
 
@@ -1248,6 +1249,17 @@ def _terminal_ui(
             "budgetHkd": account["cash_hkd"] * account["risk_budget_pct"] / 100,
             "maxLoss": strategy.get("maxLoss"),
             "contractMultiplier": account.get("contract_multiplier"),
+            "execCostPerLot": (engine.get("execution") or {}).get("cost_per_lot_exec"),
+            "feesPerLot": (engine.get("execution") or {}).get("fees_per_lot"),
+            "slippageBps": (engine.get("execution") or {}).get("slippage_bps"),
+            "cashRequired": (engine.get("execution") or {}).get("cash_required"),
+            "costStatus": (engine.get("execution") or {}).get("cost_model_status"),
+            "maxQtyPerOrder": (
+                (engine.get("execution") or {}).get("trade_limits") or {}
+            ).get("max_qty_per_order"),
+            "positionLimitPerDirection": (
+                (engine.get("execution") or {}).get("trade_limits") or {}
+            ).get("position_limit_per_direction"),
         },
         "selection": {
             "expiry": primary["expiry"],
@@ -1352,7 +1364,7 @@ def compose_state(
         },
         "scenario": card["scenario"],
         "expiries": expiries,
-        "terminal": _terminal_ui(payload, card, expiries, data),
+        "terminal": _terminal_ui(payload, card, expiries, data, engine=engine),
         "decisionCard": _card_ui(card),
         "macro": card["macro_assessment"],
         "policyLibrary": _policy_library_ui(),
