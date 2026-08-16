@@ -33,9 +33,9 @@ P0 聚焦一个可验证场景：
 
 已实现并验证的资产：
 
-- DSH 编排层（Phase 0）：`harness/plugins/goai-bridge.host.js` 注册 `goai_state` /
-  `goai_run` / `goai_chat` 三个 model tools，真机跑通「对话 → 五阶段管线 → 十角色辩论 →
-  审计链」闭环；插件生命周期托管引擎进程（可逆效应）；
+- DSH 编排层（Phase 3 插件族）：`harness/plugins/goai-*.host.js`（Base Mode：goai-core / goai-run / goai-chat，可选 macro / research / backtest）注册 `goai_state` /
+  `goai_run` / `goai_chat` 等 model tools，真机跑通「对话 → 五阶段管线 → 十角色辩论 →
+  审计链」闭环；插件生命周期托管引擎进程（可逆效应）；用户经 `harness/config/goai.plugins.json` 自选加载；
 - SDK 无关的 typed Gateway 合同、稳定快照哈希和 typed error；
 - Futu Live 只读行情/账户 Gateway，以及同合同的确定性 Replay Gateway；
 - 线程安全 Snapshot Recorder、严格 JSONL 校验和 legacy 快照迁移读取；
@@ -46,13 +46,25 @@ P0 聚焦一个可验证场景：
 - 腾讯跨式分析与历史回测原型；
 - JSONL + SHA-256 审计工具；
 - 政策事件库（带来源链接与核验状态）与宏观来源自动监控程序；
-- 四面板终端前端（`ui/` + `src/ui_server.py` 本地只读服务，支持真实重跑管线）；
+- 桌面研究终端前端（`ui/` + `src/ui_server.py` 本地只读服务，支持真实重跑管线与多项目工作区）；
+- 项目注册表（`data/workspaces.json`）：可为不同公司分别绑定期权快照、历史行情和投研资料，切换后整条研究管线跟随当前项目；
 - 十角色多 Agent 辩论运行时（LLM 只出文字，数字/verdict 仍由引擎产出，离线回退）；
 - 项目级 `futu-options-agent` 工作流（`goai_*` tools 可用时优先走 DSH 工具）。
 
-仍在建设：Live 行情接入 UI、DSH 客户端决策卡面板与审批闭环（Phase 1）、
-港股离散股息与 executable-cost 完整实现、独立 Edge/Risk/Action gates，
-以及当前版本的模拟提交安全闭环。
+实时行情第一阶段已接入：设置 `GOAI_DATA_MODE=live` 后 UI 走只读 live 链路
+（`GET /api/live-quote` 轻量报价、`GET /api/state` 显示 LIVE/FRESH、
+`POST /api/run|/api/chat|/api/command` 用实时快照重算且只读不写审计）；
+OpenD 不可用时显式返回 `OPEND_UNAVAILABLE`，绝不静默回退 Replay。
+实时行情第二阶段已接入：`GET /api/stream` SSE 服务端推送（`quote`/`error`/
+`refresh` 事件 + 15s 心跳；LIVE 模式专属，订阅上限与断连清理），LIVE 前端
+自动连接并在报价变化时就地更新报价条、防抖重拉完整状态（顶栏「实时推送」
+状态徽章）；上游默认 diff 轮询（2s，变化才推送），设 `GOAI_LIVE_FEED=push`
+启用真实 OpenD 订阅推送（SDK subscribe + QuoteHandler，失败/静默自动回退轮询
+并推 `warning` 事件）。可选环境变量：`GOAI_LIVE_STREAM_POLL_SECONDS`、
+`GOAI_LIVE_STREAM_PUSH_SILENCE_SECONDS`、`GOAI_LIVE_STREAM_MAX_SUBSCRIBERS`。
+仍在建设：DSH 客户端决策卡面板与审批闭环（Phase 1）、港股离散股息与
+executable-cost 完整实现、独立 Edge/Risk/Action gates，以及当前版本的模拟
+提交安全闭环。
 
 中国官方来源 HTML 解析已接入（央行/统计局实测可达并默认启用；海关总署本机 TLS 证书校验失败，默认停用待复核），Windows 计划任务已注册。
 
@@ -60,7 +72,7 @@ P0 聚焦一个可验证场景：
 
 ## 核心原则
 
-1. LLM 只做场景解析、工具编排和解释，不生成金融数字。
+1. LLM 只做工具编排和解释，不生成金融数字；场景解析由确定性引擎完成。
 2. 行情和账户事实来自 Futu 或明确标记的 Replay；计算来自确定性引擎。
 3. 理论价值与 bid/ask、费用、滑点后的可成交口径分开。
 4. 风险硬门一票否决；`PASS` 不代表盈利、成交或投资建议。
@@ -72,9 +84,9 @@ P0 聚焦一个可验证场景：
 ```text
 src/                                数据适配、回放、定价与 Hero 原型
 src/agents/                         十角色辩论运行时（llm_client/tools/runtime）
-src/ui_server.py                    引擎契约：四面板终端 + JSON API（127.0.0.1:8000）
-ui/                                 四面板终端前端（独立模式/静态回退）
-harness/plugins/goai-bridge.host.js DSH host 插件（大号金融插件的编排层）
+src/ui_server.py                    引擎契约：7 视图研究终端 + JSON API（127.0.0.1:8000）
+ui/                                 7 视图终端前端（独立模式/静态回退）
+harness/plugins/goai-*.host.js   DSH 编排层插件族（Base：core/run/chat + 可选：macro/research/backtest）
 tests/                              Gateway 合同、安全边界与离线集成测试（367 passed + 157 subtests）
 research/                           市场、数据、边界和专家方法研究
 docs/PRD.md                         产品需求与比赛验收
@@ -98,7 +110,7 @@ python -m src.decision_pipeline
 
 输出 `data/decision_card_*.json` 与 `research/audit/audit_log.jsonl` 哈希链记录。
 
-四面板终端（对话 / 期权链流动性 / 策略与账户 / 事件与审计，含十角色辩论 dock）：
+7 视图研究终端（总览 / 决策卡 / 期权链 / 宏观 / 投研 / 政策库 / 分歧 / 审计，含十角色辩论 dock）：
 
 ```powershell
 python -m src.ui_server --port 8000
@@ -106,6 +118,15 @@ python -m src.ui_server --port 8000
 
 访问 `http://127.0.0.1:8000/`。对话面板输入自然语言（`POST /api/chat`）直接驱动
 「场景解析 → 五阶段管线 → 十角色辩论」；无 DeepSeek key 自动离线回退，Demo 不崩。
+只读 API 另有 `GET /api/decision-card`（导出决策卡 + SHA-256）、`GET /api/audit`
+（审计链校验视图）、`GET /api/metrics`（会话度量）、`GET /api/projects`（项目工作区）。
+
+左侧工作区的“添加”可导入其他公司的研究快照。新快照放入 `data/projects/`，在项目抽屉填写
+`SSE.600519`、`NASDAQ.AAPL`、`HK.09988` 等通用市场前缀代码即可；Agent 会在受控 `data/` 范围内自动找快照和投研资料，
+校验 `underlying` 与代码一致后注册，并隔离该项目的期权链、历史价格/实现波动率、投研资料和 Agent
+上下文。也可以直接对研究助理说“研究 600519 的期权”或直接说公司名称，Agent 会先自动发现该标的文件。具体规则与 API 示例见
+[ui/README.md](ui/README.md) 的“添加其他公司的期权研究项目”；冻结快照格式与录制方法见
+[docs/SNAPSHOT_RECORDING.md](docs/SNAPSHOT_RECORDING.md)。
 
 知识库检索：
 
@@ -116,10 +137,21 @@ python research\kb_search.py "IV crush" --tag earnings
 
 ### DSH 模式（对话 Agent 编排，本机）
 
+编排层是 **Cordis 插件族**（DSH 底层即 Cordis 内核）：Base Mode（`goai-core` +
+`goai-run` + `goai-chat`）保证基本使用，宏观/投研/回测为可选插件，用户在
+`harness/config/goai.plugins.json` 勾选加载哪些（详见 [docs/PLUGIN_ARCHITECTURE.md](docs/PLUGIN_ARCHITECTURE.md)）。
 在 DSH 会话中直接说「用 goai_state 看当前决策卡」或「goai_chat：腾讯业绩前方向不确定，
 账户10万港币，评估跨式」——插件自动拉起引擎并返回带快照哈希与门控的决策卡摘要。
-DSH 重启后插件需要重新注册（Phase 1c 之前），把
-`harness/plugins/goai-bridge.host.js` 内容交给会话助手执行 `cordis_define` + `cordis_run` 即可。
+DSH 重启后插件需要重新注册：运行 `harness\bootstrap.ps1` 获取注册指引，把
+`harness\plugins\goai-*.host.js`（启用者）内容交给会话助手执行 `cordis_define` +
+`cordis_run` 即可（旧单体 `goai-bridge.host.js` 为 LEGACY 回退，与插件族二选一）。
+
+**agent preset 入口（推荐）**：新建 DSH 会话选 **GOAI Options Terminal**，同步/校验
+preset 用 `harness\verify_preset.ps1`（`-Sync` 一键同步到 `~\.dsh\.agent-presets`），
+真实挂载冒烟用 `node harness\smoke_preset.mjs`。注意：若 DSH web profile 装了
+实验性 `@deepseek-ai/dsh-tool-search`，preset 层工具会对模型不可见，需先跑
+`harness\fix_dsh_tool_visibility.ps1`（新建会话即生效，无需重启；已运行会话
+保持旧限制，详见 harness/README.md 的“tool-search 与 agent preset 分层不兼容”）。
 
 投研证据整理与影响研判（公告/财报/新闻/研报/行业数据 -> 股价与期权影响）：
 

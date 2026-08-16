@@ -660,6 +660,161 @@ class FutuLiveGateway:
             self._note_connection_failure(failure)
             return self._error(request, failure)
 
+    def start_quote_push(
+        self,
+        codes: Iterable[str],
+        on_quote: Callable[[List[Mapping[str, Any]]], None],
+    ) -> Any:
+        """Optional real-time push subscription (SDK ``subscribe`` + handler).
+
+        Not part of the typed ``MarketDataGateway`` protocol: callers must
+        feature-detect with ``hasattr(gateway, "start_quote_push")`` and fall
+        back to polling when it is missing or raises.  Push callbacks arrive on
+        SDK threads and are forwarded to ``on_quote`` as whitelisted snake_case
+        rows using the same vocabulary as ``get_market_snapshot`` (``code``,
+        ``name``, ``last_price``, ``open``, ``high``, ``low``,
+        ``previous_close``, ``volume``, ``turnover``, ``updated_at``); bid/ask
+        are not part of the push-quote message and stay ``None``.
+
+        The push context is dedicated: callbacks never share the serialised
+        synchronous query context.  Returns a handle with ``close()``.
+        """
+
+        try:
+            normalized = self._codes(codes)
+        except (TypeError, ValueError) as exc:
+            raise _GatewayFailure(
+                self._code("INVALID_REQUEST"),
+                f"invalid push codes: {exc}",
+                False,
+            ) from exc
+        self._probe()
+        try:
+            from futu import OpenQuoteContext, RET_OK, SubType
+            from futu.quote.quote_response_handler import StockQuoteHandlerBase
+        except ImportError:
+            raise _GatewayFailure(
+                self._code("SDK_UNAVAILABLE", "UPSTREAM_ERROR"),
+                "Futu SDK is unavailable",
+                False,
+            ) from None
+
+        adapter = self
+        # SDK 推送消息里的 code 是不带市场前缀的裸代码（如 HK.00700 → "00700"），
+        # 与请求的规范码对不上；按后缀映射回规范码（单市场订阅集下后缀唯一）。
+        suffix_map = {
+            code.split(".", 1)[-1].upper(): code for code in normalized
+        }
+
+        class _PushQuoteHandler(StockQuoteHandlerBase):
+            def on_recv_rsp(self, rsp_pb):  # noqa: N802 (SDK override)
+                rows: List[Mapping[str, Any]] = []
+                try:
+                    s2c = getattr(rsp_pb, "s2c", None)
+                    quotes = getattr(s2c, "basicQotList", None) or []
+                    for quote in quotes:
+                        security = getattr(quote, "security", None)
+                        code = getattr(security, "code", None)
+                        if not code:
+                            continue
+                        canonical = suffix_map.get(str(code).upper(), str(code).upper())
+                        rows.append(
+                            {
+                                "code": canonical,
+                                "name": adapter._normal_value(getattr(quote, "name", None)),
+                                "last_price": adapter._normal_value(getattr(quote, "curPrice", None)),
+                                "open": adapter._normal_value(getattr(quote, "openPrice", None)),
+                                "high": adapter._normal_value(getattr(quote, "highPrice", None)),
+                                "low": adapter._normal_value(getattr(quote, "lowPrice", None)),
+                                "previous_close": adapter._normal_value(
+                                    getattr(quote, "lastClosePrice", None)
+                                ),
+                                "volume": adapter._normal_value(getattr(quote, "volume", None)),
+                                "turnover": adapter._normal_value(getattr(quote, "turnover", None)),
+                                "updated_at": adapter._normal_value(getattr(quote, "updateTime", None)),
+                            }
+                        )
+                except Exception:
+                    return
+                if rows:
+                    try:
+                        on_quote(rows)
+                    except Exception:
+                        # A downstream consumer failure must never crash the
+                        # SDK reader thread.
+                        pass
+
+        context: Any = None
+        try:
+            context = OpenQuoteContext(host=self.host, port=self.port)
+            handler = _PushQuoteHandler()
+            result = context.set_handler(handler)
+            ret = result[0] if isinstance(result, tuple) else result
+            if ret != RET_OK:
+                raise _GatewayFailure(
+                    self._code("UPSTREAM_ERROR"),
+                    "Futu push handler was rejected",
+                    True,
+                )
+            ret, err = context.subscribe(normalized, [SubType.QUOTE], is_first_push=True)
+            if ret != RET_OK:
+                message = self._safe_message(err)
+                lowered = str(message).lower()
+                if any(
+                    token in lowered
+                    for token in (
+                        "permission",
+                        "authority",
+                        "entitlement",
+                        "quota",
+                        "bmp",
+                        "lv1",
+                        "lv2",
+                        "权限",
+                        "未开通",
+                        "未购买",
+                    )
+                ):
+                    raise _GatewayFailure(
+                        self._code("ENTITLEMENT_DENIED"),
+                        "Futu market-data entitlement denied",
+                        False,
+                    )
+                raise _GatewayFailure(
+                    self._code("UPSTREAM_ERROR"),
+                    f"Futu push subscribe failed: {message}",
+                    True,
+                )
+        except _GatewayFailure:
+            if context is not None:
+                try:
+                    context.close()
+                except Exception:
+                    pass
+            raise
+        except Exception as exc:
+            if context is not None:
+                try:
+                    context.close()
+                except Exception:
+                    pass
+            failure = self._exception_failure(exc)
+            self._note_connection_failure(failure)
+            raise failure from None
+
+        class _PushHandle:
+            def close(self) -> None:
+                try:
+                    context.unsubscribe(normalized, [SubType.QUOTE])
+                except Exception:
+                    pass
+                try:
+                    context.close()
+                except Exception:
+                    pass
+
+        return _PushHandle()
+
     def get_expiration_dates(self, underlying: str) -> DataEnvelope:
         try:
             code = self._code_value(underlying)

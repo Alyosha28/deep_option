@@ -257,3 +257,72 @@ JS 层不重算任何数字，只透传引擎结果。
 - 验收：.venv 按 requirements.txt 安装后 `python -m pytest tests -q` →
   367 passed + 157 subtests（208.5s）；审计链 83 行哈希完整；回测输出字节一致；
   /api/chat 自然语言场景（看跌/20 万/3%）summary 正确跟随场景，无 key 离线降级正常。
+
+---
+
+## 14. 产品评审修复轮 — 已完成（2026-08-14/15）
+
+产品经理视角评审（行动闭环断点 / 冻结快照像实时盘 / 不可度量 / 审计不可见 / 多标的体验 / 文档漂移）以长期 goal 分两阶段修复。速览见 PROJECT_STATE.md §14 与 deliverables/evidence/product-review-fixes.md。
+
+### 第一阶段：产品修复六项
+
+1. **决策卡行动闭环**：GET /api/decision-card（最新落盘决策卡 + 相对路径 + SHA-256 身份哈希，只读不写审计）；决策卡视图「下一步」动作区（导出按钮下载 JSON + 哈希提示；修改条件重算 → 打开研究条件面板；按 verdict 的行动文案；P0c 边界声明「模拟提交未启用」）。浏览器实测导出 sha256 提示正确、重算面板展开。
+2. **能力声明首屏**：总览顶部能力条（当前切片 P0a·Replay 只读 / 数据模式 + 快照时间戳「非实时行情」/ 支持范围 / 一键运行管线按钮）。实测渲染正常。
+3. **审计视图**：GET /api/audit?limit=N（全链 prev_hash 衔接校验 chainOk + 每类事件紧凑摘要 + dropped_refs 投影 + 12 位哈希前缀 + 路径脱敏）；新「审计」视图（链状态徽章 / 事件明细表 / 被拒引用红字徽章）；「分歧」后的第 8 个视图。实测 95 条链完整、auditor 8 条 dropped_refs 正确显示。
+4. **会话度量日志**：data/logs/session_metrics.jsonl（ts/event/input/verdict/duration_ms/mode；线程安全追加；失败静默）；GET /api/metrics（尾部条目 + byEvent/byVerdict/avgDurationMs）；审计视图「会话度量」面板；总览「最近分析耗时」。端到端实测 POST /api/agent(refresh) 13.8s → NO_TRADE 记录。
+5. **多标的项目体验**：workspace_registry（未提交改动）整合验证；无快照标的失败路径实测（422 + 明确范围声明 + 录制指引）；新增 docs/SNAPSHOT_RECORDING.md（快照契约/两种录制路径/失败对照表/范围声明）；UI 表单常驻范围声明。
+6. **文档同步**：PRD v0.6（场景解析口径、7 视图壳结构、DSH 插件族、实现真相表、§10.5 增量计划）；README（7 视图/插件族/新 API/录制指引/核心原则口径修正「LLM 不解析场景」）。
+
+### 第二阶段：深化与打磨
+
+7. 审计/度量深化：总览「最近分析耗时」（metrics 驱动）；决策卡「下一步」页脚「审计链完整 · 共 N 条」（audit 驱动，链校验可视化）。
+8. 多标的落地：失败路径实测（SSE.600519 → 422 含指引）、超范围明确提示、录制指引文档。
+9. 全链路浏览器 e2e：8 视图 + 4 抽屉实测（DOM 断言 + 内容检查），console 0 错误，14 张截图存档 deliverables/evidence/screenshots/。
+10. 测试扩充：新增 decision-card/audit/metrics 端点测试、agent 动作写度量集成（真实 select_expiry 14.5s）、audit 日志缺失降级、workspace 无快照指引；插件族 verify/smoke 复跑 PASSED。
+11. 发布材料：deliverables/evidence/product-review-fixes.md（评审问题→修复→证据）、deliverables/demo-script.md（0-120s 演示脚本）。
+12. 稳定性：审计降级测试（AUDIT_LOG 缺失 → found:false 不 500）；gitignore 补 .playwright-mcp//tmp/；管线耗时由 metrics 记录（command 5.6s / refresh 13.8s）；未提交工作区文件处置清单（PROJECT_STATE §14）。
+
+### 验证
+
+- Python 全量：418 passed（2026-08-15；含新增 24 个）
+- 插件族：verify_plugins.ps1 PASSED、smoke_plugins.mjs PASSED
+- 浏览器 e2e：8 视图 + 4 抽屉、console 0 错误
+- 铁律：JS/LLM 未重算数字（展示字段全部来自引擎 API）；审计链只增不减（audit 端点只读）；能力宣传不超过 P0a 切片（Live/模拟提交明确标注未毕业）
+
+
+## 15. DSH agent preset 产品评审修复轮 — 进行中（2026-08-15）
+
+目标：像业内顶尖产品经理一样测试 goai-options preset，产出优化建议并执行。
+
+### 发现与修复
+
+1. **tool-cordis 挂载冲突（阻断）**：同一 DSH 进程内 cordis 预设先挂载后，
+   goai-options 的 tool-cordis 在 `session.create` 时报
+   `Host Cordis inspect provider "Service" is already registered`。
+   → tool-cordis 默认 `disabled: true`（插件注册/调试走 cordis 预设）。
+2. **模板漂移**：harness/preset 曾缺 skills/、描述与能力不符。
+   → 模板成为唯一安装源，新增 verify_preset.ps1/mjs 做静态+逐字节比对。
+3. **工具面过宽**：subagent/workflow/ralph 与终端业务链无关。
+   → delegation group 默认 disabled。
+4. **首启引导**：persona 增加开场披露（goai_* 可用性/独立模式兜底）、
+   Hero 示例、中文工作语言、范围外标的拒绝与录制指引、CLI 用 pwsh 执行纪律。
+5. **tool-search 与 preset 分层不兼容（严重）**：实验性
+   `@deepseek-ai/dsh-tool-search` 只索引全局工具，preset 层
+   pwsh/read/write/view_image 全部不可见。新增 fix_dsh_tool_visibility.ps1
+   停用该插件（-Undo 回滚），已应用到 `~/.dsh/profiles/web/cordis.patch.yml`，
+   3081 对照实例验证 97 工具可见，3080 主实例待重启激活。
+
+### 验证
+
+- verify_preset.ps1 / verify_preset.mjs / smoke_preset.mjs PASSED；
+- 真实 goai-options 对话四连测：开场披露、实盘硬阻断、范围外标的拒绝、
+  独立模式 CLI 重跑 NO_TRADE（照抄引擎数字 + stale 提示 + 审计来源）；
+- 主实例 3080 最终 e2e：profile patch 无需重启即对新建会话生效（请求头 97
+  工具）→ cordis 会话注册 goai-core/run/chat 全 running → goai-options 会话
+  调 goai_state 照抄引擎数字（NO_TRADE/LOW_EDGE/PASS/stale/短哈希）；
+- 新增 tests/test_preset_files.py（7 项 preset 打包不变量，0.04s 全绿）；
+- PRD v0.7 新增 §3.6 agent preset 产品入口。
+
+验证完成：全量 pytest 回归 **584 tests / 0 failures / 0 errors / 0 skipped**
+（292.3s，junit 落盘）；DSH 将来重启后需按 bootstrap 重新注册插件族
+（进程级资产语义，已文档化）。

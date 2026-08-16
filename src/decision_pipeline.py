@@ -15,6 +15,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -37,6 +38,9 @@ DEFAULT_INPUT = ROOT / "data" / "hero_inputs.json"
 DEFAULT_BACKTEST = ROOT / "data" / "backtest_tencent_straddle.json"
 
 VIEWS = {"bullish", "bearish", "uncertain"}
+_MARKET_SYMBOL_RE = re.compile(
+    r"[A-Z][A-Z0-9_-]{1,15}\.[A-Z0-9][A-Z0-9._-]{0,46}"
+)
 
 
 def _reject_sensitive(raw: Mapping[str, Any]) -> None:
@@ -55,8 +59,10 @@ def parse_scenario(raw: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(underlying, str) or not underlying.strip():
         raise ValueError("underlying must be a non-empty market-qualified symbol")
     normalized_underlying = underlying.strip().upper()
-    if "." not in normalized_underlying:
-        raise ValueError("underlying must include a market prefix, e.g. HK.00700")
+    if not _MARKET_SYMBOL_RE.fullmatch(normalized_underlying):
+        raise ValueError(
+            "underlying must include a valid market prefix, e.g. HK.00700 or SSE.600519"
+        )
 
     view = raw.get("view")
     if not isinstance(view, str) or view.strip().lower() not in VIEWS:
@@ -456,7 +462,11 @@ def risk_gate(engine: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
     findings: list[str] = []
 
     max_loss = primary["max_loss_exec"]
-    if max_loss <= budget:
+    if int(primary.get("lots", 0)) < 1:
+        blocked.append(
+            f"风险预算 {budget:,.0f} HKD 不足以覆盖最小 1 张方案成本 {primary['cost_lot_exec']:,.0f} HKD"
+        )
+    elif max_loss <= budget:
         findings.append(
             f"PASS 最大亏损（executable 口径）{max_loss:,.0f} <= 预算 {budget:,.0f} HKD"
         )
@@ -777,10 +787,16 @@ def run_pipeline(
     human_confirmed: bool = False,
     audit_enabled: bool = True,
     write_card: bool = True,
+    snapshot_data: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """端到端执行五阶段管线并返回决策卡。"""
+    """端到端执行五阶段管线并返回决策卡。
 
-    data = load_frozen_snapshot(input_path)
+    ``snapshot_data`` 允许调用方传入一个已经加载好的快照字典（LIVE/REPLAY
+    皆可），从而复用同一套五阶段管线；未提供时保持原有行为：从
+    ``input_path`` 读取冻结快照文件。
+    """
+
+    data = dict(snapshot_data) if snapshot_data is not None else load_frozen_snapshot(input_path)
     payload = data["payload"]
     if scenario is None:
         scenario = {
@@ -797,10 +813,19 @@ def run_pipeline(
     if parsed["underlying"] != data["underlying"]:
         raise ValueError("scenario underlying does not match frozen snapshot underlying")
 
-    engine = compute_engine(data, cost_model=cost_model)
-    edge = edge_gate(engine, payload["earnings"], data["spot"])
-    risk = risk_gate(engine, data)
-    action = action_gate(data, edge, risk, human_confirmed=human_confirmed)
+    # 场景中的账户现金与风险上限是研究条件，不应只停留在决策卡文案里。
+    # 用浅层副本把它们注入本次计算上下文，保留原始冻结快照和来源证据不变。
+    scenario_payload = dict(data["payload"])
+    scenario_account = dict(scenario_payload["account"])
+    scenario_account["cash_hkd"] = parsed["account_cash_hkd"]
+    scenario_account["risk_budget_pct"] = parsed["risk_budget_pct"]
+    scenario_payload["account"] = scenario_account
+    scenario_data = {**data, "payload": scenario_payload}
+
+    engine = compute_engine(scenario_data, cost_model=cost_model, scenario=parsed)
+    edge = edge_gate(engine, scenario_payload["earnings"], scenario_data["spot"])
+    risk = risk_gate(engine, scenario_data)
+    action = action_gate(scenario_data, edge, risk, human_confirmed=human_confirmed)
     research_evidence = None
     if research_items_path is not None:
         research_evidence = build_research_evidence(
@@ -824,7 +849,7 @@ def run_pipeline(
     elif macro_policy_id is not None:
         raise ValueError("--policy-id requires --macro-policy")
     card = build_decision_card(
-        data,
+        scenario_data,
         engine,
         edge,
         risk,

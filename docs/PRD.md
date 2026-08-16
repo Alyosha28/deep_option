@@ -2,12 +2,13 @@
 
 | 项目 | 内容 |
 |---|---|
-| 版本 | v0.5 Lean Draft |
-| 日期 | 2026-08-11 |
+| 版本 | v0.7 |
+| 日期 | 2026-08-16 |
+| 更新说明 | v0.8 对齐实现真相：P0b Live 第二阶段落地（SSE 推送/订阅 `/api/stream` + UI 自动刷新 + 真实 OpenD 端到端冒烟，`GOAI_LIVE_FEED=push` 可选 SDK 订阅推送；详见 docs/LIVE_DATA_UPGRADE.md §7）；v0.7 基础上无其他产品范围变化 |
 | 赛道 | GOAI · Boundless Agents · 金融服务 |
 | P0 场景 | `HK.00700` 腾讯业绩长跨式 |
 | 产品边界 | 决策支持；默认只读；稳定后仅提交 Futu 模拟盘；禁止实盘 |
-| 当前状态 | 数据、定价、回放、Hero、四面板 UI、十角色辩论与 DSH 编排层（Phase 0）已验证；Live 行情与模拟提交闭环待 P0b/P0c |
+| 当前状态 | P0a（Replay 决策卡）已毕业；P0b Live 只读 UI 已毕业（第一阶段：`GOAI_DATA_MODE=live`、`/api/live-quote`、state 显示 LIVE/FRESH、OpenD 不可用显式报错不静默回退；第二阶段：`/api/stream` SSE 推送/订阅、UI 自动刷新、真实 OpenD 端到端验证）；P0c（模拟提交闭环）未毕业 |
 
 ## 0. 产品结论
 
@@ -48,6 +49,10 @@ GOAI 是面向已有基础期权认知用户的港美股期权研究与风险 Ag
 固定计算器适合输入完整后的公式计算；本产品还必须：
 
 - 从自然语言识别场景，只追问会改变结果的缺失字段；
+  > 实现口径（v0.6 对齐）：场景结构化由**确定性解析器** `src/scenario_parser.py`
+  > 完成（规则提取标的/观点/现金/风险预算/期限，缺失字段显式标注"按冻结快照假定"），
+  > LLM 不参与场景解析、不产生任何金融数字；"追问缺失字段"以对话链路
+  > （`POST /api/chat` / `POST /api/agent` 的 ask 动作）与 UI 研究条件面板呈现。
 - 按标的、市场、策略和环境动态选择数据、模型与工具；
 - 在数据失败时切换 Replay、降级为草稿或明确阻断；
 - 用户修改期限、风险预算或观点后，只重做受影响部分；
@@ -133,6 +138,11 @@ Agent 解析并让用户确认：标的、观点、事件/期限、账户币种�
 
 用户可在提交前修改任务、暂停或停止。修改约束后，旧结果不得冒充新方案。提交后“停止 Agent”只代表停止新分析，不代表撤销券商订单。
 
+> 实现口径（v0.6 对齐）：「用户调整」由 `POST /api/agent` 提供动作化执行
+> （`ask` 追问 / `refresh` 刷新 / `select_expiry` 到期切换 / `debate` 生成分歧记录，
+> 响应带 `actions` 动作数组供 UI 渲染为按钮：open_view / open_controls 等），
+> 场景条件重算由 UI 研究条件面板（观点/现金/风险上限/到期 → 按条件重算）驱动。
+
 ### 3.4 决策卡
 
 首屏只回答六件事：
@@ -146,14 +156,38 @@ Agent 解析并让用户确认：标的、观点、事件/期限、账户币种�
 
 详细 IV、Greeks、情景矩阵、合约规格、证据和版本放在展开层，不把首屏做成审计日志。
 
-### 3.5 四面板产品壳
+### 3.5 产品壳（v0.6 对齐实现：主工作区 7 视图 + 决策栏 + 抽屉）
 
-| 面板 | 核心内容 |
+| 区域 | 内容 |
 |---|---|
-| 对话与任务 | 场景摘要、必要追问、当前阶段、暂停/修改/停止 |
-| 期权链与流动性 | 到期、行权价、bid/ask、IV、OI/成交量、新鲜度 |
-| 策略与账户 | 方案、成本、Greeks、损益图、风险预算与剩余缓冲 |
-| 事件与证据 | 业绩、股息、公司行动、关键 Claim、来源和审计 |
+| 主工作区视图 | **总览**（行情带、损益/价格/波动图表、平值报价、策略与事件台账）、**决策卡**（结论与依据、关键证据、变更条件、事件与账户）、**期权链**（报价/流动性明细）、**宏观**（情绪指数、IV 晴雨表、情景研判、事件库健康）、**投研**（证据条目与影响研判）、**政策库**（事件库/来源/核验状态）、**分歧**（十角色辩论轮次与共识） |
+| 决策检查栏 | 本页结论、三门控（机会/风险/下一步）、事件日历、证据摘要、边界说明 |
+| 工作区侧栏 | 研究项目列表、市场监控/期权研究/资料库导航、账户与风险预算 |
+| 抽屉 | 研究助理（对话 + 场景条件面板：观点/现金/风险上限/到期 + 按条件重算）、研究项目（添加项目）、设置（主题/可读性） |
+| 命令条 | 终端命令（标的 <GO> / F5 刷新 / RUN）、快捷入口 |
+
+### 3.6 DSH agent preset 入口（v0.7 新增）
+
+用户在 DSH 中新建会话时选择 **GOAI Options Terminal**（`goai-options`）预设，
+即可获得 GOAI persona + 铁律 + 精简工具目录。产品安全默认：
+
+- tool-cordis **默认禁用**（避免与 cordis 预设共享宿主 cordisInspect 注册表冲突；
+  插件注册/调试走 cordis 预设会话）；
+- delegation group **默认禁用**（不挂 subagent/workflow/ralph，终端业务链不需要）；
+- view_image 视觉可用（默认智谱 glm-4.6v-flash，key 按 VISION_API_KEY →
+  ZHIPUAI_API_KEY / DASHSCOPE_API_KEY 解析）；
+- 安装/同步：`harness\verify_preset.ps1 -Sync`；跨平台静态校验：
+  `node harness\verify_preset.mjs`；真实挂载冒烟：
+  `node harness\smoke_preset.mjs`。
+
+已知环境约束：若 DSH web profile 安装实验性 `@deepseek-ai/dsh-tool-search`，
+preset 层工具（pwsh/read/write/view_image 等）对模型不可见，执行
+`harness\fix_dsh_tool_visibility.ps1` 后新建会话即可生效（实测无需重启，
+已运行会话保持旧限制）。goai_* 插件是进程级动态资产，
+DSH 每次重启后需按 `harness\bootstrap.ps1` 在 cordis 预设会话重新注册；
+未注册时 Agent 按 persona 自动回退独立模式 CLI，不假装工具可用。
+2026-08-15 主实例已全链路实测：patch 生效 → 注册三插件 running →
+goai-options 会话调用 `goai_state` 照抄引擎数字。
 
 ## 4. 核心功能需求
 
@@ -238,11 +272,13 @@ Decision Agent ── 调用 ──> Futu / Replay / 研究来源
 
 P0 不为“多 Agent”而拆角色。一个 Decision Agent 配合受控工具和硬门即可；只有当独立角色能带来清晰权限或质量收益时才拆分。
 
-工程落地：对话 Agent 编排运行在 **DeepSeek Harness**（「大号金融插件」形态：host 插件注册
-`goai_state` / `goai_run` / `goai_chat` 工具，引擎进程由插件生命周期托管）。「多角色」以十角色
-辩论运行时实现（LLM 只出文字，数字与 verdict 仍来自确定性管线），并非把风控拆给 LLM。
-产品主链路保持 `python -m src.ui_server` 独立可跑，不依赖 Harness。架构见
-[DSH_ARCHITECTURE.md](DSH_ARCHITECTURE.md)。
+工程落地：对话 Agent 编排运行在 **DeepSeek Harness**（「大号金融插件」形态：
+DSH 底层是 Cordis 内核，编排层为**插件族**——Base Mode（`goai-core` + `goai-run` +
+`goai-chat`，注册 `goai_state` / `goai_run` / `goai_chat` 工具，引擎进程由插件生命周期托管）
+保证基本使用，宏观/投研/回测为可选插件，用户在 `harness/config/goai.plugins.json` 勾选加载。
+「多角色」以十角色辩论运行时实现（LLM 只出文字，数字与 verdict 仍来自确定性管线），
+并非把风控拆给 LLM。产品主链路保持 `python -m src.ui_server` 独立可跑，不依赖 Harness。
+架构见 [DSH_ARCHITECTURE.md](DSH_ARCHITECTURE.md) 与 [PLUGIN_ARCHITECTURE.md](PLUGIN_ARCHITECTURE.md)。
 
 ### 6.2 AnalystCollective 可复用能力
 
@@ -344,20 +380,21 @@ Hero B 使用与 Hero A 隔离、时点有效的数据。合成 PASS fixture 只
 
 | 已有 | 尚缺 |
 |---|---|
-| `FutuAdapter`：期权到期、期权链、代码解析、快照和订阅 | Live 行情接入与产品级测试 |
-| 可运行的对话 Agent：DSH 编排层 Phase 0（`goai_state` / `goai_run` / `goai_chat`）与四面板 UI（对话面板已接 `/api/chat`） | DSH 客户端决策卡面板、审批闭环（Phase 1） |
-| SnapshotRecorder 与 ReplayAdapter 骨架 | 统一 Replay fixture 迁移和产品入口 |
-| BS、美式二叉树、IV、Greeks 引擎 | 港股规格解析、离散股息与 executable-cost 完整实现 |
-| 腾讯 Hero 输入、原型方案和历史回测 | 独立 Edge/Risk/Action gates 与可信决策卡 |
-| JSONL + SHA-256 审计工具 | 当前版本的确认、幂等、异常接管和新模拟证据 |
-| 投研证据整理与事件影响研判（`src/research_evidence.py`：条目校验/SHA-256、情绪与相关性整理、历史财报日实际波动 vs 隐含事件波动、IV 水位与 crush 研判；`decision_pipeline --research-items` 已接入决策卡；`src/research_sources.py` 已支持 futu-news-search / futu-stock-digest 的 API JSON 与 Markdown 输出适配） | 真实数据源的定时抓取与权限开通、LLM 复核摘要、多文档对比与持续追踪预警 |
-| 宏观研判（`src/macro_assessment.py`：消息面情绪量化指数、IV 情绪晴雨表（水位/IV-HV/Skew/crush）、政策博弈矩阵与政治经济学审视、求是检验（事实/前提/证伪/监控）；`data/policy_events/` 政策事件库：4 个事件带来源 URL 与核验状态（VERIFIED/PENDING/FAILED），`src/policy_library.py` 提供健康报告；`decision_pipeline --macro-policy data/policy_events [--policy-id]` 已接入决策卡） | 多事件联动研判、事件自动提升 ACTIVE 的审批流程 |
-| 宏观来源自动监控（`src/macro_source_watcher.py` + `data/sources_config.json`：官方 RSS/FRED/BLS/SEC + 中国官方 HTML 列表页 `cn_html_list` → 主题过滤去重 → DRAFT 入库 + 抓取/健康报告；FRED/BLS 直接解析的数值标记 VERIFIED，RSS 标记 PENDING 不伪造核验；`src/cn_data_extract.py` 数值富化：正文页规则提取 CPI/PPI 同比、LPR、进出口总值、城镇调查失业率，原文片段留痕标 VERIFIED，实测统计局 CPI/PPI、央行 LPR 已提取；Windows 计划任务脚本 `scripts/install_watcher_task.ps1` 已注册每 60 分钟轮询，日志 UTF-8） | 海关总署真机网络复核、BLS/SEC 网络放行、开机无人值守凭据方案 |
-| DRAFT→ACTIVE 工作流（`src/policy_draft_workflow.py`：`summarize_draft` / `completeness_check` / `promote_draft` + CLI；`src/policy_library.py` 新增 `set_event_status` 写回；前置条件不满足时显式拒绝并列出缺失项；提升成功写 `policy_event_promoted` 审计事件，库健康报告 `recently_promoted` 进决策卡） | DRAFT 自动摘要的 LLM 复核层、长期 DRAFT 到期清理 |
-| 四面板终端前端（`ui/` + `src/ui_server.py`：对话与任务 / 期权链与流动性 / 策略与账户 / 事件与审计；静态回退 + 本地只读 API `/api/state`（决策卡、投研、宏观、事件库健康）、`POST /api/run` 真实重跑管线、`POST /api/chat` 自然语言驱动管线（`src/scenario_parser.py` 确定性解析，缺失字段按快照假定并标注）；前端零计算、动态文本 textContent 防注入、仅绑定 127.0.0.1） | LLM 场景解析、Live 行情接入、模拟确认 UI |
-| Futu skills 与项目特化 skill | 产品级测试、发布证据和脱敏演示包 |
+| 确定性场景解析（`src/scenario_parser.py`：标的/观点/现金/风险预算/期限规则提取，未知不补造；快照回退假定显式标注） | LLM 追问式补全（当前以 ask 动作 + 条件面板替代，规则覆盖率有限） |
+| 五阶段决策管线（`src/decision_pipeline.py`：场景解析 → 冻结快照 → 自研引擎 → Edge/Risk/Action 门控 → 决策卡；verdict：NO_TRADE / BLOCK / DRAFT_ONLY / READY_FOR_CONFIRMATION） | 独立 Edge/Risk/Action gates 与离散股息、executable-cost 完整实现（原型状态） |
+| BS、美式二叉树、IV、Greeks（bump-and-reprice）引擎 | 港股规格解析、费用/滑点/tick 完整 policy（需期权负责人冻结） |
+| 数据层：`FutuLiveGateway`（只读）/ `ReplayGateway` / `SnapshotRecorder` / `DecisionInputService`（唯一只读入口） | Live 行情接入 UI（当前全部来自 2026-08-08 冻结快照） |
+| JSONL + SHA-256 审计链（`research/audit/audit_log.jsonl`，只增不减） | 审计 UI 视图（当前审计仅在文件与决策卡摘要） |
+| 十角色辩论运行时（LLM 只出文字，证据引用白名单过滤，离线回退） | 辩论 subagent 化（可选） |
+| 宏观：`macro_assessment`（情绪指数/IV 晴雨表/政策博弈/求是检验）、`policy_library`（健康报告）、`macro_source_watcher`（官方 RSS/FRED/BLS/SEC/中国官方 HTML → DRAFT 入库 + 计划任务）、`policy_draft_workflow`（DRAFT→ACTIVE） | 多事件联动研判、DRAFT 自动摘要 LLM 复核层 |
+| 投研：`research_evidence`（证据包/影响研判）、`research_sources`（futu-news-search / futu-stock-digest 输出适配） | 真实数据源定时抓取与权限开通 |
+| 四面板→7 视图终端（`ui/` + `src/ui_server.py`：总览/决策卡/期权链/宏观/投研/政策库/分歧 + 决策栏 + 抽屉；API：`/api/state`、`/api/policy-library`、`POST /api/run`、`POST /api/chat`、`POST /api/agent`（ask/refresh/select_expiry/debate + actions）、`POST /api/command`、`/api/projects`（workspace_registry，未提交）） | 能力声明首屏、决策卡行动闭环（导出/条件重算入口）、审计视图、会话度量日志 |
+| DSH 编排层插件族（Base Mode：`goai-core`/`goai-run`/`goai-chat` + 可选 `goai-macro`/`goai-research`/`goai-backtest`；`config/goai.plugins.json` 用户自选；verify/smoke/bootstrap 脚本；旧 `goai-bridge` 降级 LEGACY） | DSH client 面板（`goai-terminal`）、审批闭环（`goai-approval`，Phase 1a） |
+| 腾讯 Hero 输入与历史回测（`hero_tencent_straddle` / `backtest_tencent_straddle`） | Hero B 独立合格数据与新模拟证据 |
+| Futu skills（futuapi 等 8 个）+ 项目特化 `futu-options-agent` skill | 产品级测试、发布证据和脱敏演示包 |
 
-Quick Start 已覆盖管线、四面板 UI、对话链路与 DSH 工具入口（2026-08-13 文档重构时更新）。任何未验证的能力仍只写为计划，不得宣传为可用。
+Quick Start 已覆盖管线、UI、对话链路与 DSH 插件族入口（2026-08-13/14 文档重构时更新）。
+任何未验证的能力仍只写为计划，不得宣传为可用。产品评审修复增量见 §10.5。
 
 ### 10.2 交付优先级
 
@@ -380,10 +417,24 @@ Quick Start 已覆盖管线、四面板 UI、对话链路与 DSH 工具入口（
 
 ### 10.4 当前阻断项
 
-- Futu OpenAPI 港股期权行情和订单查询权限需在比赛机器复核。
+- Futu OpenAPI 港股期权行情和订单查询权限需在比赛机器复核（P0b/P0c 前提）。
+- Live 行情接入 UI 未完成：当前所有展示数字来自冻结快照，UI 必须继续诚实标注数据模式。
+- P0c（模拟提交闭环）未毕业：确认、幂等、异常接管和新模拟证据均未通过，对外不得声称模拟提交可用。
 - 港股费用、滑点、tick、离散股息和调整合约 policy 需由期权负责人冻结。
 - Hero A 需用新版 executable 口径重算；Hero B 需独立合格数据与新模拟证据。
-- UI/Agent 技术栈与 LLM provider 已固定（2026-08-13）：UI=四面板终端 + `ui_server` 本地服务（独立可跑）；Agent 编排=DeepSeek Harness（不进入金融计算路径）；LLM provider=DeepSeek（OpenAI 兼容接口，无 key 自动离线回退确定性管线）。
+- UI/Agent 技术栈与 LLM provider 已固定（2026-08-13/14）：UI=7 视图终端 + `ui_server` 本地服务（独立可跑）；Agent 编排=DeepSeek Harness 插件族（不进入金融计算路径）；LLM provider=DeepSeek（OpenAI 兼容接口，无 key 自动离线回退确定性管线）。
+
+### 10.5 产品增量计划（2026-08-14 产品评审修复，状态随实现更新）
+
+| # | 增量 | 验收 | 状态 |
+|---|---|---|---|
+| ① | 决策卡行动闭环：结论视图"下一步"动作区（导出决策卡 + 条件重算入口 + 模拟提交边界声明） | 用户从决策卡可一键导出/重算；P0c 未毕业时明确标注"模拟提交未启用" | ✅ 已落地（`GET /api/decision-card` + UI 实测） |
+| ② | 能力声明首屏：首屏 15 秒内可见当前切片、数据模式+时间戳、支持范围、一键 Replay | 评审/新用户无需探索即知"这是什么、数据从哪来、能做什么" | ✅ 已落地（总览能力声明条，实测） |
+| ③ | 审计视图：UI 展示审计链（哈希链校验、门控明细、dropped_refs），只读 API | 用户/评审在界面内可核验可溯源，不读文件 | ✅ 已落地（`GET /api/audit` + 审计视图，实测） |
+| ④ | 本地会话度量日志：时间戳/输入/verdict/耗时/模式 JSONL + 只读 API | PRD §9.1 指标可度量 | ✅ 已落地（`data/logs/session_metrics.jsonl` + `GET /api/metrics`，实测） |
+| ⑤ | 多标的项目体验：workspace_registry 整合 + 添加项目失败路径明确范围声明与快照录制指引 | 超范围标的得到明确解释而非静默失败 | 进行中 |
+| ⑥ | 文档同步：PRD/README 实现口径一致（本次 v0.6）、对外主入口明确（独立模式为主，DSH 为编排亮点） | 文档与实现无漂移 | ✅ 本版完成（后续随实现持续维护） |
+| ⑦ | goai-options preset 产品评审修复：tool-cordis/delegation 默认禁用、模板=已装实例、persona 开场披露与边界纪律、tool-search 兼容修复、verify/smoke 脚本、真实对话四连测 + 隔离实例全链路 e2e | preset 可挂载、可复现、首轮对话诚实披露且 CLI/goai_state 可用 | ✅ 已落地（3081 隔离实例全链路 e2e 通过；3080 主实例待 DSH 重启激活 tool-search 修复） |
 
 ## 11. 技术规格边界
 
@@ -402,7 +453,7 @@ Quick Start 已覆盖管线、四面板 UI、对话链路与 DSH 工具入口（
 ## 12. 输入依据
 
 - 项目现状：`README.md`、`PROJECT_STATE.md`、`src/`、`data/`。
-- 编排层架构：`docs/DSH_ARCHITECTURE.md`、`harness/plugins/goai-bridge.host.js`。
+- 编排层架构：`docs/DSH_ARCHITECTURE.md`、`docs/PLUGIN_ARCHITECTURE.md`、`harness/plugins/goai-*.host.js`。
 - 项目研究：`research/01–06`、`research/sources.json`。
 - 项目工作流：`.agents/skills/futu-options-agent/`。
 - 可复用研究工程：团队的 AnalystCollective 项目。

@@ -3,7 +3,7 @@
 这是 futu-options-agent 工作流「阶段 1 场景解析」的离线确定性切片：
 - 只做文本结构化，不产生任何金融数字；现金/风险预算等数字只从用户输入
   中提取，缺失字段显式标注为「按冻结快照假定」；
-- 当前 P0 只有 HK.00700 冻结快照，其他标的由决策管线明确拒绝；
+- 标的从通用市场前缀代码或当前快照名称解析，不把某个公司写死为唯一入口；
 - view 只用于记录用户观点，P0 策略仍为跨式（方向中性），解析结果会如实说明。
 """
 
@@ -31,7 +31,16 @@ VIEW_KEYWORDS: dict[str, tuple[str, ...]] = {
     "uncertain": ("不确定", "方向不明", "震荡", "跨式", "uncertain", "straddle"),
 }
 
-_SYMBOL_PATTERN = re.compile(r"(?:^|\s)([A-Z]{2}\.\d{5})(?:\s|$)")
+_SYMBOL_PATTERN = re.compile(
+    r"(?<![A-Z0-9_])([A-Z][A-Z0-9_-]{1,15}\.[A-Z0-9][A-Z0-9._-]{0,46})"
+    r"(?![A-Z0-9._-])",
+    re.IGNORECASE,
+)
+_NUMERIC_DISPLAY_PATTERN = re.compile(
+    r"(?<![A-Z0-9._-])(?:(\d{4,8})\s+([A-Z][A-Z0-9_-]{1,15})"
+    r"|([A-Z][A-Z0-9_-]{1,15})\s+(\d{4,8}))(?![A-Z0-9._-])",
+    re.IGNORECASE,
+)
 _PERCENT_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*%")
 _CASH_UNIT_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*[万kK千]")
 _CASH_RAW_PATTERN = re.compile(r"(?<![%.\d])(\d{4,})(?!\d)")
@@ -42,14 +51,39 @@ def _looks_like_earnings(text: str) -> bool:
     return any(keyword in text.lower() for keyword in ("业绩", "财报", "earnings"))
 
 
-def _extract_underlying(text: str) -> str | None:
+def _extract_underlying(
+    text: str,
+    snapshot_payload: Mapping[str, Any] | None = None,
+) -> str | None:
     lowered = text.lower()
+    match = _SYMBOL_PATTERN.search(text)
+    if match:
+        return match.group(1).upper()
+    display = _NUMERIC_DISPLAY_PATTERN.search(text)
+    if display:
+        code, market = display.group(1), display.group(2)
+        if not code or not market:
+            market, code = display.group(3), display.group(4)
+        if market and code:
+            return f"{market.upper()}.{code.upper()}"
     for alias, symbol in SYMBOL_ALIASES.items():
         if alias in lowered:
             return symbol
-    match = _SYMBOL_PATTERN.search(text)
-    if match:
-        return match.group(1)
+    if isinstance(snapshot_payload, Mapping):
+        underlying = str(snapshot_payload.get("underlying") or "").strip().upper()
+        names: list[str] = []
+        for key in ("name", "company", "company_name"):
+            value = snapshot_payload.get(key)
+            if isinstance(value, str) and value.strip():
+                names.append(value.strip())
+        meta = snapshot_payload.get("meta")
+        if isinstance(meta, Mapping):
+            for key in ("name", "company", "company_name"):
+                value = meta.get(key)
+                if isinstance(value, str) and value.strip():
+                    names.append(value.strip())
+        if underlying and any(name.casefold() in lowered for name in names):
+            return underlying
     return None
 
 
@@ -102,10 +136,10 @@ def parse_message(
     if not text:
         raise ValueError("消息为空，请描述标的、期限与账户约束。")
 
-    underlying = _extract_underlying(text)
+    underlying = _extract_underlying(text, snapshot_payload)
     if underlying is None:
         raise ValueError(
-            "无法识别标的；请写明市场代码或名称，例如 HK.00700 / 腾讯。"
+            "无法识别标的；请写明市场代码或当前项目名称，例如 HK.00700 / 公司名称。"
         )
 
     account = snapshot_payload.get("account")

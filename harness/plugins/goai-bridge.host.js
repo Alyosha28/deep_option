@@ -1,4 +1,10 @@
-// GOAI-DSH 桥接插件（Phase 0，host-only）
+// GOAI-DSH 桥接插件（Phase 0 单体版 · LEGACY）
+// ---------------------------------------------------------------------------
+// 已被插件族取代：goai-core + goai-run + goai-chat（Base Mode）功能等价本插件，
+// 并新增 goai-macro / goai-research / goai-backtest 可选插件。本文件保留用于
+// 兼容旧注册流程（bootstrap 未找到 config/goai.plugins.json 时的回退）。
+// 注意：与本插件族二选一，不要同时注册（工具名重叠）。
+// ---------------------------------------------------------------------------
 // 作用：把 GOAI 的 Python 引擎（src/ui_server.py, 127.0.0.1:8000）以 DSH model tools 形式暴露：
 //   goai_state  读取决策终端状态（GET /api/state，内存重算不写审计）
 //   goai_run    重跑五阶段管线（POST /api/run，默认写审计与决策卡）

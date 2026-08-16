@@ -19,6 +19,22 @@ window.GOAI_DATA = {
     spot: 478.8,
     prevClose: 479.2,
   },
+  workspace: {
+    activeProjectId: "tencent-0700",
+    projects: [
+      {
+        id: "tencent-0700",
+        name: "腾讯控股",
+        symbol: "HK.00700",
+        description: "静态冻结快照示例",
+        inputPath: "data/hero_inputs.json",
+        researchItemsPath: "data/research_items_hero.json",
+        available: true,
+        researchAvailable: true,
+        active: true,
+      },
+    ],
+  },
   earnings: {
     date: "2026-08-12",
     quarter: "2026Q2",

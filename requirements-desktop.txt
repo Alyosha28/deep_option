@@ -1,0 +1,2 @@
+# Desktop shell for the local GOAI terminal.
+PySide6>=6.9,<6.10

@@ -53,6 +53,31 @@ class ParseMessageTests(unittest.TestCase):
         self.assertEqual(result["scenario"]["underlying"], "HK.00700")
         self.assertEqual(result["scenario"]["horizon"], "5 天")
 
+    def test_generic_market_code_parses_without_exchange_whitelist(self):
+        snapshot = {**SNAPSHOT, "underlying": "SSE.600519", "name": "贵州茅台"}
+
+        result = parse_message("SSE.600519 持有 5 天，单笔最多亏 3%", snapshot)
+
+        self.assertEqual(result["scenario"]["underlying"], "SSE.600519")
+
+    def test_generic_alphabetic_market_code_is_not_rewritten_by_aliases(self):
+        snapshot = {**SNAPSHOT, "underlying": "NASDAQ.AAPL", "name": "Apple Inc."}
+
+        result = parse_message("NASDAQ.AAPL 持有 5 天，单笔最多亏 3%", snapshot)
+
+        self.assertEqual(result["scenario"]["underlying"], "NASDAQ.AAPL")
+
+    def test_snapshot_company_name_resolves_without_company_alias_whitelist(self):
+        snapshot = {
+            **SNAPSHOT,
+            "underlying": "NASDAQ.BRK.B",
+            "name": "Berkshire Hathaway",
+        }
+
+        result = parse_message("Berkshire Hathaway 财报前怎么看", snapshot)
+
+        self.assertEqual(result["scenario"]["underlying"], "NASDAQ.BRK.B")
+
     def test_alias_maps_to_symbol(self):
         result = parse_message("英伟达财报前怎么看", SNAPSHOT)
 

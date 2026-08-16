@@ -121,6 +121,7 @@ class DebatePanelStaticTests(unittest.TestCase):
         cls.html = (UI_DIR / "index.html").read_text(encoding="utf-8")
         cls.app_js = (UI_DIR / "app.js").read_text(encoding="utf-8")
         cls.data_js = (UI_DIR / "data.js").read_text(encoding="utf-8")
+        cls.styles_css = (UI_DIR / "styles.css").read_text(encoding="utf-8")
 
     def test_panel_elements_present(self):
         for element_id in (
@@ -141,6 +142,55 @@ class DebatePanelStaticTests(unittest.TestCase):
         self.assertIn("function bindDebateToggle()", self.app_js)
         self.assertIn("renderDebate(D);", self.app_js)
         self.assertIn("bindDebateToggle();", self.app_js)
+
+    def test_theme_settings_are_present_and_persisted(self):
+        for element_id in (
+            "settings-toggle",
+            "settings-drawer",
+            "settings-close",
+            "theme-options",
+            "contrast-toggle",
+        ):
+            self.assertIn(f'id="{element_id}"', self.html, element_id)
+        for theme_id in ("monokai-dimmed", "monokai-classic", "graphite-contrast", "cool-cyan"):
+            self.assertIn(f'id: "{theme_id}"', self.app_js, theme_id)
+        self.assertIn("window.localStorage.setItem(THEME_STORAGE_KEY", self.app_js)
+        self.assertIn("function bindSettings()", self.app_js)
+        self.assertIn("bindSettings();", self.app_js)
+
+    def test_workspace_projects_are_dynamic_and_addable(self):
+        for element_id in (
+            "workspace-add",
+            "workspace-projects",
+            "project-drawer",
+            "project-list",
+            "project-form",
+            "project-input-path",
+        ):
+            self.assertIn(f'id="{element_id}"', self.html, element_id)
+        self.assertIn("function renderWorkspace(D)", self.app_js)
+        self.assertIn("function selectProject(projectId)", self.app_js)
+        self.assertIn('fetch("/api/projects/select?no_audit=1"', self.app_js)
+        self.assertIn('fetch("/api/projects?no_audit=1"', self.app_js)
+        self.assertIn('activeProjectId: "tencent-0700"', self.data_js)
+
+    def test_theme_presets_cover_more_color_families(self):
+        theme_block = re.search(r"var THEME_PRESETS = \[(.*?)\n  \];", self.app_js, re.S)
+        self.assertIsNotNone(theme_block)
+        theme_ids = re.findall(r'\bid: "([^"]+)"', theme_block.group(1))
+        expected_new_ids = (
+            "amber-crt",
+            "rose-pulse",
+            "violet-night",
+            "forest-moss",
+            "electric-blue",
+            "solarized-night",
+        )
+        self.assertEqual(len(theme_ids), 10)
+        self.assertEqual(len(theme_ids), len(set(theme_ids)))
+        for theme_id in expected_new_ids:
+            self.assertIn(theme_id, theme_ids)
+            self.assertIn(f':root[data-theme="{theme_id}"]', self.styles_css)
 
     def test_dynamic_text_only_via_textcontent(self):
         # app.js 中所有 innerHTML 赋值都必须是清空（""），动态文本一律 textContent

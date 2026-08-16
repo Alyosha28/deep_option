@@ -1,0 +1,43 @@
+{
+  "_readme": "GOAI 插件选择清单：改 enabled 后运行 harness\\verify_plugins.ps1 校验，再按 bootstrap.ps1 输出把注册指令交给 DSH 会话助手。Base Mode = goai-core + goai-run + goai-chat（等价旧 goai-bridge 三工具，保证基本使用）。可选插件关闭时其工具不会注册。",
+  "version": 1,
+  "baseMode": ["goai-core", "goai-run", "goai-chat"],
+  "plugins": {
+    "goai-core": {
+      "enabled": true,
+      "file": "plugins/goai-core.host.js",
+      "description": "引擎生命周期（懒启动/健康检查/可逆回收）+ HTTP 桥 + goai_state。Base Mode 必备。",
+      "tools": ["goai_state"]
+    },
+    "goai-run": {
+      "enabled": true,
+      "file": "plugins/goai-run.host.js",
+      "description": "重跑五阶段决策管线（goai_run）。Base Mode 默认。",
+      "tools": ["goai_run"]
+    },
+    "goai-chat": {
+      "enabled": true,
+      "file": "plugins/goai-chat.host.js",
+      "description": "对话链路：场景解析 + 管线 + 十角色辩论（goai_chat）。Base Mode 默认。",
+      "tools": ["goai_chat"]
+    },
+    "goai-macro": {
+      "enabled": false,
+      "file": "plugins/goai-macro.host.js",
+      "description": "政策事件库只读视图 + 手动宏观来源监控（goai_policy_library / goai_macro_watch）。",
+      "tools": ["goai_policy_library", "goai_macro_watch"]
+    },
+    "goai-research": {
+      "enabled": false,
+      "file": "plugins/goai-research.host.js",
+      "description": "投研证据包 + 新闻/研报 canonical 适配（goai_research_evidence / goai_research_sources）。",
+      "tools": ["goai_research_evidence", "goai_research_sources"]
+    },
+    "goai-backtest": {
+      "enabled": false,
+      "file": "plugins/goai-backtest.host.js",
+      "description": "腾讯 0700 业绩跨式历史回测（goai_backtest）。",
+      "tools": ["goai_backtest"]
+    }
+  }
+}

@@ -1,7 +1,11 @@
 # GOAI × DeepSeek Harness — 架构文档（大号金融插件）
 
-> 权威性：本文档与 `harness/plugins/goai-bridge.host.js` 一起定义 GOAI 的 DSH 编排层。
-> 数值、审计与产品边界仍以 `docs/PRD.md` 和 `src/` 引擎为准。最后更新：2026-08-13。
+> 权威性：本文档与 `harness/plugins/goai-*.host.js`、`harness/config/goai.plugins.json`
+> 一起定义 GOAI 的 DSH 编排层。DSH 底层是 Cordis 内核，编排层因此实现为**插件族**：
+> Base Mode（goai-core + goai-run + goai-chat）保证基本使用，其余模块为可选插件，
+> 用户在 `harness/config/goai.plugins.json` 勾选。插件族细节见
+> [docs/PLUGIN_ARCHITECTURE.md](PLUGIN_ARCHITECTURE.md)。
+> 数值、审计与产品边界仍以 `docs/PRD.md` 和 `src/` 引擎为准。最后更新：2026-08-14。
 
 ## 0. 一句话定位
 
@@ -35,29 +39,42 @@ Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent �
 │  （127.0.0.1:8000；四面板 UI 与 DSH 插件共用同一契约）            │
 ├────────────────────────────────────────────────────────────────┤
 │ Python 引擎（不动）：gateway / pricing / pipeline /              │
-│  debate runtime / audit 链 / policy library · 367 tests         │
+│  debate runtime / audit 链 / policy library · 584 tests         │
 └────────────────────────────────────────────────────────────────┘
 ```
 
 ## 3. 资产映射表（GOAI → DSH 机制）
 
-| GOAI 资产 | DSH 落点 | 状态 |
-|---|---|---|
-| 五阶段管线 `decision_pipeline.py` | model tool `goai_run`（POST /api/run） | ✅ Phase 0 已通 |
-| 决策终端状态 | model tool `goai_state`（GET /api/state） | ✅ Phase 0 已通 |
-| 对话链路（场景解析+管线+十角色辩论） | model tool `goai_chat`（POST /api/chat） | ✅ Phase 0 已通 |
-| 引擎进程生命周期 | `subprocess.spawn` + `ctx.effect` 终止句柄（可逆效应） | ✅ Phase 0 已通 |
-| `READY_FOR_CONFIRMATION` 模拟下单确认 | DSH `approval` 服务（withhold-until-commit） | 📋 Phase 1a |
-| 四面板终端 `ui/` | 独立数据终端；DSH client 插件面板（settings.section / shell.overlay / tool.call.toolview） | 📋 Phase 1a |
-| 项目铁律（LLM 不算数/模拟盘/人机确认） | `goai-options` agent preset 的 systemPrompt 节 + `futu-options-agent` skill | 📋 Phase 1b |
-| 宏观监控 Windows 计划任务 | 保留计划任务；可选 `timer.interval` 双轨 | 📋 Phase 2 |
-| 十角色辩论 `agents/runtime.py` | 保留 Python 实现；可选改 DSH `subagents` 子代理 | 📋 Phase 2（可选） |
-| 快照新鲜度失效传播 | DSH Event（`goai/snapshot-stale`）+ 工具 guard 对比快照哈希 | 📋 Phase 2 |
+> 2026-08-14 起编排层为插件族（Base Mode = goai-core + goai-run + goai-chat），
+> 旧 `goai-bridge.host.js` 为 LEGACY 兼容回退，与本插件族二选一。
 
-## 4. 插件合同（goai-bridge）
+| GOAI 资产 | DSH 落点 | 插件 | 状态 |
+|---|---|---|---|
+| 五阶段管线 `decision_pipeline.py` | model tool `goai_run`（POST /api/run） | `goai-run` | ✅ Base 默认 |
+| 决策终端状态 | model tool `goai_state`（GET /api/state） | `goai-core` | ✅ Base 必备 |
+| 对话链路（场景解析+管线+十角色辩论） | model tool `goai_chat`（POST /api/chat） | `goai-chat` | ✅ Base 默认 |
+| 引擎进程生命周期 | `subprocess.spawn` + `ctx.effect` 终止句柄（可逆效应） | `goai-core` | ✅ Base 必备 |
+| 政策事件库 + 宏观监控 | `goai_policy_library` / `goai_macro_watch` | `goai-macro` | ✅ 可选插件 |
+| 投研证据包 + 新闻适配 | `goai_research_evidence` / `goai_research_sources` | `goai-research` | ✅ 可选插件 |
+| 腾讯业绩跨式回测 | `goai_backtest` | `goai-backtest` | ✅ 可选插件 |
+| `READY_FOR_CONFIRMATION` 模拟下单确认 | DSH `approval` 服务（withhold-until-commit） | `goai-approval` | 📋 Phase 1a |
+| 四面板终端 `ui/` | 独立数据终端；DSH client 插件面板（settings.section / shell.overlay / tool.call.toolview） | `goai-terminal` | 📋 Phase 1a |
+| 项目铁律（LLM 不算数/模拟盘/人机确认） | `goai-options` agent preset 的 systemPrompt 节 + `futu-options-agent` skill | — | 📋 Phase 1b（preset 已完成） |
+| 宏观监控 Windows 计划任务 | 保留计划任务；可选 `timer.interval` 双轨 | — | 📋 Phase 2 |
+| 十角色辩论 `agents/runtime.py` | 保留 Python 实现；可选改 DSH `subagents` 子代理 | — | 📋 Phase 2（可选） |
+| 快照新鲜度失效传播 | DSH Event（`goai/snapshot-stale`）+ 工具 guard 对比快照哈希 | — | 📋 Phase 2 |
+
+## 4. 插件合同（goai 插件族）
+
+> Base Mode 三件套（core/run/chat）与旧 goai-bridge 的合同完全一致；
+> 每个插件独立遵守下列约定。可选插件（macro/research/backtest）沿用
+> 「execute 紧凑投影 + render 实质摘要」模式，CLI 型工具直接透传 stdout 摘要。
 
 - **工具**：`goai_state`（内存重算，不写审计）、`goai_run`（默认写审计+决策卡，
-  `noAudit=true` 只算不写）、`goai_chat`（`message` 中文场景，默认写审计；无 key 离线回退）。
+  `noAudit=true` 只算不写）、`goai_chat`（`message` 中文场景，默认写审计；无 key 离线回退）、
+  `goai_policy_library` / `goai_macro_watch`（宏观，只读/手动监控）、
+  `goai_research_evidence` / `goai_research_sources`（投研，只做格式转换与来源留痕）、
+  `goai_backtest`（历史回测，无未来函数）。
 - **结果契约**：`execute` 返回紧凑投影（只取叶字段：verdict、三门控、快照身份、LLM 徽章、
   辩论共识）；`render` 输出实质摘要文本——**render 文本是模型可见内容**，必须包含数字，
   不能只回状态码。
@@ -85,10 +102,12 @@ Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent �
 
 - **Phase 0（已完成，2026-08-13）**：goai-bridge host 插件 + 三工具全链路真机验证
   （审计链 83 行、辩论 complete、consensus oppose/high）。
+- **Phase 3（已完成，2026-08-14）**：编排层插件族——Base Mode（core/run/chat）+
+  可选插件（macro/research/backtest）+ `config/goai.plugins.json` 用户选择 +
+  verify/bootstrap 升级；旧 goai-bridge 降级为 LEGACY。详见 docs/PLUGIN_ARCHITECTURE.md。
 - **Phase 1a**：client 插件（DSH 内决策卡面板 + 预警 dock + 自定义工具卡）+ approval 接管。
 - **Phase 1b**：`goai-options` agent preset（复制 standard → 注入 GOAI 铁律 persona）。
-- **Phase 1c**：bootstrap 脚本（一条命令恢复插件注册）、`futu-options-agent` skill 更新、
-  本文档维护。
+- **Phase 1c**：bootstrap 脚本（一条命令恢复插件注册）、`futu-options-agent` skill 更新。
 - **Phase 2**：freshness 失效传播、jobs 惯性状态机、辩论 subagent 化（可选）、realm 隔离。
 
 ## 7. 铁律（编排层不许破坏）
@@ -96,4 +115,21 @@ Python 确定性引擎守护全部金融数字与审计链，DSH 负责 Agent �
 1. JS/LLM 都不重算数字；verdict/门控只来自 Python 引擎。
 2. `python -m src.ui_server` 独立链路任何时候可跑，评审不依赖 DSH。
 3. 审计链只增不减；证据白名单、脱敏逻辑只增不减。
-4. Python 367 tests 全绿是底线；插件改动不触碰 `src/`。
+4. Python 584 tests 全绿是底线；插件改动不触碰 `src/`。
+
+
+## 8. agent preset 与 tool-search 兼容性（2026-08-15 实测）
+
+- `goai-options` preset 是产品入口；产品安全默认：tool-cordis disabled、
+  delegation group disabled、view_image 可用。
+- 实验性 `@deepseek-ai/dsh-tool-search` 只索引全局工具，agent preset 的
+  preset scope 层工具（pwsh/read/write/view_image）会被它整体挡住；
+  本机修复脚本：`harness\fix_dsh_tool_visibility.ps1`（停用两行，-Undo 回滚）。
+  实测修复后**新建会话即生效，无需重启 DSH**；已运行会话保持旧限制。
+- 验证脚本族：`harness\verify_preset.ps1`（-Sync 同步）、
+  `harness\verify_preset.mjs`（跨平台）、`harness\smoke_preset.mjs`
+  （真实 `session.create` 挂载冒烟）。
+- 动态 goai 插件是进程级资产：DSH 重启后必须在 cordis 预设会话按
+  `harness\bootstrap.ps1` 重新注册；未注册时 goai-options 会话如实回退 CLI。
+  2026-08-15 主实例（3080）已全链路验证：patch 生效 → 注册三插件 running →
+  goai-options 会话直接调 goai_state 并照抄引擎数字（隔离实例 3081 同链路亦通过）。

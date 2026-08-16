@@ -1,49 +1,103 @@
-# The `standard` agent preset: the full coding agent, mounted once per process.
+# The 'goai-options' agent preset: GOAI 期权决策终端专属 Agent（DSH Phase 1b）。
+#
+# Derived from the 'standard' preset (full coding agent) with three additions:
+#   1. persona / agent-instructions above — GOAI 铁律与工具编排纪律
+#   2. tool-vision — view_image 视觉工具（@dsh-external/dsh-vision）
+#   3. tool-cordis（默认 disabled：产品信任边界最小化，且避免与 cordis 预设
+#      共享宿主 cordisInspect 注册表冲突）+ preset-local skills（cordis 创作技能）
 #
 # This file is an AGENT-PLANE composition. The roster mounts it ONCE under a
 # standing scope; every session naming it joins by scope parentage, so the
 # tools and prompt sections registered here cover each joined agent while a
 # session's own state stays keyed per Session/Agent inside the plugins. The
-# host composition (`base.cordis.yml` + `web.cordis.yml`) keeps everything a
+# host composition (base.cordis.yml + web.cordis.yml) keeps everything a
 # preset must not own: the registries themselves, the sandbox and approval
 # stack, persistence, and the model route.
 #
-# A service row here MUST sit inside a group carrying an `isolate` realm.
+# A service row here MUST sit inside a group carrying an isolate realm.
 # Without one it publishes into the root realm, where it is process-global —
 # another preset publishing the same name collides, and a host reader would
-# resolve one preset's instance for every session; `dsh-agent-presets` rejects
-# that at mount. `true` means an entry-local realm: this standing mount's own
+# resolve one preset's instance for every session; dsh-agent-presets rejects
+# that at mount. true means an entry-local realm: this standing mount's own
 # private instance, apart from every other preset's. (A shared label does NOT
-# pool instances — `provide()` throws on the second registration under the
+# pool instances — provide() throws on the second registration under the
 # same realm symbol; labels join REALMS, and are not what this file needs.)
+#
+# 注意：preset 文件按 mtime/size 分代挂载。修改后新建会话即挂载新代际，
+# 无需重启 DSH；已运行会话保持其开始时的代际。DSH 重启后从磁盘重新挂载。
 
 # ── identity ────────────────────────────────────────────────────────────────
 
 # The preset's own persona, shadowing the deployment default for this agent.
-# `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
+# {{model}} and {{cwd}} resolve from the agent's own route and workspace.
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
-      你是 GOAI 期权决策终端的对话 Agent（模型 {{model}}），工作目录 {{cwd}}。
-      GOAI 是港美股期权「研究 + 风险研判」终端，运行在 DeepSeek Harness 上，形态是一个「大号金融插件」。
-      你的职责是把用户的自然语言场景变成可核验的决策卡，并用人话解释结论。
+    text: |-
+      你是 GOAI 期权决策终端的对话 Agent（模型 {{model}}，工作目录 {{cwd}}）。
+      GOAI 是港美股期权「研究 + 风险研判」终端，运行在 DeepSeek Harness 上，
+      形态是「大号金融插件」。你的职责是把用户的自然语言场景变成可核验的决策卡，
+      并用人话解释结论与依据。
 
-      铁律（不可违反）：
-      1. 数字铁律——任何金融数字（价格、IV、Greeks、盈亏、verdict、门控）只能来自：
-         goai_state / goai_run / goai_chat 工具返回、本仓库 Python 引擎产物
-         （data/decision_card_*.json、research/audit/audit_log.jsonl、python -m src.* 命令）、
-         或 futuapi 等数据 skill 的真实返回。你绝不估算、编造或改写数字；缺数据就说缺数据。
+      【开场体验 · 面向终端用户】
+      - 首轮回复先披露当前状态：goai_* 工具可用就说明终端引擎已接好；
+        不可用就说明将以独立模式（python -m src.* CLI）兜底，不假装实时。
+      - 主动给一个可上手的例子：「腾讯 0700 业绩前方向不明，账户 10 万港币，
+        评估跨式」；用户没给全字段就问，不要替用户编造观点。
+      - 先结论、后依据、再下一步；术语用中文工作语言，内部枚举只保留在
+        data-system-code 类字段（NO_TRADE=这次先不交易，LOW_EDGE=机会不足，
+        BLOCK=被风险拦截，DRAFT_ONLY=暂存为草案，READY_FOR_CONFIRMATION=可以进入确认）。
+      - 标的超出当前快照/支持范围时，明确说明可支持范围与
+        docs/SNAPSHOT_RECORDING.md 录制指引；不得假装能分析没有数据的标的。
+
+      【铁律 · 不可违反】
+      1. 数字铁律——价格、IV、Greeks、盈亏、verdict、门控等一切金融数字只能来自：
+         goai_* 工具返回、本仓库 Python 引擎产物（data/decision_card_*.json、
+         research/audit/audit_log.jsonl、python -m src.* 命令）、或 futuapi 等
+         数据 skill 的真实返回。LLM 不估算、不换算、不改写任何数字；缺数据就明说缺数据。
       2. 产品边界——决策支持/研究/教育工具；不是投资建议，不自动交易。比赛版本只有
          Futu 模拟盘（SIMULATE）；任何模拟订单必须用户本人独立确认；真实交易请求硬阻断。
-      3. 结论纪律——NO_TRADE 是成功结果。Edge/Risk/Action 三门控只由引擎判定，
-         你不放宽也不收紧，只负责解释依据。
-      4. 审计——输出引用数字时注明来源与快照时间；写盘动作默认带审计（测试可用 --no-audit）。
-      5. 编排——优先用 goai_* 工具；工具不可用时回退 python -m src.* CLI（独立模式）。
-         操作细节按需加载 skill「futu-options-agent」。
+      3. 结论纪律——NO_TRADE 是成功结果。verdict 与 Edge/Risk/Action 三门控只由引擎判定，
+         你只解释依据，不放宽、不收紧、不预判。
+      4. 审计纪律——引用数字必须注明来源与快照时间（有 snapshot_sha256 就带上）；
+         写盘动作默认带审计（测试可用 --no-audit）；审计链只增不减。
+      5. 编排纪律——goai_* 工具可用时优先使用；不可用时回退 python -m src.* CLI
+         （独立模式）。操作细节按需加载 skill「futu-options-agent」；
+         若会话中注册了 goai_policy_library / goai_research_evidence / goai_backtest
+         等可选工具，按需使用，没有就回退对应 CLI。
 
-      工作方式：解析场景（标的/观点/期限/账户/风险预算）→ 引擎取数与计算 → 决策卡 →
-      人话解释结论、依据与下一步；每个引用数字都带来源。
+      【工具使用阶梯（减少重复计算与重复审计）】
+      1) 想读当前结论：先调 goai_state（只读内存，不写审计）。
+      2) 场景/参数变化或快照过期：goai_run 重算（默认写审计+决策卡；临时试算 noAudit=true）。
+      3) 中文场景一步到位（含十角色辩论）：goai_chat。
+      同一组参数不要反复 goai_run / goai_chat——先 state，再决定是否重算。
+      工具摘要缺细节时，读 data/decision_card_*.json 与 research/audit/audit_log.jsonl
+      原文核验，不要在对话里复述未经审计链确认的数字。
+
+      【场景解析】补齐：underlying（标准代码，如 HK.00700 / US.NVDA）、view、
+      horizon、account（资金/币种）、risk_budget_pct、constraints；
+      缺字段按快照假定并显式标注。
+
+      【执行纪律】跑 python -m src.* CLI 用 tool-pwsh（PowerShell）执行，
+      不要用 node_repl 或内存脚本代替 shell——node_repl 绑定在调用间持久，
+      容易出现 Identifier already declared 之类的串扰，拖慢取数。
+      如果 pwsh/read 工具不在当前可见工具里：用 tool_search 按精确名各查一次
+      （pwsh、read、glob）；仍不可见就明确告诉用户「当前会话 shell/文件工具
+      未挂载」并指向 harness/README.md 的 tool-search 修复，不要反复空转 tool_search。
+      命令输出只摘引擎写盘的数字与来源；运行结束先读
+      data/decision_card_*.json 与 research/audit/audit_log.jsonl 核验再复述。
+
+      【独立模式 CLI 速查】python -m src.ui_server --port 8000（四面板终端）、
+      python -m src.decision_pipeline（重跑管线）、python research\kb_search.py <关键词>；
+      其余命令以 skill 为准。
+
+      【输出模板 · 每次给结论时】
+      - 决策卡：verdict / Edge / Risk / Action + 快照时间与来源
+      - 依据：每个数字的来源（工具或文件）+ 快照时间
+      - 下一步：NO_TRADE 原因，或重算 / 补充快照 / 人机确认
+      - 免责：决策支持，非投资建议
+      数字照抄引擎输出，精度与单位保持原样；快照过期时先标注 stale，
+      并建议 goai_run 重算或按 docs/SNAPSHOT_RECORDING.md 录制新快照。
 
 - id: agent-instructions
   name: '@deepseek-ai/dsh-agent-instructions'
@@ -52,12 +106,12 @@
 
 # ── shell ───────────────────────────────────────────────────────────────────
 
-# `shell-env` stays in the HOST composition: `apps/cli/src/web.ts` injects it to
-# publish `DSH_WEB_URL`/`DSH_WEB_MODE`, and a host row that injects a service is
+# shell-env stays in the HOST composition: apps/cli/src/web.ts injects it to
+# publish DSH_WEB_URL/DSH_WEB_MODE, and a host row that injects a service is
 # the criterion for host-plane ownership — injection resolves before any session
 # exists, so there is no agent to key by. Behind a preset realm those variables
 # never reached the model's shell at all. Both shell tools consume the host
-# registry from here; their executors (`bash-sandbox`/`pwsh-sandbox`) are
+# registry from here; their executors (bash-sandbox/pwsh-sandbox) are
 # host-plane too.
 - id: tool-bash
   name: '@deepseek-ai/dsh-tool-bash'
@@ -69,8 +123,8 @@
 
 # ── filesystem ──────────────────────────────────────────────────────────────
 
-# Both register into the host `tools` registry and provide nothing, so
-# they need no realm. The `fs` service and its policy stay in the host.
+# Both register into the host tools registry and provide nothing, so
+# they need no realm. The fs service and its policy stay in the host.
 - id: tool-fs
   name: '@deepseek-ai/dsh-tool-fs'
 
@@ -82,9 +136,9 @@
 # ── background jobs ────────────────────────────────────────────────────────
 
 # Only the model-facing controls. The task REGISTRY stays on the host plane:
-# its producers sit outside any realm this file could put it in — `tool-bash`
-# above resolves it with `ctx.get`, and an entry-local realm here is invisible
-# to every sibling row, so `run_in_background` would answer "background jobs
+# its producers sit outside any realm this file could put it in — tool-bash
+# above resolves it with ctx.get, and an entry-local realm here is invisible
+# to every sibling row, so run_in_background would answer "background jobs
 # unavailable" while these controls sat in the catalog. The registry is keyed by
 # owning agent anyway, so one host instance serves every session. What a preset
 # chooses is whether its agent can collect and stop background work at all.
@@ -95,11 +149,15 @@
 
 # The skill REGISTRY lives in the host composition and is layered per scope:
 # these rows register into THIS preset's layer of it, so they need no realm.
-# `skill-filesystem` contributes local-root discovery for agents on this preset, and
-# `tool-skill` gives them the catalog and loader; the merged catalog also
+# skill-filesystem contributes local-root discovery for agents on this preset, and
+# tool-skill gives them the catalog and loader; the merged catalog also
 # carries whatever the deployment registered globally (repository plugins).
+# goai-options 额外挂载 preset 目录下的 skills/（cordis 创作技能，研发期保留）。
 - id: skill-filesystem
   name: '@deepseek-ai/dsh-skill-filesystem'
+  config:
+    customSkillDirs:
+      - !!js "process.getBuiltinModule('node:url').fileURLToPath(new URL('skills/', baseUrl))"
 
 - id: tool-skill
   name: '@deepseek-ai/dsh-tool-skill'
@@ -107,9 +165,9 @@
 # ── goals ───────────────────────────────────────────────────────────────────
 
 # Only the model-facing tool. The goal SERVICE, its session driver, and the
-# `/goal` command stay on the host plane: the Gateway serves the goal domain as
+# /goal command stay on the host plane: the Gateway serves the goal domain as
 # Remote endpoints whose receiver comes from a generated descriptor, so it
-# resolves `goals` on the host and an entry-local realm here would hide it. The
+# resolves goals on the host and an entry-local realm here would hide it. The
 # registry is keyed by session anyway, so one host instance serves every
 # session. What a preset chooses is whether its agent can call the goal tool.
 - id: tool-goal
@@ -143,15 +201,15 @@
 
 # ── compaction ──────────────────────────────────────────────────────────────
 
-# `compaction-basic` reads `toolResultPrune` through `ctx.get`, so the pruner must
+# compaction-basic reads toolResultPrune through ctx.get, so the pruner must
 # share this realm rather than sit outside it.
 #
-# `tokenMeter` is deliberately NOT in this realm: the meter stays on the HOST
+# tokenMeter is deliberately NOT in this realm: the meter stays on the HOST
 # plane, and the rows here resolve that one instance. It takes no configuration,
 # keys every fold by Session, and owns the context-meter projection units the
 # browser reads for every session — behind a realm those units would come and go
 # with whichever presets happen to be mounted. What a preset chooses is whether
-# its agent compacts at all, which is `compaction-basic` below.
+# its agent compacts at all, which is compaction-basic below.
 - id: compaction
   name: cordis:group
   group: true
@@ -174,24 +232,29 @@
 
 # ── delegation and workflows ────────────────────────────────────────────────
 
-# The `subagents` registry and its spawn/fork backends live in the HOST
+# The subagents registry and its spawn/fork backends live in the HOST
 # composition: the registry is a process singleton whose cross-session queries
 # the api-proxy serves to the browser, and a provider name may only be
 # registered once. This preset contributes the delegation TOOLS, which resolve
 # that host registry.
 #
-# `workflows` is different — nothing outside an agent reads it — so every row
+# workflows is different — nothing outside an agent reads it — so every row
 # that reaches it shares one entry-local realm here, and a consumer left
 # outside would resolve a host registry this preset does not populate.
 #
-# `tool-subagent-report` is host-plane for the same reason as the registry,
+# tool-subagent-report is host-plane for the same reason as the registry,
 # not because a preset may not want it: it registers a CONTINUABLE SETUP on
 # that singleton rather than a tool this agent calls, and the setup list is
 # not scope-aware — one copy per mounted preset means every child gets
-# `report` registered once per live session, which throws on the second.
+# report registered once per live session, which throws on the second.
+#
+# 产品预设默认禁用本 group：GOAI 终端业务链不依赖 subagent/workflow/ralph，
+# 少挂 8 个工具=更小上下文/更小信任面（十角色辩论在 Python 引擎内完成，不经过这里）。
+# 研发期如需要，去掉本行 disabled（工具注册/插件调试更推荐用 cordis 预设会话）。
 - id: delegation
   name: cordis:group
   group: true
+  disabled: true
   isolate:
     workflowEngine: true
   config:
@@ -216,7 +279,7 @@
         backgroundMode: continuable
 
     # Product providers are host-plane singletons. Copy this preset, then
-    # remove `disabled` from either ordinary tool row to expose that product
+    # remove disabled from either ordinary tool row to expose that product
     # only to agents composed from the copy.
     - id: tool-subagent-codex
       name: '@deepseek-ai/dsh-tool-subagent'
@@ -250,6 +313,17 @@
         subagentProvider: spawn
         maxRounds: 64
 
+# ── vision ──────────────────────────────────────────────────────────────────
+
+# view_image 工具：给纯文本模型加上眼睛——经任意 OpenAI 兼容 VLM 端点回答关于
+# 图片的问题（OCR / 数数 / 读图 / 布局，任意视觉问题）。默认智谱免费
+# glm-4.6v-flash 零成本开箱，可用 baseURL/model 换通义 / Ollama 本地 / DeepSeek
+# 识图 API。包名从宿主组装解析（web profile 已装 @dsh-external/dsh-vision）；
+# API key 按调用时解析：config.apiKey → $VISION_API_KEY（~/.dsh/.env 已配）→
+# $ZHIPUAI_API_KEY / $DASHSCOPE_API_KEY；本地 Ollama 端点无需 key。
+- id: tool-vision
+  name: '@dsh-external/dsh-vision'
+
 # ── remaining model-facing rows ─────────────────────────────────────────────
 
 - id: tool-ask-user
@@ -260,10 +334,28 @@
   config:
     allowParallelInProgress: true
 
-# The `web` service and its search provider stay in the host composition; only
+# The web service and its search provider stay in the host composition; only
 # the model-facing tool is per-session.
 - id: tool-web
   name: '@deepseek-ai/dsh-tool-web'
   config:
     fetch: false
     searchTimeoutMs: 60000
+
+# ── self-modification ───────────────────────────────────────────────────────
+
+# Read the live runtime, mount a temporary plugin, unmount it. The toolset is a
+# trust boundary, not a sandbox — see this file's header.
+# 产品预设默认禁用 self-modification（信任边界最小化）。
+# 1) tool-cordis 与 cordis/standard 等预设共享宿主 cordisInspect 注册表：
+#    同一 DSH 进程内任一含 tool-cordis 的预设先挂载后，后挂载者会在
+#    session.create 时报 "Host Cordis inspect provider \"Service\" is already
+#    registered"——两个含 tool-cordis 的 preset 不能同时挂载。
+# 2) GOAI 终端业务链不依赖 cordis_*：goai_* 插件的注册/调试请使用 cordis
+#    预设会话（按 harness\bootstrap.ps1 指引），注册后 goai-options 会话
+#    即可直接调用 goai_state / goai_run / goai_chat。
+# 研发期如需在本预设内注册插件：去掉本行 disabled，并确保该 DSH 进程内
+# 没有先挂载 cordis 预设；产品演示不要打开。
+- id: tool-cordis
+  name: '@deepseek-ai/dsh-tool-cordis'
+  disabled: true

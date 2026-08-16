@@ -36,6 +36,19 @@ GOAI 的编排层运行在 DeepSeek Harness（「大号金融插件」，架构�
 审计链确认的数字。DSH 工具不可用时回退到下方 CLI 命令（独立模式，评审机器无 DSH 也可用）。
 本 skill 同时是 `goai-options` agent preset（Phase 1b）persona 的来源，铁律在两种模式下完全一致。
 
+### preset 调试与 tool-search 兼容性（2026-08-15）
+
+- 产品安全默认：`goai-options` 中 tool-cordis 与 delegation group 均默认
+  `disabled: true`；注册/调试动态插件用 cordis 预设会话。
+- 若 DSH web profile 装有实验性 `@deepseek-ai/dsh-tool-search`，preset 层工具
+  （pwsh/read/write/view_image）对模型不可见：先执行
+  `harness\fix_dsh_tool_visibility.ps1` 并重启 DSH。
+- 校验：`harness\verify_preset.ps1 -Sync`（PowerShell）或
+  `node harness\verify_preset.mjs`（跨平台）；真实挂载冒烟
+  `node harness\smoke_preset.mjs`。
+- 动态插件是进程级资产：DSH 重启后需按 `harness\bootstrap.ps1` 在 cordis
+  预设会话重新注册 goai-core/goai-run/goai-chat；未注册时如实回退 CLI。
+
 ## 定位与边界（不可违反）
 
 - 决策支持 / 研究 / 教育工具；不是投资建议，不自动交易。

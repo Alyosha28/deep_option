@@ -1,0 +1,4 @@
+# Optional historical-market-data providers for the desktop price and volatility views.
+# The base terminal remains fully usable without this package.
+openbb>=4.7,<5
+yfinance>=1.4,<2

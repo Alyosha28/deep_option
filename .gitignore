@@ -1,4 +1,5 @@
 .venv/
+.openbb-home/
 data/*
 !data/policy_events/
 !data/policy_events/*.json
@@ -24,8 +25,16 @@ __pycache__/
 # Office lock/temp files
 ~$*
 
-# QA scratch outputs
+# Playwright MCP artifacts and scratch output
+.playwright-mcp/
+tmp/
 presentation/.qa-images/_recheck_*
+
+# Session-local scratch (impeccable workspace, caches)
+.impeccable/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
 
 # Third-party competition manual (not redistributed)
 rule/

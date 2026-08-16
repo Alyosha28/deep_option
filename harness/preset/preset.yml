@@ -1,2 +1,2 @@
 name: GOAI Options Terminal
-description: GOAI 期权决策终端专属 Agent：数字铁律（LLM 不算数）、模拟盘与人机确认、审计留痕；优先使用 goai_state/goai_run/goai_chat 工具，独立模式回退 python -m src.* CLI。基于 standard preset 复制，工具集与 standard 一致。
+description: GOAI 期权决策终端专属 Agent：数字铁律（LLM 不算数）、模拟盘与人机确认、审计留痕；goai_state → goai_run / goai_chat 工具阶梯（需先按 harness\bootstrap.ps1 注册 goai 插件；未注册自动回退 python -m src.* CLI 独立模式）。基于 standard 精简：subagent/workflow/ralph 不挂载，tool-cordis 默认禁用，view_image 视觉可用（默认智谱 glm-4.6v-flash，key 按 VISION_API_KEY → ZHIPUAI_API_KEY / DASHSCOPE_API_KEY 解析）。开场直接说「腾讯 0700 业绩前方向不明，账户 10 万港币，评估跨式」即可上手。
