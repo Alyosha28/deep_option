@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="180" viewBox="0 0 920 180" role="img" aria-labelledby="title desc">
+  <title id="title">GOAI logo</title>
+  <desc id="desc">GOAI 港美股期权智能投研终端标志</desc>
+  <rect width="920" height="180" rx="8" fill="#1e1e1e"/>
+  <g fill="#a6e22e">
+    <rect x="36" y="40" width="14" height="14"/>
+    <rect x="36" y="68" width="14" height="14" opacity=".72"/>
+    <rect x="36" y="96" width="14" height="14" opacity=".45"/>
+    <rect x="64" y="40" width="14" height="14" opacity=".72"/>
+    <rect x="64" y="68" width="14" height="14" opacity=".45"/>
+  </g>
+  <text x="112" y="116" fill="#a6e22e" font-family="Segoe UI, Arial, sans-serif" font-size="96" font-weight="700" letter-spacing="-5">GOAI</text>
+  <text x="470" y="108" fill="#b9bcba" font-family="Segoe UI, Microsoft YaHei, Arial, sans-serif" font-size="28" letter-spacing="2">港美股期权智能投研终端</text>
+  <path d="M470 132H846" stroke="#66d9ef" stroke-width="2" opacity=".8"/>
+  <circle cx="858" cy="132" r="5" fill="#a6e22e"/>
+</svg>

@@ -4,6 +4,8 @@
 
 **把自然语言期权观点，变成一张带数据来源、定价依据、账户风控与审计链的可核验决策卡。**
 
+<img src="assets/images/goai-logo.svg" alt="GOAI 港美股期权智能投研终端 Logo" width="620">
+
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/Windows-10%2F11-0078D6?style=flat-square&logo=windows&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-496%20passed-brightgreen?style=flat-square)
@@ -39,6 +41,12 @@ GOAI 是 **GOAI 世界人工智能开源大赛 · Boundless Agents（无界应�
 产品定位是**研究与决策支持**，不是投资建议，不提供实盘自动交易。
 
 > **Hero 场景**：腾讯 `HK.00700` 业绩前方向不确定，账户 10 万港币，评估长跨式是否值得交易。
+
+<p align="center">
+  <img src="assets/images/goai-hero.png" alt="GOAI 品牌主视觉：信号场、期权收益曲线与决策卡" width="1100">
+</p>
+
+> 视觉说明：主视觉、管线图和数据板是 Image 2 生成的品牌化设计示意，不代表实时行情或投资收益；终端截图来自仓库已有的 Replay 端到端证据。
 
 系统针对每个场景输出四种产品结果之一：
 
@@ -90,8 +98,25 @@ GOAI 是 **GOAI 世界人工智能开源大赛 · Boundless Agents（无界应�
 8 视图桌面研究终端（总览 / 决策卡 / 期权链 / 宏观 / 投研 / 政策库 / 分歧 / 审计），Bloomberg 式深色设计语言，支持对话抽屉、项目工作区、`Ctrl+K` 研究助理、实时推送状态徽章与静态回退。
 
 <p align="center">
-  <img src="deliverables/evidence/screenshots/e2e-overview.png" alt="GOAI 终端总览视图" width="960">
+  <img src="assets/images/goai-terminal-overview.png" alt="GOAI 终端总览视图" width="1100">
 </p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="assets/images/goai-decision-card.png" alt="GOAI 决策卡视图"></td>
+    <td width="50%"><img src="assets/images/goai-debate.png" alt="GOAI 十角色辩论视图"></td>
+  </tr>
+  <tr>
+    <td align="center">决策卡：机会、风险与下一步集中呈现</td>
+    <td align="center">辩论视图：分歧点、证据引用与研究共识</td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="assets/images/goai-data-visual.png" alt="GOAI 期权风险数据板示意：收益曲线、Greeks、IV 与证据" width="1100">
+</p>
+
+数据板是产品信息架构的视觉示意：把收益曲线、Greeks、IV 与证据来源放在同一研究面上；真实数字仍以冻结快照和确定性引擎输出为准。
 
 ### 当前状态
 
@@ -109,6 +134,16 @@ GOAI 是 **GOAI 世界人工智能开源大赛 · Boundless Agents（无界应�
 完整产品边界与验收标准见 [精简版 PRD](docs/PRD.md)（v0.7）。
 
 ## 🏗️ 架构概览
+
+<p align="center">
+  <img src="assets/images/goai-architecture.svg" alt="GOAI 系统架构图：桌面终端、DSH、引擎契约、数据网关、定价门控与审计链" width="1100">
+</p>
+
+五阶段流程的视觉摘要：
+
+<p align="center">
+  <img src="assets/images/goai-pipeline.png" alt="GOAI 五阶段流程：场景、快照、定价、门控、决策卡与审计" width="1100">
+</p>
 
 ```mermaid
 flowchart LR

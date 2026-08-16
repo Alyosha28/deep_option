@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">GOAI 系统架构</title>
+  <desc id="desc">桌面终端与 DSH 编排层通过 JSON API 进入确定性引擎，经过数据网关、定价与门控后生成决策卡，并写入审计链。</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity=".32"/>
+    </filter>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#383939" stroke-width="1" opacity=".45"/>
+    </pattern>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0L9 3L0 6Z" fill="#66d9ef"/>
+    </marker>
+    <marker id="arrow-lime" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0L9 3L0 6Z" fill="#a6e22e"/>
+    </marker>
+    <style>
+      .sans { font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif; }
+      .mono { font-family: "Cascadia Mono", Consolas, monospace; }
+      .title { fill: #f8f8f2; font-size: 30px; font-weight: 700; }
+      .eyebrow { fill: #8c8f8d; font-size: 14px; letter-spacing: 2px; }
+      .label { fill: #f8f8f2; font-size: 22px; font-weight: 700; }
+      .sub { fill: #b9bcba; font-size: 15px; }
+      .code { fill: #66d9ef; font-size: 14px; }
+      .small { fill: #8c8f8d; font-size: 13px; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#1e1e1e"/>
+  <rect x="26" y="26" width="1548" height="848" rx="14" fill="url(#grid)" opacity=".6"/>
+  <rect x="26" y="26" width="1548" height="848" rx="14" fill="#181818" opacity=".55"/>
+
+  <text x="74" y="82" class="sans title">GOAI / 系统架构</text>
+  <text x="74" y="112" class="sans eyebrow">EVIDENCE → DETERMINISTIC ENGINE → DECISION CARD → AUDIT</text>
+  <text x="1515" y="82" class="mono small" text-anchor="end">READ-ONLY BY DEFAULT</text>
+  <circle cx="1530" cy="78" r="6" fill="#a6e22e"/>
+
+  <!-- top entry points -->
+  <g filter="url(#shadow)">
+    <rect x="74" y="166" width="310" height="136" rx="8" fill="#252526" stroke="#a6e22e" stroke-width="2"/>
+    <rect x="414" y="166" width="310" height="136" rx="8" fill="#252526" stroke="#66d9ef" stroke-width="2"/>
+    <rect x="806" y="166" width="720" height="136" rx="8" fill="#252526" stroke="#c5a635" stroke-width="2"/>
+  </g>
+  <text x="100" y="204" class="sans eyebrow">USER SURFACE</text>
+  <text x="100" y="238" class="sans label">桌面研究终端</text>
+  <text x="100" y="267" class="sans sub">8 视图 · 对话抽屉 · 静态回退</text>
+  <text x="100" y="289" class="mono code">ui/  ·  PySide6 + QtWebEngine</text>
+
+  <text x="440" y="204" class="sans eyebrow">ORCHESTRATION</text>
+  <text x="440" y="238" class="sans label">DSH 编排层</text>
+  <text x="440" y="267" class="sans sub">goai-* 插件族 · agent preset</text>
+  <text x="440" y="289" class="mono code">host tools + skills + approval</text>
+
+  <text x="832" y="204" class="sans eyebrow">CONTRACT</text>
+  <text x="832" y="238" class="sans label">引擎契约 / JSON API</text>
+  <text x="832" y="267" class="sans sub">本机回环服务 · 前端不重算金融数字</text>
+  <text x="832" y="289" class="mono code">src/ui_server.py · 127.0.0.1:8000</text>
+
+  <path d="M384 234H806" stroke="#a6e22e" stroke-width="3" marker-end="url(#arrow-lime)"/>
+  <path d="M724 252H806" stroke="#66d9ef" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+
+  <!-- engine row -->
+  <g filter="url(#shadow)">
+    <rect x="74" y="376" width="310" height="164" rx="8" fill="#2a2b2b" stroke="#66d9ef" stroke-width="2"/>
+    <rect x="414" y="376" width="310" height="164" rx="8" fill="#2a2b2b" stroke="#66d9ef" stroke-width="2"/>
+    <rect x="754" y="376" width="310" height="164" rx="8" fill="#2a2b2b" stroke="#a6e22e" stroke-width="2"/>
+    <rect x="1094" y="376" width="432" height="164" rx="8" fill="#2a2b2b" stroke="#a6e22e" stroke-width="2"/>
+  </g>
+
+  <text x="100" y="414" class="sans eyebrow">DATA PLANE</text>
+  <text x="100" y="448" class="sans label">数据网关</text>
+  <text x="100" y="477" class="sans sub">Replay / Futu Live 只读</text>
+  <text x="100" y="503" class="mono code">DataEnvelope · typed errors</text>
+  <text x="100" y="526" class="mono small">LIVE / REPLAY 语义一致</text>
+
+  <text x="440" y="414" class="sans eyebrow">EVIDENCE</text>
+  <text x="440" y="448" class="sans label">冻结快照</text>
+  <text x="440" y="477" class="sans sub">canonical JSONL · 来源时间</text>
+  <text x="440" y="503" class="mono code">snapshot_hash · provenance</text>
+  <text x="440" y="526" class="mono small">可复现、可回放</text>
+
+  <text x="780" y="414" class="sans eyebrow">DETERMINISTIC CORE</text>
+  <text x="780" y="448" class="sans label">定价与门控</text>
+  <text x="780" y="477" class="sans sub">Black–Scholes · 二叉树 · IV / Greeks</text>
+  <text x="780" y="503" class="mono code">Edge → Risk → Action</text>
+  <text x="780" y="526" class="mono small">五阶段决策管线</text>
+
+  <text x="1120" y="414" class="sans eyebrow">EXPLANATION</text>
+  <text x="1120" y="448" class="sans label">研究与辩论</text>
+  <text x="1120" y="477" class="sans sub">十角色质证 · LLM 只出文字</text>
+  <text x="1120" y="503" class="mono code">evidence_refs · consensus</text>
+  <text x="1120" y="526" class="mono small">数字 / verdict 仍由引擎产出</text>
+
+  <path d="M960 302V358" stroke="#c5a635" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+  <path d="M384 458H414" stroke="#66d9ef" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+  <path d="M724 458H754" stroke="#66d9ef" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+  <path d="M1064 458H1094" stroke="#a6e22e" stroke-width="3" marker-end="url(#arrow-lime)"/>
+
+  <!-- outputs -->
+  <g filter="url(#shadow)">
+    <rect x="74" y="630" width="650" height="160" rx="8" fill="#252526" stroke="#c5a635" stroke-width="2"/>
+    <rect x="754" y="630" width="772" height="160" rx="8" fill="#252526" stroke="#be3f48" stroke-width="2"/>
+  </g>
+  <text x="100" y="668" class="sans eyebrow">OUTPUT</text>
+  <text x="100" y="702" class="sans label">可核验决策卡</text>
+  <text x="100" y="732" class="sans sub">机会是否值得 · 最坏情况是否可承受 · 下一步怎么做</text>
+  <text x="100" y="761" class="mono code">NO_TRADE · BLOCK · DRAFT_ONLY · READY_FOR_CONFIRMATION</text>
+
+  <text x="780" y="668" class="sans eyebrow">AUDIT / SAFETY</text>
+  <text x="780" y="702" class="sans label">审计链与用户边界</text>
+  <text x="780" y="732" class="sans sub">JSONL + SHA-256 · 关键结果可追溯 · 不自动交易</text>
+  <text x="780" y="761" class="mono code">research/audit/audit_log.jsonl</text>
+
+  <path d="M909 540V612" stroke="#a6e22e" stroke-width="3" marker-end="url(#arrow-lime)"/>
+  <path d="M1310 540V612" stroke="#c5a635" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+  <text x="800" y="840" class="sans small">所有金融数字、门控和数量由 Python 确定性引擎产出；Agent 负责解析、编排与解释。</text>
+</svg>
