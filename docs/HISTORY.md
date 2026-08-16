@@ -377,3 +377,28 @@ JS 层不重算任何数字，只透传引擎结果。
   （`terminal.risk`）与总览新增「可执行成本 / 张」展示（带状态 tone）。
 - 测试：管线 +7（快照声明升级/调用方覆盖/上限约束与持仓限额 BLOCK/PASS/
   非法声明拒绝/hero UNVERIFIED 不回归/决策卡 executable_cost 块）。
+
+### ③ P0c 模拟提交闭环（已完成 2026-08-16）
+
+READY_FOR_CONFIRMATION 决策卡 → 用户独立确认（确认语原文匹配）→ Futu
+SIMULATE 下单 → 回执入审计哈希链；实盘在构造期 + worker 内双重硬阻断。
+
+- 新边界 `src/trade_gateway.py`：`SimulatedOrderRequest`（仅 BUY、数量/价格
+  校验、规范代码）+ `SimulatedTradeGateway`（AccountBinding 构造期强制
+  SIMULATE；订单经受监督子进程 `src/futu_trade_worker.py` 提交：硬截止
+  20s、响应大小上限、至多 2 腿；typed error 含新增 `TRADE_UNLOCK_REQUIRED`
+  ——交易解锁只在 OpenD GUI 手动完成，SDK 不提供 unlock_trade）。
+- 编排 `src/order_submission.py`：`build_straddle_orders`（Action 门 =
+  READY_FOR_CONFIRMATION、LIVE/FRESH、lots≥1、ask 买入价）+
+  `submit_simulated_straddle`（确认语「提交模拟盘」原文匹配 + 下单 +
+  `order_submitted`/`order_receipt` 审计事件；LIVE 只读铁律的显式例外）。
+- HTTP：`POST /api/submit`（LIVE 专属；确认语 422 / 未配置
+  `GOAI_TRADE_ACCOUNT_ID` 503 ACCOUNT_UNAVAILABLE / 交易未解锁 503
+  TRADE_UNLOCK_REQUIRED；成功回执含 order_id/状态/环境 SIMULATE）。
+- UI：决策卡「下一步」面板在 READY_FOR_CONFIRMATION 时显示提交块
+  （键入确认语 + 提交按钮 + 回执状态），成功后刷新审计视图。
+- gateway 公共 schema 扩展：`GatewayErrorCode.TRADE_UNLOCK_REQUIRED`、
+  origin `FUTU_SIMULATE`、entitlement 值 `simulate`。
+- 测试：test_trade_gateway.py（订单/绑定/worker 响应矩阵/超时/非法响应/
+  腿数上限）+ test_order_submission.py（门控/确认语/回执/审计链/解锁错误
+  透传）+ SubmitEndpointTests 5 用例；全量回归绿。

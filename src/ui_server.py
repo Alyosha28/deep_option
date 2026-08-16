@@ -53,6 +53,7 @@ from src.live_stream import (
     StreamCapacityError,
 )
 from src.gateway import (
+    AccountBinding,
     DataMode,
     EnvelopeStatus,
     FreshnessStatus,
@@ -60,6 +61,12 @@ from src.gateway import (
     GatewayErrorCode,
     normalize_symbol as normalize_security_code,
 )
+from src.order_submission import (
+    CONFIRMATION_PHRASE,
+    SubmissionError,
+    submit_simulated_straddle,
+)
+from src.trade_gateway import SimulatedTradeGateway
 from src.macro_assessment import DEFAULT_ITEMS, DEFAULT_POLICY_DIR
 from src.openbb_adapter import configured_provider, fetch_historical
 from src.policy_library import load_policy_library, policy_health_report
@@ -334,6 +341,38 @@ def _stream_default_codes(project: Mapping[str, Any]) -> list[str]:
 
 def _create_live_gateway() -> Any:
     return FutuLiveGateway()
+
+
+def _trade_binding() -> AccountBinding | None:
+    """模拟盘交易账户绑定（可选）：配置 GOAI_TRADE_ACCOUNT_ID 后才允许提交。
+
+    trd_env 恒为 SIMULATE（AccountBinding 构造期硬约束），实盘无法经此配置
+    触发；交易解锁不在 SDK 内进行（OpenD GUI 手动解锁）。
+    """
+
+    raw = _runtime_env("GOAI_TRADE_ACCOUNT_ID").strip()
+    if not raw:
+        return None
+    try:
+        acc_id = int(raw)
+    except ValueError:
+        return None
+    try:
+        return AccountBinding(
+            account_ref="simulated-demo",
+            _acc_id=acc_id,
+            trd_env="SIMULATE",
+            currency=_runtime_env("GOAI_TRADE_CURRENCY", "HKD").strip().upper() or "HKD",
+            market="HK",
+            security_firm=(
+                _runtime_env("GOAI_TRADE_SECURITY_FIRM", "FUTUSECURITIES")
+                .strip()
+                .upper()
+                or "FUTUSECURITIES"
+            ),
+        )
+    except ValueError:
+        return None
 
 
 _LIVE_GATEWAY_FACTORY: Callable[[], Any] = _create_live_gateway
@@ -2688,6 +2727,7 @@ class Handler(BaseHTTPRequestHandler):
             "/api/agent",
             "/api/projects",
             "/api/projects/select",
+            "/api/submit",
         ):
             self._send_json({"error": "not found"}, status=404)
             return
@@ -2775,6 +2815,106 @@ class Handler(BaseHTTPRequestHandler):
                 body = self._read_json_body()
                 state = run_agent_action(body, audit_enabled=not no_audit)
                 self._finish_state(state, "agent", str(body.get("message") or body.get("action") or ""), start)
+                return
+            if parsed.path == "/api/submit":
+                # P0c 模拟提交闭环：READY_FOR_CONFIRMATION + 用户独立确认 →
+                # Futu SIMULATE 下单 → 回执 + 审计（LIVE 只读铁律的例外：
+                # 下单事件按设计写审计，run/chat/command 仍只读）。
+                active_project = _workspace_project()
+                if _data_mode(active_project) is not DataMode.LIVE:
+                    self._send_json(
+                        {"error": "submit 仅在 GOAI_DATA_MODE=live 或项目 data_mode=live 时可用"},
+                        status=422,
+                    )
+                    return
+                body = self._read_json_body()
+                confirmed = body.get("confirmed") is True
+                confirm_text = str(body.get("confirmText") or "")
+                if not confirmed or confirm_text.strip() != CONFIRMATION_PHRASE:
+                    self._send_json(
+                        {
+                            "error": f"需要用户独立确认：请原文键入「{CONFIRMATION_PHRASE}」后重试",
+                            "typedError": {
+                                "code": GatewayErrorCode.INVALID_REQUEST.value,
+                                "message": "human confirmation phrase mismatch",
+                                "retryable": False,
+                            },
+                        },
+                        status=422,
+                    )
+                    return
+                binding = _trade_binding()
+                if binding is None:
+                    self._send_json(
+                        {
+                            "error": "未配置模拟盘交易账户（设置 GOAI_TRADE_ACCOUNT_ID）",
+                            "typedError": {
+                                "code": GatewayErrorCode.ACCOUNT_UNAVAILABLE.value,
+                                "message": "simulated trade account is not configured",
+                                "retryable": False,
+                            },
+                        },
+                        status=503,
+                    )
+                    return
+                try:
+                    snapshot_data = _build_live_snapshot_for_project(
+                        active_project, force=True
+                    )
+                except _LiveDataError as exc:
+                    self._send_live_error_json(exc)
+                    return
+                input_path = Path(active_project["input_path"])
+                # 用提交时点的实时快照重算决策卡；human_confirmed=True 使
+                # Action 门在 Edge/Risk/LIVE/FRESH 全过时给出
+                # READY_FOR_CONFIRMATION（确认语在上方已验证）。
+                card = run_pipeline(
+                    input_path,
+                    research_items_path=_research_items_path(active_project),
+                    macro_policy_path=DEFAULT_POLICY_DIR,
+                    audit_enabled=False,
+                    write_card=False,
+                    snapshot_data=snapshot_data,
+                    human_confirmed=True,
+                )
+                engine = compute_engine(snapshot_data)
+                gateway = SimulatedTradeGateway(binding)
+                try:
+                    result = submit_simulated_straddle(
+                        card,
+                        engine,
+                        snapshot_data["payload"],
+                        gateway=gateway,
+                        human_confirmed=True,
+                        confirmation_text=CONFIRMATION_PHRASE,
+                        audit_enabled=True,
+                    )
+                except SubmissionError as exc:
+                    status_code = (
+                        422
+                        if exc.code
+                        in (GatewayErrorCode.INVALID_REQUEST, GatewayErrorCode.STALE_DATA)
+                        else 503
+                    )
+                    self._send_json(
+                        {
+                            "error": f"{exc.code.value}: {exc.message}",
+                            "typedError": exc.to_dict(),
+                        },
+                        status=status_code,
+                    )
+                    return
+                finally:
+                    gateway.close()
+                invalidate_state_cache()
+                _record_session_metric(
+                    "submit",
+                    confirm_text,
+                    card.get("verdict"),
+                    (time.monotonic() - start) * 1000.0,
+                    DataMode.LIVE,
+                )
+                self._send_json(result)
                 return
             if parsed.path == "/api/command":
                 body = self._read_json_body()

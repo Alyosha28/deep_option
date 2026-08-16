@@ -8,7 +8,7 @@
 | 赛道 | GOAI · Boundless Agents · 金融服务 |
 | P0 场景 | `HK.00700` 腾讯业绩长跨式 |
 | 产品边界 | 决策支持；默认只读；稳定后仅提交 Futu 模拟盘；禁止实盘 |
-| 当前状态 | P0a（Replay 决策卡）已毕业；P0b Live 只读 UI 已毕业（第一阶段：`GOAI_DATA_MODE=live`、`/api/live-quote`、state 显示 LIVE/FRESH、OpenD 不可用显式报错不静默回退；第二阶段：`/api/stream` SSE 推送/订阅、UI 自动刷新、真实 OpenD 端到端验证）；P0c（模拟提交闭环）未毕业 |
+| 当前状态 | P0a（Replay 决策卡）已毕业；P0b Live 只读 UI 已毕业（两阶段：live 报价链路 + SSE 推送/订阅）；P0c 模拟提交闭环已落地（`READY_FOR_CONFIRMATION` + 确认语人机确认 → Futu SIMULATE 下单 → 回执入审计链；实盘双重硬阻断、无 SDK 交易解锁；未配置 `GOAI_TRADE_ACCOUNT_ID` 时提交端点显式 503） |
 
 ## 0. 产品结论
 

@@ -234,6 +234,11 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--accent); ou
 .top-chip[data-tone="good"] { color: var(--green); }
 .top-chip[data-tone="warn"] { color: var(--accent); }
 .top-chip[data-tone="bad"] { color: var(--red, #e05c5c); }
+.submit-block { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
+.submit-block[hidden] { display: none; }
+.submit-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.submit-row input { flex: 1; min-width: 200px; background: var(--bg-2, #141414); border: 1px solid var(--line); color: var(--white); font-family: var(--mono); font-size: 12px; padding: 8px 10px; }
+.submit-row input:focus { outline: none; border-color: var(--accent); }
 .clock { color: var(--white); font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .window-hints { display: flex; gap: 10px; color: var(--faint); font-family: var(--mono); font-size: 10px; white-space: nowrap; }
 

@@ -45,8 +45,8 @@ _SENSITIVE_TEXT = re.compile(
     r"(?i)(?:\b(?:token|password|passwd|bearer|secret|acc_id|card_num)\b|"
     r"[A-Z]:\\|\\\\|/(?:home|root|users|var|tmp|etc)/)"
 )
-_PUBLIC_ORIGINS = {"FUTU", "REPLAY", "APPLICATION"}
-_ENTITLEMENT_VALUES = {"available", "denied", "unverified"}
+_PUBLIC_ORIGINS = {"FUTU", "FUTU_SIMULATE", "REPLAY", "APPLICATION"}
+_ENTITLEMENT_VALUES = {"available", "denied", "unverified", "simulate"}
 _EnumT = TypeVar("_EnumT", bound=Enum)
 
 
@@ -79,6 +79,7 @@ class GatewayErrorCode(str, Enum):
     UPSTREAM_ERROR = "UPSTREAM_ERROR"
     PROVIDER_ERROR = "PROVIDER_ERROR"
     ACCOUNT_UNAVAILABLE = "ACCOUNT_UNAVAILABLE"
+    TRADE_UNLOCK_REQUIRED = "TRADE_UNLOCK_REQUIRED"
     INVALID_REQUEST = "INVALID_REQUEST"
     NOT_FOUND = "NOT_FOUND"
     AMBIGUOUS_MATCH = "AMBIGUOUS_MATCH"

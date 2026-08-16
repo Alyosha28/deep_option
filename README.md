@@ -125,13 +125,13 @@ GOAI 是 **GOAI 世界人工智能开源大赛 · Boundless Agents（无界应�
 | P0a Replay 决策链路 | 冻结快照 → 决策卡 → 审计链 | ✅ 已毕业 |
 | P0b Live 只读行情 | 第一阶段报价 + 第二阶段 SSE 推送/订阅 | ✅ 已毕业 |
 | 港股离散股息定价口径 | escrowed-spot 口径全链路（快照 `model.dividends` 可选声明） | ✅ 已完成 |
-| executable-cost 完整口径 | 费用 / 滑点 / 保证金 / 持仓限额链 | 🚧 建设中 |
+| executable-cost 完整口径 | 费用 / 滑点 / 持仓限额 / 单笔上限链（快照 `account.cost_policy` / `account.trade_limits` 可选声明，三层口径 VERIFIED/SNAPSHOT_DECLARED/UNVERIFIED） | ✅ 已完成 |
 | 独立 Edge/Risk/Action gates | 三道门独立化 | 🚧 建设中 |
-| P0c 模拟提交闭环 | `READY_FOR_CONFIRMATION` → 人机确认 → Futu SIMULATE 下单 → 回执入审计链 | 🚧 建设中 |
+| P0c 模拟提交闭环 | `READY_FOR_CONFIRMATION` → 确认语人机确认 → Futu SIMULATE 下单 → 回执入审计链（`POST /api/submit`，需 `GOAI_TRADE_ACCOUNT_ID` 配置模拟盘账户；实盘双重硬阻断、无 SDK 解锁） | ✅ 已完成 |
 | DSH 客户端决策卡面板 + 审批闭环 | Phase 1a | 🚧 建设中 |
 | 港股离散股息 Live 实时富化 | 引擎已支持快照声明的离散股息，实时富化待接入 | 🚧 建设中 |
 
-完整产品边界与验收标准见 [精简版 PRD](docs/PRD.md)（v0.7）。
+完整产品边界与验收标准见 [精简版 PRD](docs/PRD.md)（v0.8）。
 
 ## 🏗️ 架构概览
 
@@ -223,6 +223,9 @@ Copy-Item .env.example .env   # 然后编辑填入 DEEPSEEK_API_KEY
 | `GOAI_LIVE_STREAM_POLL_SECONDS` | 否 | `2.0` | SSE 轮询间隔 |
 | `GOAI_LIVE_STREAM_PUSH_SILENCE_SECONDS` | 否 | `60.0` | 推送静默判定阈值 |
 | `GOAI_LIVE_STREAM_MAX_SUBSCRIBERS` | 否 | `8` | SSE 订阅上限 |
+| `GOAI_TRADE_ACCOUNT_ID` | 否 | 无 | P0c 模拟提交所需：Futu 模拟盘账户 ID（未配置时 `/api/submit` 返回 503） |
+| `GOAI_TRADE_CURRENCY` | 否 | `HKD` | 模拟盘账户币种 |
+| `GOAI_TRADE_SECURITY_FIRM` | 否 | `FUTUSECURITIES` | 模拟盘证券商（比赛版本仅 FUTUSECURITIES） |
 
 ## 🎯 使用方法
 
@@ -252,6 +255,8 @@ python -m src.ui_server --port 8000
 | `GET /api/decision-card` | 导出决策卡 + SHA-256 |
 | `GET /api/audit` | 审计链校验视图 |
 | `GET /api/metrics` | 会话度量 |
+| `GET /api/stream` | LIVE 模式 SSE 推送（quote/error/refresh + 心跳） |
+| `POST /api/submit` | P0c 模拟提交（READY_FOR_CONFIRMATION + 确认语「提交模拟盘」→ Futu SIMULATE → 回执） |
 | `GET /api/projects` | 项目工作区 |
 | `GET /api/live-quote` | 轻量实时报价（LIVE 模式） |
 | `GET /api/stream` | SSE 推送（`quote`/`error`/`refresh` 事件 + 15s 心跳，LIVE 模式） |

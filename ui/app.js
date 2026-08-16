@@ -15,6 +15,7 @@
     projectBusy: false,
     agent: { sequence: 0, busy: false, history: [], context: null, restored: false },
     stream: { es: null, key: "", connected: false, closing: false, refreshTimer: null, lastError: null, liveQuotes: {} },
+    submitReceipt: null,
   };
   var AGENT_SESSION_KEY = "goai-agent-session-v2";
   var PROJECT_STORAGE_KEY = "goai-active-project-v1";
@@ -436,6 +437,15 @@
       });
     }
     if (el("action-next")) el("action-next").textContent = action.nextStep || "未提供下一步";
+    var submitBlock = el("submit-block");
+    if (submitBlock) {
+      var ready = action.action === "READY_FOR_CONFIRMATION";
+      submitBlock.hidden = !ready;
+      if (ready && !state.submitReceipt) {
+        if (el("submit-status")) { el("submit-status").textContent = ""; el("submit-status").dataset.tone = ""; }
+        if (el("submit-confirm-text")) el("submit-confirm-text").value = "";
+      }
+    }
   }
 
   function renderCapability(D) {
@@ -774,6 +784,46 @@
     });
     var recalc = el("card-recalc");
     if (recalc) recalc.addEventListener("click", function () { handleAgentAction({ type: "open_controls" }); });
+    var submitButton = el("submit-order");
+    if (submitButton) submitButton.addEventListener("click", submitSimulatedOrder);
+    var confirmInput = el("submit-confirm-text");
+    if (confirmInput) confirmInput.addEventListener("keydown", function (event) { if (event.key === "Enter") { event.preventDefault(); submitSimulatedOrder(); } });
+  }
+
+  function submitSimulatedOrder() {
+    var input = el("submit-confirm-text");
+    var status = el("submit-status");
+    var phrase = String(input && input.value || "").trim();
+    if (phrase !== "提交模拟盘") {
+      if (status) { status.textContent = "请先键入「提交模拟盘」确认（原文，模拟盘仅支持研究演示）。"; status.dataset.tone = "warn"; }
+      return;
+    }
+    if (el("submit-order")) el("submit-order").disabled = true;
+    if (status) { status.textContent = "提交中…"; status.dataset.tone = ""; }
+    fetch("/api/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirmed: true, confirmText: phrase }) })
+      .then(function (response) { return response.json().then(function (payload) { return { ok: response.ok, payload: payload }; }); })
+      .then(function (result) {
+        if (el("submit-order")) el("submit-order").disabled = false;
+        if (!status) return;
+        if (result.ok && result.payload.submitted) {
+          state.submitReceipt = result.payload;
+          var orders = (result.payload.receipts || []).map(function (row) {
+            return String(row.code).split(".").slice(-1)[0] + " #" + row.order_id + "（" + row.status + "）";
+          }).join("；");
+          status.textContent = "模拟盘订单已提交：" + orders;
+          status.dataset.tone = "good";
+          note("模拟盘订单已提交，回执已写入审计链。");
+          renderAudit();
+        } else {
+          var error = (result.payload && (result.payload.typedError || {}).message) || (result.payload && result.payload.error) || "提交失败";
+          status.textContent = String(error);
+          status.dataset.tone = "bad";
+        }
+      })
+      .catch(function () {
+        if (el("submit-order")) el("submit-order").disabled = false;
+        if (status) { status.textContent = "提交请求失败（本地服务不可用）。"; status.dataset.tone = "bad"; }
+      });
   }
 
   function renderMacro(D) {

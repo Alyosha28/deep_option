@@ -855,5 +855,157 @@ class LiveStreamServerTests(unittest.TestCase):
             self.assertEqual(len(service._feeds), 0, "最后一个订阅离开后 feed 必须停止")
 
 
+class SubmitEndpointTests(unittest.TestCase):
+    """POST /api/submit：P0c 模拟提交闭环的 HTTP 门控与错误映射。"""
+
+    server: ClassVar[ThreadingHTTPServer]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.server = _start_server()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        mod._close_live_stream()
+        cls.server.shutdown()
+        cls.server.server_close()
+
+    def setUp(self) -> None:
+        mod._close_live_stream()
+        mod._reset_live_data_service()
+        mod.invalidate_state_cache()
+
+    def tearDown(self) -> None:
+        mod._close_live_stream()
+        mod._reset_live_data_service()
+        mod.invalidate_state_cache()
+        mod._LIVE_GATEWAY_FACTORY = mod._create_live_gateway
+
+    def _post_submit(self, body: dict[str, Any]) -> tuple[int, Any]:
+        return _request(
+            self.server,
+            "POST",
+            "/api/submit",
+            json.dumps(body, ensure_ascii=False),
+        )
+
+    def test_submit_rejected_in_replay_mode(self) -> None:
+        with patch.dict(os.environ, {"GOAI_DATA_MODE": "replay"}, clear=False):
+            status, payload = self._post_submit(
+                {"confirmed": True, "confirmText": "提交模拟盘"}
+            )
+
+        self.assertEqual(status, 422)
+        self.assertIn("GOAI_DATA_MODE=live", payload["error"])
+
+    def test_submit_requires_exact_confirmation_phrase(self) -> None:
+        gateway = _ReadyGateway()
+        with patch.dict(os.environ, {"GOAI_DATA_MODE": "live"}, clear=False):
+            mod._LIVE_GATEWAY_FACTORY = lambda: gateway
+            mod._reset_live_data_service()
+
+            for body in (
+                {"confirmed": False, "confirmText": "提交模拟盘"},
+                {"confirmed": True, "confirmText": "确认"},
+                {"confirmed": True},
+            ):
+                status, payload = self._post_submit(body)
+
+                self.assertEqual(status, 422, body)
+                self.assertEqual(
+                    payload["typedError"]["code"], "INVALID_REQUEST", body
+                )
+
+    def test_submit_without_trade_binding_returns_503(self) -> None:
+        gateway = _ReadyGateway()
+        with patch.dict(os.environ, {"GOAI_DATA_MODE": "live"}, clear=False):
+            mod._LIVE_GATEWAY_FACTORY = lambda: gateway
+            mod._reset_live_data_service()
+            with patch.object(mod, "_trade_binding", return_value=None):
+                status, payload = self._post_submit(
+                    {"confirmed": True, "confirmText": "提交模拟盘"}
+                )
+
+        self.assertEqual(status, 503)
+        self.assertEqual(payload["typedError"]["code"], "ACCOUNT_UNAVAILABLE")
+
+    def test_submit_happy_path_returns_receipt(self) -> None:
+        gateway = _ReadyGateway()
+        from src.gateway import AccountBinding
+
+        ready_card = {
+            "verdict": "READY_FOR_CONFIRMATION",
+            "action_gate": {"action": "READY_FOR_CONFIRMATION"},
+            "data_evidence": {"mode": "LIVE", "freshness": "FRESH"},
+        }
+        engine = {
+            "primary": {
+                "lots": 2,
+                "expiry": "2026-08-14",
+                "call": {"code": "HK.TCH260814C480000"},
+                "put": {"code": "HK.TCH260814P480000"},
+            }
+        }
+        fake_result = {
+            "submitted": True,
+            "environment": "SIMULATE",
+            "lots": 2,
+            "receipts": [
+                {"order_id": "SIM-1", "code": "HK.TCH260814C480000", "qty": 2, "price": 10.75, "status": "SUBMITTED"},
+                {"order_id": "SIM-2", "code": "HK.TCH260814P480000", "qty": 2, "price": 11.32, "status": "SUBMITTED"},
+            ],
+            "audit_refs": [],
+        }
+        binding = AccountBinding(account_ref="demo", _acc_id=123)
+        with patch.dict(os.environ, {"GOAI_DATA_MODE": "live"}, clear=False):
+            mod._LIVE_GATEWAY_FACTORY = lambda: gateway
+            mod._reset_live_data_service()
+            with patch.object(mod, "_trade_binding", return_value=binding), patch.object(
+                mod, "run_pipeline", return_value=ready_card
+            ), patch.object(mod, "compute_engine", return_value=engine), patch.object(
+                mod, "submit_simulated_straddle", return_value=fake_result
+            ) as submit_mock:
+                status, payload = self._post_submit(
+                    {"confirmed": True, "confirmText": "提交模拟盘"}
+                )
+
+        self.assertEqual(status, 200, payload)
+        self.assertTrue(payload["submitted"])
+        self.assertEqual(payload["environment"], "SIMULATE")
+        self.assertEqual(len(payload["receipts"]), 2)
+        submit_mock.assert_called_once()
+        _name, kwargs = submit_mock.call_args
+        self.assertEqual(kwargs["human_confirmed"], True)
+        self.assertEqual(kwargs["confirmation_text"], "提交模拟盘")
+        self.assertEqual(kwargs["audit_enabled"], True)
+
+    def test_submit_maps_submission_error_to_typed_503(self) -> None:
+        from src.gateway import AccountBinding, GatewayErrorCode as GEC
+        from src.order_submission import SubmissionError
+
+        gateway = _ReadyGateway()
+        binding = AccountBinding(account_ref="demo", _acc_id=123)
+        with patch.dict(os.environ, {"GOAI_DATA_MODE": "live"}, clear=False):
+            mod._LIVE_GATEWAY_FACTORY = lambda: gateway
+            mod._reset_live_data_service()
+            with patch.object(mod, "_trade_binding", return_value=binding), patch.object(
+                mod, "run_pipeline", return_value={"verdict": "READY_FOR_CONFIRMATION"}
+            ), patch.object(
+                mod,
+                "submit_simulated_straddle",
+                side_effect=SubmissionError(
+                    GEC.TRADE_UNLOCK_REQUIRED,
+                    "模拟盘交易未解锁：请在 OpenD GUI 手动完成交易解锁后重试",
+                    False,
+                ),
+            ):
+                status, payload = self._post_submit(
+                    {"confirmed": True, "confirmText": "提交模拟盘"}
+                )
+
+        self.assertEqual(status, 503)
+        self.assertEqual(payload["typedError"]["code"], "TRADE_UNLOCK_REQUIRED")
+
+
 if __name__ == "__main__":
     unittest.main()
