@@ -19,9 +19,9 @@ import re
 import subprocess
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from src.hero_tencent_straddle import (
     AUDIT_LOG_SCRIPT,
@@ -38,6 +38,7 @@ DEFAULT_INPUT = ROOT / "data" / "hero_inputs.json"
 DEFAULT_BACKTEST = ROOT / "data" / "backtest_tencent_straddle.json"
 
 VIEWS = {"bullish", "bearish", "uncertain"}
+_MAX_DIVIDEND_ENTRIES = 12
 _MARKET_SYMBOL_RE = re.compile(
     r"[A-Z][A-Z0-9_-]{1,15}\.[A-Z0-9][A-Z0-9._-]{0,46}"
 )
@@ -183,6 +184,7 @@ def load_frozen_snapshot(
         raise ValueError("frozen snapshot model section is missing")
     _require_number(model, "riskfree_rate")
     _require_number(model, "div_yield")
+    _validate_dividend_declarations(model)
 
     legs = payload.get("legs")
     if not isinstance(legs, list) or not legs:
@@ -212,6 +214,102 @@ def load_frozen_snapshot(
     }
 
 
+def _validate_dividend_declarations(
+    model: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Structurally validate optional ``model.dividends`` and normalise entries.
+
+    Each entry is ``{"ex_date": "YYYY-MM-DD", "amount": float}``；格式非法、
+    重复除息日、非正股息额均显式报错。键缺失时返回空列表（不改变既有口径）。
+    """
+
+    raw = model.get("dividends")
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        raise ValueError("frozen snapshot model.dividends must be a list")
+    if len(raw) > _MAX_DIVIDEND_ENTRIES:
+        raise ValueError(
+            f"frozen snapshot model.dividends exceeds {_MAX_DIVIDEND_ENTRIES} entries"
+        )
+    entries: list[dict[str, Any]] = []
+    seen_dates: set[str] = set()
+    for index, item in enumerate(raw):
+        if not isinstance(item, dict):
+            raise ValueError(f"model.dividends[{index}] must be an object")
+        ex_date_raw = item.get("ex_date")
+        if not isinstance(ex_date_raw, str) or not ex_date_raw.strip():
+            raise ValueError(f"model.dividends[{index}].ex_date is required")
+        try:
+            ex_date = date.fromisoformat(ex_date_raw.strip())
+        except ValueError as exc:
+            raise ValueError(
+                f"model.dividends[{index}].ex_date must be a canonical ISO date"
+            ) from exc
+        if ex_date.isoformat() != ex_date_raw.strip():
+            raise ValueError(
+                f"model.dividends[{index}].ex_date must be a canonical ISO date"
+            )
+        amount = item.get("amount")
+        if (
+            isinstance(amount, bool)
+            or not isinstance(amount, (int, float))
+            or not math.isfinite(float(amount))
+            or float(amount) <= 0
+        ):
+            raise ValueError(
+                f"model.dividends[{index}].amount must be a positive finite number"
+            )
+        if ex_date_raw.strip() in seen_dates:
+            raise ValueError(
+                f"model.dividends contains duplicate ex_date {ex_date_raw.strip()}"
+            )
+        seen_dates.add(ex_date_raw.strip())
+        entries.append({"ex_date": ex_date_raw.strip(), "amount": float(amount)})
+    return entries
+
+
+def _parse_dividend_schedule(
+    payload: Mapping[str, Any],
+) -> tuple[list[tuple[float, float]], list[dict[str, Any]]]:
+    """Parse optional discrete-dividend facts into an engine schedule.
+
+    Returns ``(schedule, summary)``：schedule 是引擎消费的
+    ``(tau_years, amount)`` 列表（只含快照捕获日之后除息的股息），summary 是
+    全部声明股息的展示/审计记录（含 ``applied`` 状态，已除息的如实标注）。
+    """
+
+    model = payload.get("model")
+    declarations = _validate_dividend_declarations(
+        model if isinstance(model, Mapping) else {}
+    )
+    captured_raw = str(payload.get("captured_at") or "")
+    try:
+        captured = datetime.fromisoformat(captured_raw).date()
+    except ValueError as exc:
+        raise ValueError(
+            "snapshot captured_at must be a valid ISO timestamp to price discrete dividends"
+        ) from exc
+    schedule: list[tuple[float, float]] = []
+    summary: list[dict[str, Any]] = []
+    for entry in sorted(declarations, key=lambda item: item["ex_date"]):
+        ex_date = date.fromisoformat(entry["ex_date"])
+        days = (ex_date - captured).days
+        tau = days / 365.0
+        summary.append(
+            {
+                "ex_date": entry["ex_date"],
+                "amount": entry["amount"],
+                "tau_years": round(max(tau, 0.0), 6),
+                # 是否进入任一到期定价窗口由 compute_engine 在知道 dte 后判定
+                "applied": False,
+            }
+        )
+        if days > 0:
+            schedule.append((tau, entry["amount"]))
+    return schedule, summary
+
+
 def compute_engine(
     data: dict[str, Any],
     cost_model: Mapping[str, Any] | None = None,
@@ -223,6 +321,11 @@ def compute_engine(
     spot = data["spot"]
     r = payload["model"]["riskfree_rate"]
     q = payload["model"]["div_yield"]
+    dividends, dividend_summary = _parse_dividend_schedule(payload)
+    # applied = 除息日落在至少一个到期（含最远到期）的定价窗口内
+    max_t = max(group["dte"] for group in payload["legs"]) / 365.0
+    for item in dividend_summary:
+        item["applied"] = 0.0 < item["tau_years"] < max_t
     account = payload["account"]
     groups = {group["expiry"]: group for group in payload["legs"]}
     expiries = sorted(groups, key=lambda item: groups[item]["dte"])
@@ -236,6 +339,7 @@ def compute_engine(
         r,
         q,
         account,
+        dividends,
     )
     secondary = expiry_analysis(
         spot,
@@ -245,6 +349,7 @@ def compute_engine(
         r,
         q,
         account,
+        dividends,
     )
 
     model = {
@@ -284,12 +389,13 @@ def compute_engine(
         item["cost_lot_exec"] = item["cost_lot_ask"] + model["fees_hkd_per_lot"] + slippage
         item["max_loss_exec"] = item["cost_lot_exec"] * item["lots"]
 
-    proposal = build_proposal(payload, primary, secondary, scenario=scenario)
+    proposal = build_proposal(payload, primary, secondary, scenario=scenario, dividends=dividends)
     return {
         "primary": primary,
         "secondary": secondary,
         "proposal": proposal,
         "cost_model": model,
+        "dividends": dividend_summary,
     }
 
 
@@ -654,6 +760,22 @@ def build_decision_card(
             "captured_at": data["captured_at"],
         },
     ]
+    applied_dividends = [
+        item for item in engine.get("dividends", []) if item.get("applied")
+    ]
+    if applied_dividends:
+        latest = applied_dividends[-1]
+        key_evidence.append(
+            {
+                "claim": (
+                    f"已计入港股离散股息 {len(applied_dividends)} 笔"
+                    f"（最近除息日 {latest['ex_date']}，每股 {latest['amount']:g} HKD；"
+                    "escrowed-spot 口径：S* = S - PV(除息日前现金股息)）"
+                ),
+                "source": "snapshot model（操作员核验的股息事实）",
+                "captured_at": data["captured_at"],
+            }
+        )
 
     return {
         "schema_version": "1.0",
@@ -877,6 +999,9 @@ def run_pipeline(
                 "cost_model": engine["cost_model"],
                 "cost_per_lot_exec": engine["primary"]["cost_lot_exec"],
                 "max_loss_exec": engine["primary"]["max_loss_exec"],
+                "discrete_dividend_count": sum(
+                    1 for item in engine.get("dividends", []) if item.get("applied")
+                ),
                 "straddle_greeks_per_lot": {
                     key: round(value, 4)
                     for key, value in engine["primary"]["straddle_greeks"].items()

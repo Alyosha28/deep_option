@@ -11,6 +11,8 @@
 | §5.5 | 环境与数据层进度（含 Hero 数值、legacy 模拟单、回测结论） |
 | §11 | 十角色辩论运行时（实现清单、验证检查点、真机冒烟记录） |
 | §12 | DSH 编排层 Phase 0（验证与踩坑细节） |
+| §15 | DSH agent preset 产品评审修复轮（2026-08-15） |
+| §16 | P0c 前置链路三步：离散股息 / executable-cost / 模拟提交（2026-08-16） |
 
 ---
 
@@ -326,3 +328,30 @@ JS 层不重算任何数字，只透传引擎结果。
 验证完成：全量 pytest 回归 **584 tests / 0 failures / 0 errors / 0 skipped**
 （292.3s，junit 落盘）；DSH 将来重启后需按 bootstrap 重新注册插件族
 （进程级资产语义，已文档化）。
+
+
+## 16. P0c 前置链路三步（2026-08-16，goal 驱动进行中）
+
+目标：①港股离散股息定价口径 ②executable-cost 完整口径 ③P0c 模拟提交闭环；
+铁律不变（引擎产数字、LIVE 只读、审计哈希链、全量回归绿）。
+
+### ① 港股离散股息（已完成 2026-08-16）
+
+- 口径：**escrowed-spot（Black 近似）**——S* = S - Σ PV(D_i)（按 r 从除息日
+  折现，只计入 0 < τ < T 的除息日），代入同一 BS/二叉树；美式提前行权边界
+  随正股路径下移自动反映股息影响。精确的除息日分叉非重组树超出比赛版本
+  范围，口径在决策卡证据里显式标注。
+- 引擎：`pricing_engine.py` 新增 `escrowed_spot()` + 各定价函数
+  `discrete_dividends` 参数（BS/二叉树/IV/Greeks 全链路，Greeks 的 rho 自动
+  捕获 S* 对 r 的敏感性——bump-and-reprice 天然成立）。
+- 快照契约：`model.dividends` 可选列表 `[{ex_date:"YYYY-MM-DD", amount>0}]`，
+  结构校验（ISO 规范、去重、≤12 条）在 load_frozen_snapshot；τ 相对快照
+  captured_at 计算，`applied` 按「是否落在任一到期定价窗口」判定。
+- 接线：compute_engine/expiry_analysis/leg_analysis/post_earnings_value/
+  build_proposal 全链路透传；hero CLI 同口径（懒导入避免循环依赖）；
+  决策卡新增股息证据条、审计 engine_computed 增加
+  `discrete_dividend_count`。
+- 测试：引擎 +10（escrow 闭式恒等、平价、IV 往返、Greeks 闭式对照含 rho
+  双通道、窗口外/非法股息拒绝）、管线 +5（方向性 IV 移动、证据条、
+  applied 语义、hero 无股息不回归）。
+- hero 快照保持无股息声明：hero 数字零漂移（全部钉死数字回归通过）。

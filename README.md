@@ -62,9 +62,10 @@ OpenD 不可用时显式返回 `OPEND_UNAVAILABLE`，绝不静默回退 Replay�
 启用真实 OpenD 订阅推送（SDK subscribe + QuoteHandler，失败/静默自动回退轮询
 并推 `warning` 事件）。可选环境变量：`GOAI_LIVE_STREAM_POLL_SECONDS`、
 `GOAI_LIVE_STREAM_PUSH_SILENCE_SECONDS`、`GOAI_LIVE_STREAM_MAX_SUBSCRIBERS`。
-仍在建设：DSH 客户端决策卡面板与审批闭环（Phase 1）、港股离散股息与
-executable-cost 完整实现、独立 Edge/Risk/Action gates，以及当前版本的模拟
-提交安全闭环。
+仍在建设：DSH 客户端决策卡面板与审批闭环（Phase 1）、港股离散股息的
+实时富化（引擎已支持快照声明的离散股息，escrowed-spot 口径）、
+executable-cost 完整实现（费用/滑点/保证金/持仓限额链）、独立
+Edge/Risk/Action gates，以及当前版本的模拟提交安全闭环（P0c）。
 
 中国官方来源 HTML 解析已接入（央行/统计局实测可达并默认启用；海关总署本机 TLS 证书校验失败，默认停用待复核），Windows 计划任务已注册。
 

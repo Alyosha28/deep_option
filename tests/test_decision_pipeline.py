@@ -224,5 +224,118 @@ class FullPipelineTests(unittest.TestCase):
         )
 
 
+class DiscreteDividendPipelineTests(unittest.TestCase):
+    """港股离散股息（escrowed-spot 口径）管线测试。
+
+    在 hero 快照副本上加 `model.dividends`（快照捕获日 2026-08-08，
+    主/次到期 2026-08-14/08-28），验证校验、引擎方向性与决策卡证据。
+    """
+
+    def _snapshot_with_dividends(self, dividends) -> tuple[dict, Path]:
+        original = json.loads(Path(DEFAULT_INPUT).read_text(encoding="utf-8"))
+        modified = dict(original)
+        modified["model"] = {
+            **original["model"],
+            "dividends": dividends,
+        }
+        temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(temp_dir.cleanup)
+        path = Path(temp_dir.name, "hero_dividends.json")
+        path.write_text(json.dumps(modified, ensure_ascii=False), encoding="utf-8")
+        return modified, path
+
+    def test_model_dividends_are_validated(self):
+        for bad in (
+            [{"ex_date": "not-a-date", "amount": 4.0}],
+            [{"ex_date": "2026-8-11", "amount": 4.0}],
+            [{"ex_date": "2026-08-11", "amount": -4.0}],
+            [{"ex_date": "2026-08-11", "amount": "4.0"}],
+            [{"ex_date": "2026-08-11", "amount": 4.0}, {"ex_date": "2026-08-11", "amount": 5.0}],
+            {"ex_date": "2026-08-11", "amount": 4.0},
+        ):
+            _payload, path = self._snapshot_with_dividends(bad)
+            with self.assertRaises(ValueError, msg=repr(bad)):
+                load_frozen_snapshot(path)
+
+    def test_discrete_dividend_shifts_iv_directionally(self):
+        _payload, path = self._snapshot_with_dividends(
+            [{"ex_date": "2026-08-11", "amount": 4.0}]
+        )
+        base = load_frozen_snapshot(DEFAULT_INPUT)
+        with_dividend = load_frozen_snapshot(path)
+
+        engine_base = compute_engine(base)
+        engine_div = compute_engine(with_dividend)
+
+        # escrowed S* 更低：同一市场价下 call 的模型价更低 → IV 更高；
+        # put 相反。两个到期（除息日在两者之前）都应生效。
+        for expiry in ("primary", "secondary"):
+            self.assertGreater(
+                engine_div[expiry]["call"]["iv"],
+                engine_base[expiry]["call"]["iv"],
+                msg=expiry,
+            )
+            self.assertLess(
+                engine_div[expiry]["put"]["iv"],
+                engine_base[expiry]["put"]["iv"],
+                msg=expiry,
+            )
+
+        summary = engine_div["dividends"]
+        self.assertEqual(len(summary), 1)
+        self.assertTrue(summary[0]["applied"])
+        self.assertEqual(summary[0]["ex_date"], "2026-08-11")
+        self.assertAlmostEqual(summary[0]["tau_years"], 3 / 365, places=5)
+
+    def test_pipeline_card_records_dividend_evidence(self):
+        _payload, path = self._snapshot_with_dividends(
+            [{"ex_date": "2026-08-11", "amount": 4.0}]
+        )
+        data = load_frozen_snapshot(path)
+        card = run_pipeline(
+            path,
+            audit_enabled=False,
+            write_card=False,
+            snapshot_data=data,
+        )
+
+        self.assertEqual(card["verdict"], "NO_TRADE")
+        self.assertEqual(len(card["key_evidence"]), 4)
+        dividend_claim = card["key_evidence"][-1]["claim"]
+        self.assertIn("离散股息", dividend_claim)
+        self.assertIn("2026-08-11", dividend_claim)
+        self.assertIn("escrowed-spot", dividend_claim)
+
+    def test_dividend_after_expiry_is_declared_but_not_applied(self):
+        _payload, path = self._snapshot_with_dividends(
+            [{"ex_date": "2026-09-15", "amount": 4.0}]
+        )
+        base = load_frozen_snapshot(DEFAULT_INPUT)
+        with_dividend = load_frozen_snapshot(path)
+
+        engine_base = compute_engine(base)
+        engine_div = compute_engine(with_dividend)
+
+        self.assertFalse(engine_div["dividends"][0]["applied"])
+        self.assertAlmostEqual(
+            engine_div["primary"]["call"]["iv"],
+            engine_base["primary"]["call"]["iv"],
+            places=10,
+        )
+        card = run_pipeline(
+            path,
+            audit_enabled=False,
+            write_card=False,
+            snapshot_data=with_dividend,
+        )
+        self.assertEqual(len(card["key_evidence"]), 3, "到期后除息不进入定价证据")
+
+    def test_hero_snapshot_without_dividends_is_unchanged(self):
+        # hero 快照没有股息声明：引擎输出不出现 dividends 摘要
+        base = load_frozen_snapshot(DEFAULT_INPUT)
+        engine = compute_engine(base)
+        self.assertEqual(engine["dividends"], [])
+
+
 if __name__ == "__main__":
     unittest.main()

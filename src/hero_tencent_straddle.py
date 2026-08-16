@@ -28,18 +28,24 @@ def load_inputs() -> dict:
         return json.load(fh)
 
 
-def leg_analysis(spot, strike, dte, mid, r, q, opt_type):
+def leg_analysis(spot, strike, dte, mid, r, q, opt_type, dividends=None):
     T = dte / 365.0
-    iv = implied_volatility(mid, spot, strike, T, r, q, opt_type, american=True)
-    g = greeks(spot, strike, T, r, q, iv, opt_type, american=True)
+    iv = implied_volatility(
+        mid, spot, strike, T, r, q, opt_type, american=True,
+        discrete_dividends=dividends,
+    )
+    g = greeks(
+        spot, strike, T, r, q, iv, opt_type, american=True,
+        discrete_dividends=dividends,
+    )
     return iv, g
 
 
-def expiry_analysis(spot, expiry, call, put, r, q, account):
+def expiry_analysis(spot, expiry, call, put, r, q, account, dividends=None):
     dte = expiry["dte"]
     mult = account["contract_multiplier"]
-    iv_c, g_c = leg_analysis(spot, call["strike"], dte, call["mid"], r, q, "CALL")
-    iv_p, g_p = leg_analysis(spot, put["strike"], dte, put["mid"], r, q, "PUT")
+    iv_c, g_c = leg_analysis(spot, call["strike"], dte, call["mid"], r, q, "CALL", dividends)
+    iv_p, g_p = leg_analysis(spot, put["strike"], dte, put["mid"], r, q, "PUT", dividends)
 
     premium_mid_share = call["mid"] + put["mid"]
     premium_ask_share = call["ask"] + put["ask"]
@@ -83,12 +89,28 @@ def expiry_pnl_at_expiry(spot, strike, move_pct, lots, cost_lot_ask, mult, direc
     return S, value - cost_lot_ask * lots
 
 
-def post_earnings_value(spot, strike, move_pct, direction, T_after, sigma, mult, lots, r, q):
-    """业绩后剩余价值。利率/股息率必须来自快照 model 段，不硬编码。"""
+def post_earnings_value(spot, strike, move_pct, direction, T_after, sigma, mult, lots, r, q, dividends=None):
+    """业绩后剩余价值。利率/股息率必须来自快照 model 段，不硬编码。
+
+    离散股息口径：估值时点（业绩后 +T_after）之前已除息的股息视为已反映在
+    移动后的价格里，只把 τ > T_after 的除息日纳入 escrow（引擎内 0<τ<T
+    过滤再配合此处 T_after 切分，见 decision_pipeline 的 dividend schedule）。
+    """
 
     S = spot * (1 + direction * move_pct / 100.0)
-    call_v = price(S, strike, T_after, r, q, sigma, "CALL", american=True)
-    put_v = price(S, strike, T_after, r, q, sigma, "PUT", american=True)
+    future_dividends = None
+    if dividends:
+        future_dividends = [
+            (tau, amount) for tau, amount in dividends if tau > T_after
+        ]
+    call_v = price(
+        S, strike, T_after, r, q, sigma, "CALL", american=True,
+        discrete_dividends=future_dividends,
+    )
+    put_v = price(
+        S, strike, T_after, r, q, sigma, "PUT", american=True,
+        discrete_dividends=future_dividends,
+    )
     return S, (call_v + put_v) * mult * lots
 
 
@@ -96,7 +118,7 @@ def fmt_hkd(x: float) -> str:
     return f"{x:,.0f}"
 
 
-def build_proposal(data, primary, secondary, scenario=None):
+def build_proposal(data, primary, secondary, scenario=None, dividends=None):
     spot = data["spot"]
     mult = data["account"]["contract_multiplier"]
     exp_move = data["earnings"]["expected_move_pct"]
@@ -121,6 +143,7 @@ def build_proposal(data, primary, secondary, scenario=None):
                 spot, primary["strike"], exp_move, d, 2.0 / 365.0,
                 avg_iv * (1 - crush), mult, primary["lots"],
                 data["model"]["riskfree_rate"], data["model"]["div_yield"],
+                dividends,
             )
             rows.append({
                 "direction": "up" if d > 0 else "down",
@@ -253,16 +276,22 @@ def main() -> None:
     q = data["model"]["div_yield"]
     account = data["account"]
 
+    # 与决策管线同一离散股息口径（懒导入避免循环依赖）。
+    from src.decision_pipeline import _parse_dividend_schedule
+
+    dividends, dividend_summary = _parse_dividend_schedule(data)
+    applied_dividends = [item for item in dividend_summary if item["applied"]]
+
     groups = {leg["expiry"]: leg for leg in data["legs"]}
     ordered = sorted(groups.values(), key=lambda leg: leg["dte"])
     primary_leg = ordered[0]
     secondary_leg = ordered[1]
     primary_a = expiry_analysis(spot, primary_leg, primary_leg["call"],
-                                primary_leg["put"], r, q, account)
+                                primary_leg["put"], r, q, account, dividends)
     secondary_a = expiry_analysis(spot, secondary_leg, secondary_leg["call"],
-                                  secondary_leg["put"], r, q, account)
+                                  secondary_leg["put"], r, q, account, dividends)
 
-    proposal = build_proposal(data, primary_a, secondary_a)
+    proposal = build_proposal(data, primary_a, secondary_a, dividends=dividends)
     audit_payload = proposal
     out_path = OUT_DIR / f"hero_proposal_{data['captured_at'][:10]}.json"
     with open(out_path, "w", encoding="utf-8") as fh:
@@ -282,6 +311,13 @@ def main() -> None:
         f"预期波动 ±{data['earnings']['expected_move_pct']}%"
     )
     print(f"IV {data['earnings']['iv']:.1f}% | IV Rank {data['earnings']['iv_rank']:.1f} | IV Pct {data['earnings']['iv_percentile']:.1f} | HV30 {data['earnings']['hv_30d']:.1f}%")
+    if applied_dividends:
+        latest = applied_dividends[-1]
+        print(
+            f"离散股息：已计入 {len(applied_dividends)} 笔"
+            f"（最近除息日 {latest['ex_date']}，每股 {latest['amount']:g} HKD，"
+            "escrowed-spot 口径）"
+        )
     print("=" * 78)
 
     for a in (primary_a, secondary_a):

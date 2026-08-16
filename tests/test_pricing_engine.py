@@ -11,6 +11,7 @@ import unittest
 from src.pricing_engine import (
     binomial_american,
     black_scholes,
+    escrowed_spot,
     greeks,
     implied_volatility,
     price,
@@ -202,6 +203,145 @@ class GreeksAnalyticCrossCheckTests(unittest.TestCase):
     def test_long_call_theta_is_negative(self):
         g = greeks(100.0, 100.0, 0.5, 0.05, 0.0, 0.3, "CALL", american=False)
         self.assertLess(g["theta"], 0.0)
+
+
+class DiscreteDividendTests(unittest.TestCase):
+    """港股离散股息（escrowed-spot 口径）基准测试。
+
+    所有对照值来自独立闭式公式（把 S* = S - PV(D) 代入 BS），不依赖
+    引擎自身输出；股息路径对 call/put 的方向性影响按金融直觉校验。
+    """
+
+    def test_escrowed_spot_matches_closed_form(self):
+        # D=2.5 于 τ=0.25 除息，r=4%：PV = 2.5·e^(-0.04·0.25)
+        pv = 2.5 * math.exp(-0.04 * 0.25)
+        self.assertAlmostEqual(
+            escrowed_spot(100.0, 0.5, 0.04, [(0.25, 2.5)]), 100.0 - pv, places=12
+        )
+        # 多条股息按各自 τ 折现
+        pv2 = 2.5 * math.exp(-0.04 * 0.25) + 1.25 * math.exp(-0.04 * 0.4)
+        self.assertAlmostEqual(
+            escrowed_spot(100.0, 0.5, 0.04, [(0.25, 2.5), (0.4, 1.25)]),
+            100.0 - pv2,
+            places=12,
+        )
+
+    def test_european_dividend_equals_escrowed_bs(self):
+        S, K, T, r, q, sigma = 100.0, 100.0, 0.5, 0.04, 0.0, 0.3
+        dividends = [(0.25, 2.5)]
+        S_adj = escrowed_spot(S, T, r, dividends)
+        for option_type in ("CALL", "PUT"):
+            self.assertAlmostEqual(
+                black_scholes(S, K, T, r, q, sigma, option_type, dividends),
+                black_scholes(S_adj, K, T, r, q, sigma, option_type),
+                places=12,
+                msg=option_type,
+            )
+
+    def test_dividend_lowers_call_and_raises_put(self):
+        S, K, T, r, q, sigma = 100.0, 100.0, 0.5, 0.04, 0.0, 0.3
+        dividends = [(0.25, 2.5)]
+        call_no_div = black_scholes(S, K, T, r, q, sigma, "CALL")
+        call_div = black_scholes(S, K, T, r, q, sigma, "CALL", dividends)
+        put_no_div = black_scholes(S, K, T, r, q, sigma, "PUT")
+        put_div = black_scholes(S, K, T, r, q, sigma, "PUT", dividends)
+        self.assertLess(call_div, call_no_div)
+        self.assertGreater(put_div, put_no_div)
+
+    def test_parity_holds_on_escrowed_forward(self):
+        S, K, T, r, q, sigma = 100.0, 100.0, 0.5, 0.04, 0.02, 0.3
+        dividends = [(0.25, 2.5), (0.4, 1.25)]
+        call = black_scholes(S, K, T, r, q, sigma, "CALL", dividends)
+        put = black_scholes(S, K, T, r, q, sigma, "PUT", dividends)
+        S_adj = escrowed_spot(S, T, r, dividends)
+        parity = call - put - (S_adj * math.exp(-q * T) - K * math.exp(-r * T))
+        self.assertAlmostEqual(parity, 0.0, places=10)
+
+    def test_dividends_outside_expiry_window_are_ignored(self):
+        S, K, T, r, q, sigma = 100.0, 100.0, 0.5, 0.04, 0.0, 0.3
+        base_call = black_scholes(S, K, T, r, q, sigma, "CALL")
+        # 到期后才除息（τ=0.75 > T=0.5）与已除息（τ=-0.1）均不影响本到期
+        self.assertAlmostEqual(
+            black_scholes(S, K, T, r, q, sigma, "CALL", [(0.75, 5.0)]),
+            base_call,
+            places=12,
+        )
+        self.assertAlmostEqual(
+            black_scholes(S, K, T, r, q, sigma, "CALL", [(-0.1, 5.0)]),
+            base_call,
+            places=12,
+        )
+
+    def test_iv_roundtrip_with_dividends(self):
+        S, K, T, r, q = 100.0, 100.0, 0.4, 0.04, 0.0
+        dividends = [(0.2, 3.0)]
+        for sigma in (0.2, 0.42):
+            for american in (False, True):
+                market = price(
+                    S, K, T, r, q, sigma, "CALL", american=american,
+                    discrete_dividends=dividends,
+                )
+                solved = implied_volatility(
+                    market, S, K, T, r, q, "CALL", american=american,
+                    discrete_dividends=dividends,
+                )
+                self.assertAlmostEqual(
+                    solved, sigma, places=4 if american else 6,
+                    msg=f"american={american} sigma={sigma}",
+                )
+
+    def test_american_with_dividends_respects_lower_bounds(self):
+        S, K, T, r, q, sigma = 100.0, 100.0, 0.5, 0.04, 0.0, 0.3
+        dividends = [(0.25, 2.5)]
+        call_am = binomial_american(S, K, T, r, q, sigma, "CALL", 300, dividends)
+        put_am = binomial_american(S, K, T, r, q, sigma, "PUT", 300, dividends)
+        call_eu = black_scholes(S, K, T, r, q, sigma, "CALL", dividends)
+        put_eu = black_scholes(S, K, T, r, q, sigma, "PUT", dividends)
+        self.assertGreaterEqual(call_am, max(S - K, 0.0) - 1e-9)
+        self.assertGreaterEqual(put_am, max(K - S, 0.0) - 1e-9)
+        # escrowed 口径下 q=0 美式 call 与欧式等价（二叉树收敛带宽 0.02）
+        self.assertAlmostEqual(call_am, call_eu, delta=0.02)
+        self.assertGreaterEqual(put_am, put_eu - 1e-6)
+
+    def test_deep_itm_american_put_still_exceeds_european_with_dividend(self):
+        S, K, T, r, q, sigma = 80.0, 100.0, 0.5, 0.04, 0.0, 0.25
+        dividends = [(0.25, 2.0)]
+        put_am = binomial_american(S, K, T, r, q, sigma, "PUT", 300, dividends)
+        put_eu = black_scholes(S, K, T, r, q, sigma, "PUT", dividends)
+        self.assertGreater(put_am, put_eu + 0.05)
+
+    def test_greeks_with_dividends_match_closed_form_on_escrowed_spot(self):
+        S, K, T, r, q, sigma = 100.0, 100.0, 0.5, 0.05, 0.0, 0.3
+        dividends = [(0.2, 2.0)]
+        g = greeks(S, K, T, r, q, sigma, "CALL", american=False, discrete_dividends=dividends)
+        S_adj = escrowed_spot(S, T, r, dividends)
+        d1 = (math.log(S_adj / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * math.sqrt(T))
+        d2 = d1 - sigma * math.sqrt(T)
+        disc_q = math.exp(-q * T)
+        disc_r = math.exp(-r * T)
+        exp_delta = disc_q * _norm_cdf(d1)
+        exp_gamma = disc_q * _norm_pdf(d1) / (S_adj * sigma * math.sqrt(T))
+        exp_vega = S_adj * math.sqrt(T) * _norm_pdf(d1) * disc_q * 0.01
+        # rho 有两个通道：显式折现 K·e^(-rT) 与 S* = S - D·e^(-rτ) 对 r 的
+        # 敏感性（∂S*/∂r = D·τ·e^(-rτ)）；delta 相对 S* 是 1:1。
+        tau, amount = dividends[0]
+        ds_dr = amount * tau * math.exp(-r * tau)
+        exp_rho = (K * T * disc_r * _norm_cdf(d2) + exp_delta * ds_dr) * 0.01
+        self.assertAlmostEqual(g["delta"], exp_delta, places=4)
+        self.assertAlmostEqual(g["gamma"], exp_gamma, places=4)
+        self.assertAlmostEqual(g["vega"], exp_vega, places=4)
+        self.assertAlmostEqual(g["rho"], exp_rho, places=5)
+
+    def test_invalid_dividends_raise(self):
+        with self.assertRaises(ValueError):
+            black_scholes(100, 100, 0.5, 0.04, 0.0, 0.3, "CALL", [(0.2, -1.0)])
+        with self.assertRaises(ValueError):
+            # 股息总额超过正股价格：S* 非正，必须显式报错
+            black_scholes(1.0, 100, 0.5, 0.04, 0.0, 0.3, "CALL", [(0.2, 2.0)])
+        with self.assertRaises(ValueError):
+            black_scholes(100, 100, 0.5, 0.04, 0.0, 0.3, "CALL", [(0.2, 1.0), (0.2, 2.0)])
+        with self.assertRaises(ValueError):
+            black_scholes(100, 100, 0.5, 0.04, 0.0, 0.3, "CALL", [("soon", 1.0)])
 
 
 class PriceDispatchTests(unittest.TestCase):

@@ -5,6 +5,10 @@
 - 美式期权：二叉树（港股个股期权默认美式、可提前行权）
 - IV：二分法按市场价迭代求解
 - Greeks：bump-and-reprice（价格对 S / sigma / T / r 数值差分）
+- 港股离散股息：escrowed-spot 口径（Black 近似）——已知除息日与每股现金
+  股息时，用 S* = S - Σ PV(D_i)（按 r 从除息日折现、只计入 0 < τ < T 的
+  除息日）代入同一 BS/二叉树；美式提前行权边界随之反映股息对正股路径的
+  下移。精确的除息日分叉非重组树超出比赛版本范围，口径已在决策卡显式标注。
 
 价格单位：每股（港币）。张数层面的金额 = 每股价格 x 合约乘数（0700 默认 100）。
 """
@@ -12,7 +16,54 @@
 from __future__ import annotations
 
 import math
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional, Sequence, Tuple
+
+# 离散股息： (τ_years, amount_per_share)；τ 为从现在到除息日的年化时间。
+DiscreteDividend = Tuple[float, float]
+
+
+def escrowed_spot(
+    S: float,
+    T: float,
+    r: float,
+    discrete_dividends: Optional[Sequence[DiscreteDividend]] = None,
+) -> float:
+    """Return S* = S - Σ PV(除息日前现金股息)。
+
+    只计入 ``0 < τ < T`` 的除息日（已除息/到期后除息的股息不影响本到期定价）；
+    股息额必须是非负有限数；折现后 S* 必须仍为正，否则显式报错（不静默钳位）。
+    """
+
+    if discrete_dividends is None:
+        return S
+    pv = 0.0
+    seen: set[float] = set()
+    for item in discrete_dividends:
+        try:
+            tau, amount = float(item[0]), float(item[1])
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"discrete dividend must be (tau_years, amount), got {item!r}"
+            ) from exc
+        if not math.isfinite(amount) or amount < 0:
+            raise ValueError(
+                f"discrete dividend amount must be a non-negative finite number, got {amount!r}"
+            )
+        if not math.isfinite(tau):
+            raise ValueError(f"discrete dividend tau must be finite, got {tau!r}")
+        if tau <= 0 or tau >= T:
+            continue
+        if tau in seen:
+            raise ValueError(f"duplicate discrete dividend ex-time {tau:g}")
+        seen.add(tau)
+        pv += amount * math.exp(-r * tau)
+    adjusted = S - pv
+    if adjusted <= 0 or not math.isfinite(adjusted):
+        raise ValueError(
+            "escrowed spot S - PV(discrete dividends) must stay positive; "
+            "dividend assumptions are inconsistent with the underlying price"
+        )
+    return adjusted
 
 
 def norm_cdf(x: float) -> float:
@@ -31,8 +82,12 @@ def black_scholes(
     q: float,
     sigma: float,
     option_type: str,
+    discrete_dividends: Optional[Sequence[DiscreteDividend]] = None,
 ) -> float:
-    """欧式 Black-Scholes 价格（option_type: CALL / PUT，大小写不敏感）。"""
+    """欧式 Black-Scholes 价格（option_type: CALL / PUT，大小写不敏感）。
+
+    离散股息按 escrowed-spot 口径：S* = S - PV(除息日前现金股息)。
+    """
 
     kind = str(option_type).upper()
     if kind not in ("CALL", "PUT"):
@@ -44,13 +99,14 @@ def black_scholes(
         return intrinsic
     if sigma <= 0 or not math.isfinite(sigma):
         raise ValueError(f"sigma must be a positive finite number, got {sigma!r}")
-    d1 = (math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * math.sqrt(T))
+    S_adj = escrowed_spot(S, T, r, discrete_dividends)
+    d1 = (math.log(S_adj / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * math.sqrt(T))
     d2 = d1 - sigma * math.sqrt(T)
     df_s = math.exp(-q * T)
     df_r = math.exp(-r * T)
     if kind == "CALL":
-        return S * df_s * norm_cdf(d1) - K * df_r * norm_cdf(d2)
-    return K * df_r * norm_cdf(-d2) - S * df_s * norm_cdf(-d1)
+        return S_adj * df_s * norm_cdf(d1) - K * df_r * norm_cdf(d2)
+    return K * df_r * norm_cdf(-d2) - S_adj * df_s * norm_cdf(-d1)
 
 
 def binomial_american(
@@ -62,8 +118,14 @@ def binomial_american(
     sigma: float,
     option_type: str,
     steps: int = 300,
+    discrete_dividends: Optional[Sequence[DiscreteDividend]] = None,
 ) -> float:
-    """美式期权二叉树价格（支持提前行权）。"""
+    """美式期权二叉树价格（支持提前行权）。
+
+    离散股息按 escrowed-spot 口径建树：正股路径整体下移 PV(股息)，
+    提前行权边界随之反映股息影响（Black 近似；精确除息日分叉树不在
+    比赛版本范围内，决策卡会显式标注口径）。
+    """
 
     kind = str(option_type).upper()
     if kind not in ("CALL", "PUT"):
@@ -74,6 +136,7 @@ def binomial_american(
         return max(S - K, 0.0) if kind == "CALL" else max(K - S, 0.0)
     if sigma <= 0 or not math.isfinite(sigma):
         raise ValueError(f"sigma must be a positive finite number, got {sigma!r}")
+    S_adj = escrowed_spot(S, T, r, discrete_dividends)
     dt = T / steps
     u = math.exp(sigma * math.sqrt(dt))
     d = 1.0 / u
@@ -84,7 +147,7 @@ def binomial_american(
 
     values = [0.0] * (steps + 1)
     for i in range(steps + 1):
-        price = S * (u ** i) * (d ** (steps - i))
+        price = S_adj * (u ** i) * (d ** (steps - i))
         if kind == "CALL":
             values[i] = max(price - K, 0.0)
         else:
@@ -92,7 +155,7 @@ def binomial_american(
 
     for j in range(steps - 1, -1, -1):
         for i in range(j + 1):
-            price = S * (u ** i) * (d ** (j - i))
+            price = S_adj * (u ** i) * (d ** (j - i))
             hold = disc * (p_up * values[i + 1] + p_down * values[i])
             if kind == "CALL":
                 values[i] = max(hold, price - K)
@@ -111,10 +174,13 @@ def price(
     option_type: str,
     american: bool = True,
     steps: int = 300,
+    discrete_dividends: Optional[Sequence[DiscreteDividend]] = None,
 ) -> float:
     if american:
-        return binomial_american(S, K, T, r, q, sigma, option_type, steps)
-    return black_scholes(S, K, T, r, q, sigma, option_type)
+        return binomial_american(
+            S, K, T, r, q, sigma, option_type, steps, discrete_dividends
+        )
+    return black_scholes(S, K, T, r, q, sigma, option_type, discrete_dividends)
 
 
 def implied_volatility(
@@ -129,11 +195,12 @@ def implied_volatility(
     steps: int = 300,
     lo: float = 0.0001,
     hi: float = 5.0,
+    discrete_dividends: Optional[Sequence[DiscreteDividend]] = None,
 ) -> float:
     """二分法由市场价反解 IV（百分比小数，如 0.42 表示 42%）。
 
     输入非法时显式报错（不再静默返回 0.0）：T<=0、market_price<=0、
-    S/K<=0 都会抛 ValueError。
+    S/K<=0 都会抛 ValueError。离散股息按同一 escrowed-spot 口径进入定价。
     """
     if T <= 0:
         raise ValueError(f"T must be positive for IV solving, got {T!r}")
@@ -145,7 +212,13 @@ def implied_volatility(
         raise ValueError("S and K must be positive for IV solving")
 
     def f(sig: float) -> float:
-        return price(S, K, T, r, q, sig, option_type, american, steps) - market_price
+        return (
+            price(
+                S, K, T, r, q, sig, option_type, american, steps,
+                discrete_dividends=discrete_dividends,
+            )
+            - market_price
+        )
 
     if f(lo) >= 0:
         return lo
@@ -173,6 +246,7 @@ def greeks(
     option_type: str,
     american: bool = True,
     steps: int = 500,
+    discrete_dividends: Optional[Sequence[DiscreteDividend]] = None,
 ) -> Dict[str, float]:
     """bump-and-reprice 计算 Greeks（每股口径）。
 
@@ -190,7 +264,8 @@ def greeks(
       h=0.5 时 gamma 恒为 0，而解析真值为 0.0176/股）。
     """
     price_fn: Callable[[float, float, float, float], float] = lambda ss, tt, rr, sg: price(
-        ss, K, tt, rr, q, sg, option_type, american, steps
+        ss, K, tt, rr, q, sg, option_type, american, steps,
+        discrete_dividends=discrete_dividends,
     )
     v0 = price_fn(S, T, r, sigma)
 
